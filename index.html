@@ -4,7 +4,47 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#0B0A08">
-<!-- ISLA NEGRA 1.1 · el latido del berserker, que estaba roto por un punto
+<!-- ISLA NEGRA 1.2 · que las salas de internet conecten de verdad, y que
+     se sepa siempre qué versión lleva cada uno.
+
+     0 · EL NÚMERO DE VERSIÓN, VISIBLE. Estaba solo en el título de la
+     pestaña, que en un móvil no lo ve nadie, y eso costó una noche entera de
+     confusión: la web servía una versión vieja y no había forma de darse
+     cuenta. Ahora sale arriba a la derecha en todas las pantallas de
+     portada. Vive en una sola línea de código, la constante VERSION, y el
+     título de la pestaña se pone solo a partir de ella.
+
+     0 bis · LA SALA COMPRUEBA LAS VERSIONES. Al entrar, cada uno dice qué
+     versión lleva. Si no coincide con la del anfitrión no se le deja
+     sentarse, y a los dos les sale por qué. El motor corre entero en cada
+     móvil y por el cable solo viajan las jugadas, así que dos versiones
+     distintas no dan un error: dan dos partidas distintas enseñándose como
+     si fueran la misma.
+
+     Cuatro cosas, todas en la tubería de internet y en ningún sitio más:
+
+     1 · SERVIDORES DE PASO (lo gordo). Faltaba el TURN. Con dos móviles en
+     el wifi de casa la cosa colaba; en datos del móvil no puede funcionar
+     nunca, porque la operadora esconde a todos sus clientes detrás de la
+     misma dirección y los dos aparatos no llegan a verse. Ahora hay tres
+     STUN y tres TURN, y por ahí pasan los mensajes cuando no hay camino
+     directo. Están arriba del todo del bloque de internet, en RED_PASO, en
+     seis líneas, por si algún día hay que cambiarlos.
+
+     2 · EL INVITADO INSISTE. Antes se llamaba a la sala una sola vez: si el
+     anfitrión tardaba un segundo de más en apuntarse, salía "no hay ninguna
+     sala con ese código" con la sala abierta delante. Ahora se llama cinco
+     veces, seis segundos cada una.
+
+     3 · SE VUELVE A ENGANCHAR SOLA. Apagar la pantalla del móvil, o pasar
+     del wifi a los datos, cortaba el hilo con la centralita y la sala se
+     quedaba muerta sin decir nada.
+
+     4 · LOS AVISOS DICEN QUÉ PASA. "No hay ninguna sala con ese código" y
+     "la sala existe pero los móviles no se enganchan" son dos averías
+     distintas y se arreglan de forma distinta; antes las dos salían igual.
+
+     ISLA NEGRA 1.1 · el latido del berserker, que estaba roto por un punto
      y coma. El retraso que hace que el corazón no vuelva a empezar de cero en
      cada repintado se pegaba al estilo de la foto sin separarlos, y el
      navegador tiraba las dos cosas: el latido daba tirones y el retrato se
@@ -87,7 +127,7 @@
      v2.6 · la mesa se recoge siempre con animación (también Mejoras y
      tácticas). v2.5 traía dos arreglos: el rodillo ya no dice "nadie te cubre" al pedir
      ayuda, y la puntería no puede quedarse sin objetivos posibles. -->
-<title>Sombras sobre Isla Negra · 1.1</title>
+<title>Sombras sobre Isla Negra · 1.2</title>
 <style>
 /* =========================================================================
    ZONA 5-A: ESTILOS
@@ -876,6 +916,16 @@ button.accion:active{background:var(--tinta-2)}
   color:var(--madera-viva);font-family:ui-monospace,Menlo,Consolas,monospace;
   margin-top:10px;animation:respira 2.6s ease-in-out infinite}
 @keyframes respira{0%,100%{opacity:.35}50%{opacity:1}}
+/* El sello de version. Va en TODAS las pantallas de portada, arriba a la
+   derecha, pequeno pero legible. Existe por una razon muy concreta: cuando
+   varios juegan por internet, saber en dos segundos que version lleva cada
+   uno es la diferencia entre arreglar algo en un minuto y pasarte una noche
+   dando vueltas. */
+.portada .sello{position:absolute;top:10px;right:12px;z-index:5;
+  font-size:11px;letter-spacing:.12em;color:#6E6152;
+  font-family:ui-monospace,Menlo,Consolas,monospace;
+  padding:3px 7px;border:1px solid #332C24;border-radius:4px;
+  background:rgba(0,0,0,.28);pointer-events:none}
 .portada .credito{position:absolute;left:0;right:0;bottom:16px;text-align:center;
   font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#4A4034;
   font-family:ui-monospace,Menlo,Consolas,monospace}
@@ -6208,6 +6258,14 @@ function vigilarLupa(){
 /* Monta la portada en sus tres piezas. "pie" es opcional: la página de
    título no lleva. El título va SIEMPRE en la cabecera, y la cabecera no se
    mueve pase lo que pase dentro del cuerpo. */
+/* EL NUMERO DE VERSION, EN UN SOLO SITIO.
+   Antes vivia solo en el <title>, que en un movil no lo ve nadie. Ahora vive
+   aqui, se pinta en la portada y se manda por la red al entrar en una sala.
+   Al sacar version nueva se cambia esta linea y ya esta: el titulo de la
+   pestana se pone solo. */
+const VERSION = "1.2";
+document.title = "Sombras sobre Isla Negra \u00b7 " + VERSION;
+
 function panelPortada(html, pie, bajoTitulo){
   const p = document.getElementById("portada");
   /* El panel entero se queda SIN toque propio. Lo pone la página de título
@@ -6217,6 +6275,7 @@ function panelPortada(html, pie, bajoTitulo){
      cualquier botón que pulsaras te devolvía a preparar la partida. */
   p.onclick = null;
   p.innerHTML =
+    '<span class="sello">v' + VERSION + '</span>' +
     '<div class="cabecera"><h1>Sombras sobre Isla Negra</h1>' +
       (bajoTitulo || "") + '</div>' +
     '<div class="cuerpo">' + html + '</div>' +
@@ -6837,20 +6896,62 @@ function tuboMismoAparato(sala, alRecibir){
    presentarlos; a partir de ahí van por su cuenta. Se descarga solo cuando
    se elige esta opción: quien juegue sin red no toca internet en ningún
    momento. */
+/* LOS SERVIDORES DE PASO · por qué dos móviles no se ven.
+   Para que dos aparatos se hablen directamente hace falta que cada uno sepa
+   cuál es su dirección de verdad, la que se ve desde fuera. De eso se ocupa
+   un servidor STUN, y con eso basta casi siempre cuando los dos están en el
+   wifi de casa.
+   Con los DATOS DEL MÓVIL no basta. La operadora mete a miles de clientes
+   detrás de la misma dirección, y entonces los dos móviles no pueden
+   hablarse por mucho que se hayan presentado: hace falta un tercero que
+   reciba los mensajes de uno y se los pase al otro. Eso es un servidor TURN.
+   Sin TURN, la sala se crea, el código se encuentra, y la conexión se queda
+   colgada para siempre. Es la causa número uno de "no conectan".
+
+   Los TURN de abajo son gratuitos y compartidos: sirven para jugar, pero
+   algunos días van saturados. Si quieres que vaya fino, saca los tuyos
+   —son gratis y se tarda dos minutos— y sustituye las tres líneas de
+   "turn:" por las que te den. Lo demás no hay que tocarlo.               */
+const RED_PASO = [
+  { urls:"stun:stun.l.google.com:19302" },
+  { urls:"stun:stun1.l.google.com:19302" },
+  { urls:"stun:stun.cloudflare.com:3478" },
+  { urls:"turn:openrelay.metered.ca:80",
+    username:"openrelayproject", credential:"openrelayproject" },
+  { urls:"turn:openrelay.metered.ca:443",
+    username:"openrelayproject", credential:"openrelayproject" },
+  { urls:"turn:openrelay.metered.ca:443?transport=tcp",
+    username:"openrelayproject", credential:"openrelayproject" }
+];
+
+/* La centralita se baja de fuera. Si el primer sitio no contesta se prueba
+   el segundo: son el mismo programa servido desde dos sitios distintos, y
+   que uno de los dos esté caído es más frecuente de lo que parece. */
 function cargarPeerJS(){
+  const sitios = [
+    "https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js",
+    "https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"
+  ];
   return new Promise((bien, mal) => {
     if(window.Peer) return bien();
-    const t = document.createElement("script");
-    t.src = "https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js";
-    t.onload = () => bien();
-    t.onerror = () => mal(new Error("no se pudo descargar la centralita"));
-    document.head.appendChild(t);
+    let k = 0;
+    const probar = () => {
+      if(k >= sitios.length) return mal(new Error("no se pudo descargar la centralita"));
+      const t = document.createElement("script");
+      t.src = sitios[k++];
+      t.onload = () => bien();
+      t.onerror = () => { t.remove(); probar(); };
+      document.head.appendChild(t);
+    };
+    probar();
   });
 }
 
 function tuboInternet(sala, papel, alRecibir, alPasar){
   const id = "sombrasIslaNegra-" + sala;
   const conexiones = [];
+  let peer = null, vivo = true, reloj = null;
+  let llamada = null, intentos = 0, reaperturas = 0, ultimoFallo = "";
   const entra = m => {
     if(!m) return;
     if(RED.vistos.has(m.id)) return;
@@ -6858,7 +6959,6 @@ function tuboInternet(sala, papel, alRecibir, alPasar){
     // El anfitrión hace de centralita: lo que le llega de uno lo reparte.
     alRecibir(m);
   };
-  const peer = papel === "anfitrion" ? new Peer(id) : new Peer();
   const tubo = {
     enviar(m){
       m.de = RED.yo;
@@ -6867,23 +6967,96 @@ function tuboInternet(sala, papel, alRecibir, alPasar){
       conexiones.forEach(c => { if(c.open) try{ c.send(texto); }catch(e){} });
     },
     cerrar(){
+      vivo = false;
+      clearTimeout(reloj);
       conexiones.forEach(c => { try{ c.close(); }catch(e){} });
-      try{ peer.destroy(); }catch(e){}
+      try{ if(peer) peer.destroy(); }catch(e){}
     }
   };
   const enchufar = c => {
+    if(!c) return;
+    let abrio = false;
     conexiones.push(c);
     c.on("data", d => { try{ entra(JSON.parse(d)); }catch(e){} });
-    c.on("open", () => alPasar("abierta"));
-    c.on("close", () => alPasar("cerrada"));
+    c.on("open", () => { abrio = true; clearTimeout(reloj); alPasar("abierta"); });
+    c.on("close", () => {
+      const k = conexiones.indexOf(c);
+      if(k >= 0) conexiones.splice(k, 1);
+      // Los intentos que se descartan al reintentar también se cierran, y de
+      // esos no hay que avisar: nunca llegaron a abrirse.
+      if(abrio) alPasar("cerrada");
+    });
+    c.on("error", () => {});
   };
-  peer.on("error", e => alPasar("error", e && e.type));
-  if(papel === "anfitrion"){
-    peer.on("open", () => alPasar("esperando"));
-    peer.on("connection", enchufar);
-  }else{
-    peer.on("open", () => enchufar(peer.connect(id, { reliable:true })));
-  }
+
+  /* EL INVITADO INSISTE.
+     El primer intento falla muchas veces sin que pase nada malo: el anfitrión
+     puede no haber terminado de apuntarse en la centralita, o la centralita
+     gratuita puede estar de mal humor. Antes se daba la sala por perdida a la
+     primera. Ahora se llama cinco veces, seis segundos cada una, y solo
+     entonces se dice algo, y se dice QUÉ ha fallado. */
+  const llamar = () => {
+    if(!vivo || !peer || peer.destroyed) return;
+    if(llamada){
+      try{ llamada.close(); }catch(e){}
+      const k = conexiones.indexOf(llamada);
+      if(k >= 0) conexiones.splice(k, 1);
+    }
+    intentos++;
+    ultimoFallo = "";
+    alPasar("buscando", intentos);
+    llamada = peer.connect(id, { reliable:true });
+    enchufar(llamada);
+    clearTimeout(reloj);
+    reloj = setTimeout(() => {
+      if(!vivo) return;
+      if(llamada && llamada.open) return;
+      if(intentos < 5) llamar();
+      else alPasar("sinsuerte", ultimoFallo);
+    }, 6000);
+  };
+
+  const montar = () => {
+    if(!vivo) return;
+    const opciones = { config:{ iceServers:RED_PASO } };
+    peer = papel === "anfitrion" ? new Peer(id, opciones) : new Peer(opciones);
+
+    peer.on("error", e => {
+      const t = e && e.type;
+      /* "no hay nadie con ese nombre": puede ser que la sala no exista, o que
+         el anfitrión llegue un segundo tarde. No se corta: lo apunta y deja
+         que el reloj vuelva a intentarlo. */
+      if(t === "peer-unavailable"){ ultimoFallo = "sinsala"; return; }
+      /* El código sigue apuntado de una partida anterior. Se suelta y se
+         vuelve a coger a los pocos segundos, que es lo que tarda la
+         centralita en olvidarlo. */
+      if(t === "unavailable-id" && papel === "anfitrion" && reaperturas < 3){
+        reaperturas++;
+        alPasar("reabriendo");
+        try{ peer.destroy(); }catch(e2){}
+        setTimeout(montar, 2500);
+        return;
+      }
+      alPasar("error", t);
+    });
+
+    /* El móvil se apaga la pantalla, o salta del wifi a los datos, y se cae
+       el hilo con la centralita. Antes eso dejaba la sala muerta sin decir
+       nada. Ahora se vuelve a enganchar sola. */
+    peer.on("disconnected", () => {
+      if(!vivo || peer.destroyed) return;
+      alPasar("dormida");
+      try{ peer.reconnect(); }catch(e){}
+    });
+
+    if(papel === "anfitrion"){
+      peer.on("open", () => alPasar("esperando"));
+      peer.on("connection", enchufar);
+    }else{
+      peer.on("open", () => { intentos = 0; llamar(); });
+    }
+  };
+  montar();
   return tubo;
 }
 
@@ -6943,9 +7116,31 @@ function alLlegarMensaje(m){
   }
   if(m.t === "hola"){
     if(RED.papel !== "anfitrion") return;
+    /* LAS VERSIONES TIENEN QUE COINCIDIR.
+       El motor de la partida corre entero en cada movil; por el cable solo
+       viajan las jugadas ("he jugado la carta tal"). Si dos moviles no
+       llevan el mismo archivo, las dos mesas dejan de parecerse y lo que se
+       ve en pantalla es mentira. Mas vale no dejar empezar. */
+    if(m.ver !== VERSION){
+      RED.tubo.enviar({ t:"versiones", suya:m.ver || "vieja", mia:VERSION,
+                        para:m.de });
+      RED.aviso = "Alguien intenta entrar con otra versión del juego (la " +
+                  (m.ver || "vieja") + "). No puede sentarse hasta que " +
+                  "recargue la página.";
+      dibujarSala();
+      return;
+    }
     sentarInvitado(m.de);
     RED.aviso = "";
     difundirSala();
+    dibujarSala();
+    return;
+  }
+  if(m.t === "versiones"){
+    if(m.para !== RED.yo) return;
+    RED.aviso = "Llevas la versión " + m.suya + " y la sala va con la " +
+                m.mia + ". Cierra la página, vuelve a abrirla y entra otra " +
+                "vez con el mismo código.";
     dibujarSala();
     return;
   }
@@ -7021,7 +7216,7 @@ function abrirRed(via, papel, sala){
       difundirSala();
     }else{
       RED.aviso = "Buscando la sala…";
-      RED.tubo.enviar({ t:"hola" });
+      RED.tubo.enviar({ t:"hola", ver:VERSION });
     }
     dibujarSala();
     return Promise.resolve();
@@ -7031,20 +7226,37 @@ function abrirRed(via, papel, sala){
   dibujarSala();
   return cargarPeerJS().then(() => {
     RED.tubo = tuboInternet(sala, papel, alLlegarMensaje, (que, detalle) => {
-      if(que === "esperando") RED.aviso = "Sala abierta. Dales el código a los demás.";
+      if(que === "esperando")
+        RED.aviso = "Sala abierta. Dales el código a los demás.";
+      else if(que === "reabriendo")
+        RED.aviso = "Ese código estaba cogido de antes. Volviendo a abrirlo…";
+      else if(que === "buscando")
+        RED.aviso = detalle > 1 ? "Buscando la sala… (" + detalle + " de 5)"
+                                : "Buscando la sala…";
+      else if(que === "dormida")
+        RED.aviso = "Se ha perdido la señal. Volviendo a conectar…";
       else if(que === "abierta"){
         RED.aviso = "";
-        if(papel === "invitado") RED.tubo.enviar({ t:"hola" });
+        if(papel === "invitado") RED.tubo.enviar({ t:"hola", ver:VERSION });
         else difundirSala();
       }
       else if(que === "cerrada" && papel === "invitado")
         RED.aviso = "Se ha cortado la conexión con la sala.";
+      /* Al invitado se le dice qué ha fallado, porque las dos cosas que
+         pueden fallar se arreglan de manera distinta. Si la centralita dijo
+         que no hay nadie con ese código, es el código. Si la centralita sí
+         encontró al anfitrión y aun así no se enganchan, son las redes: los
+         datos del móvil no dejan que dos aparatos se hablen. */
+      else if(que === "sinsuerte")
+        RED.aviso = detalle === "sinsala"
+          ? "No hay ninguna sala con ese código. Comprueba las cuatro letras, y que quien la creó siga en la pantalla de la sala."
+          : "La sala existe, pero los móviles no llegan a engancharse. Probad los dos por wifi en vez de por datos.";
       else if(que === "error"){
-        RED.aviso = detalle === "peer-unavailable"
-          ? "No hay ninguna sala con ese código."
-          : (detalle === "unavailable-id"
-             ? "Ese código ya está en uso. Prueba con otro."
-             : "No se ha podido conectar. Puede ser la red de tu móvil.");
+        RED.aviso = detalle === "unavailable-id"
+          ? "Ese código ya está en uso. Sal y crea otra sala."
+          : (detalle === "browser-incompatible"
+             ? "Este navegador no sirve para jugar online. Prueba con Chrome."
+             : "No se ha podido conectar. Comprueba que estás abriendo la página por https y que tienes internet.");
       }
       dibujarSala();
     });
