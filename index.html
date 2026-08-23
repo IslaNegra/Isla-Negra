@@ -4,7 +4,191 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#0B0A08">
-<!-- ISLA NEGRA 1.4 · VOLVER A LA PARTIDA, Y EL MANDO QUE CAMBIA DE MANOS.
+<!-- ISLA NEGRA 2.3 · LA HOJA DE CARTAS. Los cuatro mazos, técnica a técnica,
+     con su foto, su texto y cuántas copias lleva el mazo. Se entra por
+     Instrucciones, como última entrada de la lista: consultar una carta es
+     parte de leerse las reglas.
+
+     No hay ni un dato escrito en esa pantalla: todo sale de la tabla de
+     cartas del propio juego, la misma que reparte y resuelve, y la carta
+     ampliada es la lupa de la mesa. Si mañana cambia el daño de una Patada,
+     la hoja lo dice sin que nadie la toque, y no puede acabar enseñando una
+     carta distinta de la que se juega.
+
+     Cada técnica sale UNA vez, con un "×3" al lado. Repetirla tres veces
+     sería más fiel al mazo de cartón pero se lee peor, y esconde lo que de
+     verdad interesa: cuántas copias hay, que es media estrategia.
+
+     ISLA NEGRA 2.2 · RETOQUES DE LA PARTIDA DE PRUEBA.
+
+     · Sin "Round 1 / Fight" ni "Final round": aquí no se viene a pelear, se
+       viene a que te expliquen, y dos carteles a pantalla completa antes de
+       la primera parada solo hacen esperar.
+     · El botón que hay que tocar se marca con el MISMO aro azul que lleva la
+       carta elegida en el juego. Ese azul ya quiere decir "esto es lo tuyo";
+       inventar otra señal para lo mismo sería enseñar dos idiomas.
+     · Paradas de dos tiempos: las del 2 vs 2 piden sacar una carta Y señalar
+       a quién. El foco se queda en la mano mientras se elige la carta y salta
+       a las fichas en cuanto hay que apuntar. Antes iluminaba las fichas
+       desde el principio y la mano se veía apagada justo cuando había que
+       sacar una carta de ella: eso era lo del brillo.
+     · El berserker contado por lo que HACE —heredas el turno del compañero
+       caído— y no por cómo se ve.
+
+     ISLA NEGRA 2.1 · CARTELES LIMPIOS Y LA PARTIDA FRENADA.
+
+     1 · EL FRENO. Con un cartel puesto esperando un "Siguiente", la partida
+     ya no avanza por debajo. Antes la máquina seguía jugando mientras se
+     leía y lo que contaba el cartel ya había pasado para cuando levantabas
+     la vista; lo peor, el berserker, que caía el compañero, salía el rótulo
+     y se iba, todo mientras leías. Se frena por donde entra la máquina a
+     jugar, que es lo único que se mueve solo.
+
+     2 · SIN TÍTULOS. Un encabezado encima de tres líneas es un estorbo. El
+     título solo asoma con el cartel plegado, y ahí no es un título: es la
+     etiqueta de lo que hay dentro.
+
+     3 · CARTELES QUE DEJAN TOCAR. El de la línea de estado dice que la
+     toques para abrir el historial y el de la mano dice que mantengas el
+     dedo en una carta: los dos dejan pasar el dedo. La carta ampliada sale
+     por encima del cartel —se abría por debajo— y con el historial abierto
+     el cartel se pliega solo para no taparlo.
+
+     4 · SEÑALAR UN BOTÓN Y NO LOS DOS. Los botones de acción llevan nombre,
+     así que el foco puede caer solo en "descartar", solo en "encajar" o solo
+     en "¿alguien me cubre?".
+
+     5 · DOS JUGADAS NUEVAS EN EL 2 VS 2: te atacan a ti y usas "¿alguien me
+     cubre?" —Néstor te cubre—, y después le pegan a él y usas "no me meto".
+     Ahí es donde cae, y de ahí sale el berserker.
+
+     Tres fallos que salieron probándolo y conviene no repetir:
+       · Los "no responde" apuntados en el guion no se gastaban nunca (el
+         motor ni pregunta a quien no puede parar el golpe) y luego se los
+         llevaba otro momento. Ahora solo se apunta lo que SÍ ocurre.
+       · Las opciones de respuesta no son números, son fichas { i, c }.
+       · Cada respuesta de la máquina va atada a contra quién va el golpe, o
+         Néstor gastaba su "te cubro" en el primer golpe que se cruzaba.
+
+     ISLA NEGRA 2.0 · EL DOS CONTRA DOS, JUGADO. Contarlo no servía: lo que
+     hay que ver es la mesa de cuatro fichas, el golpe que hay que apuntar
+     tocando a alguien, y sobre todo el momento en que cae tu compañero y te
+     quedas solo.
+
+     Así que el tutorial ya no acaba en el duelo: cuando termina, se monta una
+     segunda mesa, esta de cuatro, y te deja caer EN MITAD de un combate, con
+     los cuatro tocados y con nivel puesto —que es como está una mesa de
+     verdad a mitad de asalto—. Cuatro turnos:
+
+       1 · juegas un golpe y tienes que decir a quién: se toca su ficha.
+       2 · le pegan a Néstor y te lo preguntan a TI: cubres tú, que en dos
+           contra dos la respuesta no tiene por qué salir del atacado.
+       3 · y la Esquiva te sigue regalando una carta aunque el golpe no
+           fuera para ti.
+       4 · Mai-lo remata a Néstor. Te quedas solo contra dos y entra el
+           berserker, con su rótulo y su latido.
+
+     Y ahí se corta: la partida no hay que terminarla, había que verla. El
+     globo del berserker espera a que la ficha se encienda de verdad, que va
+     con retraso a propósito, o hablaría de un latido que aún no se ve.
+
+     ISLA NEGRA 1.9 · UN SOLO ASALTO, DOS PUERTAS Y LA MESA A LA VISTA.
+
+     1 · FUERA EL SEGUNDO ASALTO. Repetía lo del primero con otras cartas. La
+     prueba se juega ahora a UN asalto —el guion lo dice— y así el final del
+     combate, con sus botones, llega enseguida en vez de a los diez minutos.
+
+     2 · CUBRIR AL COMPAÑERO. Es LA jugada del dos contra dos y no estaba
+     contada: responder por el de tu bando, y el botón de "¿alguien me cubre?"
+     cuando te atacan y no tienes con qué. Parada propia, detrás del 2 vs 2.
+
+     3 · DOS PUERTAS EN VEZ DE UNA LISTA. Tutorial e Instrucciones son dos
+     formas distintas de aprender —una se juega, la otra se lee— y metidas en
+     la misma lista el tutorial quedaba de octavo apartado de un índice, que
+     es donde no lo busca nadie. Ahora se elige primero.
+
+     4 · SE VE LA MESA POR DEBAJO. La sombra que oscurecía todo menos la zona
+     señalada era opaca y tapaba justo lo que se estaba explicando. Ahora es
+     media sombra, el globo es traslúcido y desenfoca lo de detrás, y si aun
+     así estorba se pliega a una tira con el título.
+
+     ISLA NEGRA 1.8 · LA PARTIDA DE PRUEBA. Se aprende a jugar jugando, y de
+     paso se aprende la pantalla, porque la pantalla es la de siempre.
+
+     No es una imitación: es el motor entero con los mazos colocados a mano,
+     de forma que se sabe qué carta va a coger cada uno en cada turno. Encima
+     va la capa que señala y dice qué hacer, y solo se deja pasar la jugada
+     que toca; lo demás se ignora sin castigo, así que se puede toquetear la
+     pantalla sin miedo a estropear nada.
+
+     Dos asaltos, treinta y seis paradas. Van cayendo por el camino: las
+     Mejoras y subir de nivel, la respuesta que además te deja jugar otra
+     carta, el ataque que el rival no puede parar por nivel, tirar la mano,
+     ceder el turno, devolver un golpe con la Contra, encajar a propósito,
+     una respuesta y un ataque expertos, el fin de asalto y el fin del
+     combate con sus botones. Al final, dos paradas contadas para lo que no
+     cabe en un duelo: cuatro en la mesa y el berserker.
+
+     Lo único que se toca del reglamento son los puntos de vida: 10 en vez de
+     22, para que quepan dos asaltos en un rato, y se dice en voz alta en la
+     primera parada. Al salir se restaura.
+
+     Del reglamento entra por "Cómo se juega", como todo lo demás: es la
+     última entrada de la lista. Y se sale cuando se quiera.
+
+     ISLA NEGRA 1.7 · TODAS LAS INSTRUCCIONES DEBAJO DE LA MISMA PUERTA. La
+     vuelta por la pantalla ya no salta sola al empezar un combate: nadie
+     quiere que le interrumpan la partida el primer día. Se entra por "Cómo se
+     juega" y por ningún otro sitio, como el resto de las instrucciones, y
+     dentro de esa hoja tiene su propia entrada al final de la lista, con
+     flecha en vez de "+": las otras se abren para leerlas, esta lleva a otra
+     pantalla.
+
+     Con eso se cae también todo lo del almacén del móvil: ya no hace falta
+     acordarse de si la has visto o no, porque no sale si no la pides.
+
+     ISLA NEGRA 1.6 bis · LA VUELTA NO SALÍA EN EL ARCHIVO DESCARGADO. La
+     primera vez sale sola, y para saber si ya la habías visto se preguntaba
+     al almacén del móvil. Abriendo el archivo suelto (una dirección
+     "file://", que es como se prueba antes de publicar) ese almacén no
+     contesta: lanza un error. Y el error se estaba leyendo como un "sí, ya
+     la ha visto", así que no salía NUNCA y no había forma de enterarse.
+     Ahora al revés: si no se puede preguntar, se supone que no se ha visto.
+     Además queda apuntado en memoria, para que en ese caso tampoco se repita
+     en cada combate de la misma sesión.
+
+     ISLA NEGRA 1.6 · LA VUELTA POR LA PANTALLA. Las reglas escritas dicen a
+     qué se juega; esto dice dónde está cada cosa. Seis paradas por encima del
+     tablero de verdad: se oscurece todo menos un trozo y se explica en una
+     línea. Tu ficha, la del rival, la línea que dice qué toca, la mesa, tu
+     mano (con el gesto de arrastrar dibujado, que es lo único que no se
+     adivina mirando) y los dos botones de abajo.
+
+     No lleva puerta propia en la pantalla de inicio: se entra por "Cómo se
+     juega", que es donde uno va a buscar esto, y sale sola la primera vez que
+     empiezas un combate. El móvil se acuerda de que ya la has visto.
+
+     Sale de dentro de las reglas y no al revés porque el tablero tiene que
+     existir para poder señalarlo: si se abre desde el cruce del principio no
+     hay nada debajo, y ahí el apartado lo dice en vez de ofrecer un botón que
+     no llevaría a ninguna parte.
+
+     ISLA NEGRA 1.5 · CÓMO SE JUEGA. Las reglas, dentro del juego. Siete
+     apartados que se abren al tocarlos, para poder leer solo lo que hace
+     falta: el objetivo, el turno, subir de nivel, golpes y respuestas, los
+     cuatro tipos de carta, las marcas de nivel y las formas de jugar.
+
+     Vive en su propia hoja, por encima de todo y sin depender de la portada.
+     Eso es lo que permite abrirla por los dos sitios donde hace falta: desde
+     el cruce del principio, antes de empezar, y desde el botón "?" de la
+     barra de arriba en mitad de un combate. La partida se queda viva por
+     debajo, intacta: la hoja no toca el motor ni repinta nada.
+
+     El texto sale de las reglas de cartón, apretado para un móvil: lo justo
+     para jugar arriba, y las excepciones (las trece cartas, rebarajar el
+     mazo) apartadas en gris al final de su apartado.
+
+     ISLA NEGRA 1.4 · VOLVER A LA PARTIDA, Y EL MANDO QUE CAMBIA DE MANOS.
      Se caía por dos sitios: quien se salía por error no podía volver, y si se
      salía quien creó la sala la partida se quedaba congelada sin decir nada.
      En un móvil esto no es raro —una llamada, bloquear la pantalla, cambiar
@@ -1719,6 +1903,275 @@ details.registro{border-top:1px solid var(--tinta-3);padding-top:6px}
 .portada.cruce .cuerpo{padding-top:112px}
 @media (max-height:780px){ .portada.cruce .cuerpo{padding-top:78px} }
 @media (max-height:700px){ .portada.cruce .cuerpo{padding-top:54px} }
+
+/* ═══ CÓMO SE JUEGA ═══════════════════════════════════════════════════
+   Una hoja con vida propia por encima de todo, y a propósito NO forma parte
+   de la portada: por eso las mismas reglas se pueden leer antes de empezar y
+   también en mitad de un combate, sin tocar la partida, que se queda viva
+   por debajo. Se abre y se cierra, y ya está: no repinta nada ni avisa al
+   motor de nada.
+
+   Tres piezas fijas, como la portada: título arriba, botón abajo y en medio
+   lo único que rueda. Así el botón de cerrar está siempre a la vista por
+   larga que sea la lista. */
+.reglas{position:fixed;inset:0;z-index:300;display:none;flex-direction:column;
+  background:radial-gradient(ellipse 120% 60% at 50% 0%,#221C14 0%,#070605 65%)}
+.reglas.abierta{display:flex}
+.reglas .cabecera{flex:0 0 auto;text-align:center;
+  padding:calc(20px + env(safe-area-inset-top, 0px)) 20px 6px}
+.reglas .cuerpo{flex:1 1 auto;min-height:0;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;padding:6px 20px 18px;
+  display:flex;flex-direction:column;align-items:center}
+.reglas .pie{flex:0 0 auto;display:flex;justify-content:center;
+  padding:12px 20px calc(14px + env(safe-area-inset-bottom, 0px));
+  border-top:1px solid var(--tinta-3);background:#0D0B08}
+.reglas h1{font-size:21px;font-weight:400;letter-spacing:.04em;line-height:1.2;
+  color:var(--pergamino)}
+.reglas .sub{font-size:10.5px;color:var(--pergamino-2);max-width:320px;
+  line-height:1.4;letter-spacing:.02em;opacity:.85;margin:5px auto 0}
+.reglas .hojas{width:100%;max-width:340px}
+
+/* Cada apartado es una tira que se abre al tocarla. Cerrados, los siete
+   caben de una vez: se ve el mapa entero del juego antes de leer nada. El
+   primero va abierto para que el gesto se entienda sin explicarlo. */
+.reglas details{border-bottom:1px solid var(--tinta-3)}
+.reglas details:first-of-type{border-top:1px solid var(--tinta-3)}
+.reglas summary{list-style:none;cursor:pointer;padding:14px 26px 14px 2px;
+  position:relative;font-size:13.5px;letter-spacing:.03em;color:var(--pergamino)}
+.reglas summary::-webkit-details-marker{display:none}
+.reglas summary::after{content:"+";position:absolute;right:4px;top:50%;
+  transform:translateY(-50%);font-size:15px;color:var(--madera-viva);opacity:.7;
+  font-family:ui-monospace,Menlo,Consolas,monospace}
+.reglas details[open] summary::after{content:"–"}
+.reglas details[open] summary{color:var(--madera-viva)}
+.reglas summary:active{background:rgba(255,255,255,.02)}
+.reglas .texto{padding:0 2px 16px;font-size:13.5px;line-height:1.55;color:#DCD3BC}
+.reglas .texto p{margin-bottom:9px}
+.reglas .texto p:last-child{margin-bottom:0}
+.reglas .texto b{font-weight:400;color:var(--pergamino)}
+/* Las opciones del turno y los tipos de carta: lista con punto de madera,
+   para que se lean como opciones y no como un párrafo corrido. */
+.reglas .lista{margin:2px 0 9px}
+.reglas .lista li{list-style:none;position:relative;padding-left:15px;margin-bottom:6px}
+.reglas .lista li::before{content:"·";position:absolute;left:3px;
+  color:var(--madera-viva);font-size:17px;line-height:1.2}
+/* Lo raro, apartado: se ve que es un apunte y no una regla que haya que
+   aprenderse para jugar. */
+.reglas .apunte{font-size:11.5px;color:var(--pergamino-2);opacity:.8;
+  line-height:1.45;border-left:1px solid var(--tinta-3);padding-left:9px;margin-top:10px}
+.reglas .marcas{display:grid;grid-template-columns:auto 1fr;gap:7px 12px;
+  align-items:center;margin:4px 0}
+.reglas .marcas .m{text-align:center}
+.reglas .marcas .q{font-size:12.5px;color:#DCD3BC}
+.reglas .niv{width:16px;height:14px}
+.reglas .n0{color:var(--pergamino-2)}
+.reglas .n1{color:#7FC48A} .reglas .n2{color:#DEBC49}
+.reglas .n3{color:#E88C4C} .reglas .n4{color:#E36259}
+/* El botón de cerrar NO usa el de empezar: ese se pone verde en cuanto está
+   activo, y en este juego el verde quiere decir "adelante, empieza". Aquí no
+   se empieza nada, se vuelve, así que se queda en el marrón de siempre. */
+.reglas .cerrar-hoja{width:100%;max-width:330px;background:rgba(255,255,255,.03);
+  border:1px solid var(--madera);border-radius:6px;color:var(--pergamino);
+  font-family:inherit;font-size:16px;padding:12px}
+.reglas .cerrar-hoja:active{background:rgba(255,255,255,.09)}
+
+/* La puerta a las reglas, abajo del todo del cruce. El "margin-top:auto" es
+   lo que la empuja al fondo: el cuerpo de la portada es una columna flexible,
+   así que el hueco sobrante se lo come este bloque y el aviso del cuaderno se
+   queda pegado debajo. */
+.pie-reglas{margin-top:auto;width:100%;text-align:center}
+/* El aviso del cuaderno también empujaba hacia abajo con su propio
+   "margin-top:auto", así que el hueco libre se repartía entre los dos y las
+   reglas se quedaban colgando a media pantalla. En el cruce, el que empuja es
+   uno solo —el de las reglas— y el aviso va detrás, pegado. */
+.portada.cruce .aviso-cuaderno{margin-top:16px}
+.filete-reglas{width:112px;height:1px;margin:0 auto;
+  background:linear-gradient(90deg,transparent,var(--madera),transparent)}
+.rellenar.ver-reglas{color:var(--madera-viva);font-size:13px;opacity:.9;margin-top:10px}
+
+/* El "?" de la barra de arriba: mismo tamaño de toque que "reiniciar", pero
+   una sola letra, así que no le hacen falta ni la separación entre letras ni
+   el ancho de una palabra. */
+.barra .mini.interro{padding:3px 10px;font-size:12px;letter-spacing:0}
+
+/* ═══ LA VUELTA POR LA PANTALLA ═══════════════════════════════════════
+   Una capa por encima del tablero DE VERDAD. No se dibuja ninguna copia del
+   tablero: el agujero se hace con una sombra enorme alrededor de un recuadro
+   vacío, así que todo lo de fuera se oscurece y lo de dentro se ve tal cual,
+   moviéndose y todo si le toca moverse.
+
+   La capa entera se traga los toques a propósito: mientras está puesta no se
+   puede arrastrar una carta sin querer. */
+.visita{position:fixed;inset:0;z-index:310;display:none}
+.visita.abierta{display:block}
+/* La sombra que oscurece todo menos la zona señalada es MEDIA sombra: lo de
+   fuera tiene que seguir leyéndose. Con la sombra opaca de antes el tutorial
+   te tapaba justo lo que estaba explicando —los puntos de vida mientras
+   hablaba de la mesa, la mano mientras hablaba de los botones— y había que
+   fiarse de la memoria. */
+.hueco{position:absolute;border-radius:8px;border:1px solid rgba(201,123,62,.75);
+  box-shadow:0 0 0 9999px rgba(6,5,4,.5), 0 0 22px rgba(201,123,62,.28);
+  pointer-events:none;
+  transition:top .3s ease,left .3s ease,width .3s ease,height .3s ease}
+/* El globo es traslúcido y va desenfocando lo que tiene detrás: se lee
+   igual, pero se sigue viendo la mesa por debajo. En los navegadores que no
+   saben desenfocar queda el color de fondo, que ya es bastante oscuro. */
+.globo{position:absolute;left:14px;right:14px;max-width:330px;margin:0 auto;
+  background:rgba(14,11,8,.84);border:1px solid rgba(138,75,34,.5);
+  border-radius:6px;padding:15px 16px 13px;
+  box-shadow:0 10px 34px rgba(0,0,0,.55);
+  -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
+  transition:top .3s ease, opacity .2s ease}
+/* Y si aun así estorba, se pliega: se queda el título en una tira fina y la
+   mesa entera a la vista. Se vuelve a desplegar tocándola. */
+.globo.plegado > p, .globo.plegado .gesto, .globo.plegado .pieG{display:none}
+.globo.plegado{padding:11px 16px;opacity:.9}
+.globo .plegar{position:absolute;top:8px;right:8px;width:30px;height:30px;
+  background:transparent;border:0;color:var(--madera-viva);opacity:.7;
+  font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;line-height:1}
+.globo .plegar:active{opacity:1}
+.globo h3{padding-right:26px}
+.globo h3{display:none;font-size:13px;font-weight:400;letter-spacing:.03em;
+  color:var(--madera-viva)}
+.globo.plegado h3{display:block}
+.globo p{font-size:12.5px;line-height:1.5;color:#DCD3BC}
+.globo p + p{margin-top:6px}
+.globo .pieG{display:flex;align-items:center;gap:10px;margin-top:13px}
+.globo .puntos{display:flex;gap:5px;flex:1}
+.globo .puntos i{width:5px;height:5px;border-radius:50%;background:#3B3229}
+.globo .puntos i.on{background:var(--madera-viva)}
+.globo .sigue{font-family:inherit;border-radius:4px;font-size:13px;padding:9px 18px;
+  background:var(--madera-oscura);border:1px solid var(--madera);color:#F4E9D6}
+.globo .sigue:active{background:#7A431E}
+/* SALTAR va clavado en la esquina de la pantalla, no colgando del globo: el
+   globo cambia de sitio en cada parada y el botón acababa cayendo encima del
+   tablero, justo donde no se lee. Aquí está siempre donde se le busca. */
+.visita .saltar{position:fixed;top:calc(9px + env(safe-area-inset-top, 0px));right:10px;
+  background:rgba(16,13,9,.92);border:1px solid var(--tinta-3);border-radius:4px;
+  color:var(--pergamino-2);font-family:ui-monospace,Menlo,Consolas,monospace;
+  font-size:10px;letter-spacing:.14em;padding:7px 11px}
+
+/* El gesto de jugar una carta, dibujado dentro del globo: una carta que sube
+   con el dedo encima. Vale más que tres líneas de explicación, porque el
+   arrastre es lo único de esta pantalla que no se adivina mirándola. */
+.gesto{height:56px;position:relative;margin:9px 0 2px}
+.gesto span{position:absolute;left:50%;animation:subeCarta 2.1s ease-in-out infinite}
+.gesto .c{bottom:0;width:26px;height:37px;margin-left:-13px;border-radius:3px;
+  background:linear-gradient(150deg,#D9C79B,#A98A55);border:1px solid var(--madera)}
+.gesto .dedo{bottom:6px;width:11px;height:11px;margin-left:-5px;border-radius:50%;
+  background:rgba(239,231,210,.85)}
+@keyframes subeCarta{
+  0%,12%{transform:translateY(0);opacity:1}
+  55%{transform:translateY(-30px);opacity:1}
+  75%{transform:translateY(-34px);opacity:0}
+  100%{transform:translateY(0);opacity:0}
+}
+
+/* ═══ LA HOJA DE CARTAS ═══════════════════════════════════════════════
+   Los cuatro nombres arriba, en una fila de cuatro tiras: con el nombre
+   largo se parten y con el corto caben justos. */
+.reglas .luchadores{display:flex;gap:5px;margin:13px 0 2px;justify-content:center}
+.reglas .luchadores button{flex:1 1 0;min-width:0;font-family:inherit;
+  background:var(--tinta-2);border:1px solid var(--tinta-3);border-radius:4px;
+  color:var(--pergamino-2);font-size:12px;padding:9px 4px;letter-spacing:.02em}
+.reglas .luchadores button.puesto{border-color:var(--madera);
+  color:var(--madera-viva);background:rgba(138,75,34,.12)}
+.reglas h2{font-size:10px;font-weight:400;letter-spacing:.14em;
+  text-transform:uppercase;color:#C4B79A;opacity:.8;margin:20px 0 2px;
+  display:flex;align-items:center;gap:7px}
+.reglas h2:first-child{margin-top:10px}
+.reglas h2 .filo{flex:1;height:1px;background:var(--tinta-3)}
+/* La foto pequeña a la izquierda y el texto a la derecha. La carta entera con
+   su texto dentro no se lee en un móvil estrecho, y a dos columnas tampoco:
+   así cabe todo y la lista se recorre de un vistazo. */
+.reglas .fila-carta{display:flex;gap:11px;align-items:flex-start;width:100%;
+  text-align:left;font:inherit;color:inherit;background:none;border:0;
+  border-bottom:1px solid rgba(36,29,21,.7);padding:11px 2px}
+.reglas .fila-carta:active{background:rgba(255,255,255,.02)}
+.reglas .tacon{flex:0 0 auto;width:44px;height:62px;border-radius:3px;
+  background:var(--papel);border:1px solid var(--madera);overflow:hidden;
+  display:flex;align-items:center;justify-content:center;color:var(--madera-oscura);
+  box-shadow:0 1px 4px rgba(0,0,0,.5)}
+.reglas .tacon .foto{display:block;width:100%;height:100%}
+.reglas .tacon svg{width:34px;height:34px}
+.reglas .lado{flex:1;min-width:0}
+.reglas .lado > span{display:block}
+.reglas .lado .nom{font-size:13.5px;display:flex;align-items:baseline;gap:6px}
+.reglas .lado .cuantas{font-size:9.5px;color:var(--madera-viva);
+  letter-spacing:.06em;flex:0 0 auto}
+.reglas .lado .cual{font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--pergamino-2);opacity:.7;margin-top:2px}
+.reglas .lado .dice{font-size:11.5px;line-height:1.4;color:#DCD3BC;margin-top:4px}
+.reglas .cuenta{text-align:center;font-size:10px;letter-spacing:.08em;
+  color:var(--pergamino-2);opacity:.6;margin:18px 0 4px}
+/* La carta ampliada es la de la mesa, y la mesa está por debajo de esta hoja:
+   sin esto se abría detrás y no se veía. */
+body.enReglas .lupa{z-index:340}
+
+/* LAS DOS PUERTAS. Recuadros grandes, con el nombre y una línea de qué hay
+   detrás: la elección se hace una vez y conviene que se entienda sin entrar
+   a probar las dos. */
+.reglas .puertas{width:100%;max-width:340px;display:flex;flex-direction:column;
+  gap:12px;margin-top:14px}
+.reglas .puerta{display:block;width:100%;text-align:left;font-family:inherit;
+  background:rgba(255,255,255,.03);border:1px solid var(--madera);
+  border-radius:6px;color:var(--pergamino);padding:15px 16px}
+.reglas .puerta:active{background:rgba(201,123,62,.14)}
+.reglas .puerta b{display:block;font-weight:400;font-size:16px;
+  color:var(--madera-viva);letter-spacing:.03em;margin-bottom:5px}
+.reglas .puerta small{display:block;font-size:11.5px;line-height:1.45;
+  color:#DCD3BC;opacity:.85}
+
+/* LA ÚLTIMA ENTRADA DE LA LISTA. Va igual que los apartados —misma altura,
+   mismo filete debajo, misma letra— para que se lea como una más y no como
+   un botón pegado al final. La única diferencia es la flecha en vez del "+":
+   las otras se abren aquí, esta lleva a otro sitio. */
+.reglas .ir-visita{display:block;width:100%;text-align:left;position:relative;
+  background:transparent;border:0;border-bottom:1px solid var(--tinta-3);
+  color:var(--pergamino);font-family:inherit;font-size:13.5px;letter-spacing:.03em;
+  padding:14px 26px 14px 2px}
+.reglas .ir-visita .flecha{position:absolute;right:2px;top:50%;
+  transform:translateY(-50%);font-size:17px;color:var(--madera-viva);opacity:.8}
+.reglas .ir-visita:active{background:rgba(255,255,255,.02)}
+/* Sin combate delante no lleva a ninguna parte, y eso se dice apagándola:
+   se sigue leyendo, pero se ve que ahora mismo no se puede tocar. */
+.reglas .ir-visita.apagada{color:var(--pergamino-2);opacity:.5}
+.reglas .ir-visita.apagada .flecha{opacity:.35}
+.reglas .ir-visita.apagada:active{background:transparent}
+.reglas #pieVisita .apunte{margin-top:11px}
+
+/* ═══ EL GLOBO DE LA PARTIDA DE PRUEBA ════════════════════════════════
+   Cuando hay algo que hacer, la capa deja pasar los dedos y solo el globo
+   los recoge: si los parara, no se podría arrastrar la carta que se pide. */
+/* El botón que la parada pide tocar se marca con el MISMO aro azul que lleva
+   la carta elegida en el juego. Ese azul ya quiere decir "esto es lo tuyo,
+   tócalo"; inventar otra señal para lo mismo sería enseñar dos idiomas. */
+.accion.senalado{box-shadow:0 0 0 2px var(--baya),0 4px 12px rgba(90,95,224,.45);
+  border-color:var(--baya)}
+.visita.pasa{pointer-events:none}
+.visita.pasa .globo, .visita.pasa .saltar{pointer-events:auto}
+.globo .tetoca{font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--madera-viva);opacity:.8;padding:9px 2px}
+/* Treinta y pico paradas no caben como puntos ni encogiéndolos, y en dos
+   filas parecían un sarpullido. Una barrita fina dice lo mismo —por dónde
+   vas— sin pedir que la mires. */
+.globo .barra-paso{flex:1;height:2px;background:#3B3229;border-radius:2px;overflow:hidden}
+.globo .barra-paso i{display:block;height:100%;background:var(--madera-viva);
+  transition:width .3s ease}
+/* El botón de salir se pone justo donde estaban "?" y "reiniciar", que
+   durante la prueba se quitan de en medio: ni se cambia de dificultad ni se
+   reinicia a mitad de tutorial. */
+body.enPrueba #ayuda, body.enPrueba #reiniciar, body.enPrueba #dif{display:none}
+/* La carta ampliada tiene que salir POR ENCIMA del cartel: el cartel dice que
+   mantengas el dedo para verla, y se abría por debajo. */
+body.enPrueba .lupa{z-index:330}
+/* Un parpadeo cuando se toca lo que no toca. Ni regaña ni bloquea: solo
+   devuelve la vista al globo, que es donde pone qué hay que hacer. */
+.globo.nope{animation:globoNo .45s ease}
+@keyframes globoNo{
+  0%,100%{border-color:var(--tinta-3)}
+  25%,75%{border-color:var(--madera-viva);box-shadow:0 0 18px rgba(201,123,62,.4)}
+}
 </style>
 </head>
 <body>
@@ -1726,6 +2179,7 @@ details.registro{border-top:1px solid var(--tinta-3);padding-top:6px}
 <div class="barra">
   <span id="titulo-barra">Sombras sobre Isla Negra</span>
   <span class="dif mono" id="dif"></span>
+  <button class="mini mono interro" id="ayuda" aria-label="Cómo se juega">?</button>
   <button class="mini mono" id="reiniciar">reiniciar</button>
 </div>
 
@@ -1755,6 +2209,12 @@ details.registro{border-top:1px solid var(--tinta-3);padding-top:6px}
 <div class="lupa" id="lupa"></div>
 <div class="cartel" id="cartel"></div>
 <div class="portada" id="portada"></div>
+<!-- Cómo se juega. Fuera de la portada y fuera de la mesa: se abre desde el
+     cruce del principio y desde el "?" de la barra, sin tocar la partida. -->
+<div class="reglas" id="reglas"></div>
+<!-- La vuelta por la pantalla. Se pone por encima del tablero de verdad y no
+     dibuja ninguna copia de nada: ver "LA VUELTA POR LA PANTALLA". -->
+<div class="visita" id="visita"></div>
 
 <!-- La biblioteca del buzón (MQTT.js 5.15.2, licencia MIT). Va dentro del
      archivo a propósito: así el juego online no depende de descargar nada
@@ -2591,6 +3051,8 @@ function prepararAsalto(a){
   do { barajar(a.mazo); }
   while(defCarta(a.mazo[a.mazo.length - 1]).tipo === "mejora");
   robar(a, REGLAS.manoInicial);
+  // La partida de prueba tira lo repartido y pone sus cartas colocadas.
+  if(TUTO.activo) tutoPrepararAsalto(a);
 }
 
 function reciclarMazo(a){
@@ -2834,6 +3296,7 @@ function hayQuienCubra(p, yo){
    responder o encajar cuando le vuelve el turno. */
 function pedirAyuda(){
   if(pasaPorLaRed("ayuda", asientoLocal(), 0)) return;
+  if(!tutoPermite("ayuda")) return;
   const p = ESTADO.pendiente;
   if(!p || !p.cola || !p.cola.length || p.pidioAyuda) return;
   p.pidioAyuda = true;
@@ -2865,6 +3328,7 @@ function pedirAyuda(){
    se pasa al siguiente de la fila. */
 function rechazarRespuesta(){
   if(pasaPorLaRed("encajar", asientoLocal(), 0)) return;
+  if(!tutoPermite("encajar")) return;
   const p = ESTADO.pendiente;
   if(!p) return;
   p.decidido = true;              // lo ha decidido una persona, no hay que esperar
@@ -2875,6 +3339,7 @@ function rechazarRespuesta(){
 function usarRespuesta(indiceAsiento, indiceMano){
   if(pasaPorLaRed("responder", indiceAsiento, indiceMano)) return;
   const a = ESTADO.asientos[indiceAsiento];
+  if(a.controlador !== "ia" && !tutoPermite("responder", a.mano[indiceMano])) return;
   const p = ESTADO.pendiente;
   // Red de seguridad: si el ataque ya no existe (la partida se reinició por
   // en medio, por ejemplo), no hay nada a lo que responder.
@@ -3489,6 +3954,8 @@ function siguienteAsalto(){
   descongelarMesa();        // la mesa del asalto anterior ya no manda
   vaciarRodillo();          // rodillo limpio en cada asalto
   ESTADO.asalto++;
+  // En la partida de prueba el guion cuenta con que empiezas tú siempre.
+  if(TUTO.activo){ ESTADO.iniciativa = 0; ESTADO.puntero = 0; }
   olvidarMano();
   // Mientras se anuncia la ronda nadie puede jugar: "anuncio" no es turno de
   // nadie. Al terminar el rótulo, empezarTurno pone la partida en marcha.
@@ -3502,6 +3969,7 @@ function siguienteAsalto(){
 function accionJugarCarta(indiceAsiento, indiceMano){
   if(pasaPorLaRed("jugar", indiceAsiento, indiceMano)) return;
   const a = ESTADO.asientos[indiceAsiento];
+  if(a.controlador !== "ia" && !tutoPermite("jugar", a.mano[indiceMano])) return;
   const c = defCarta(a.mano[indiceMano]);
   // Ojo con los pintar() de aquí: los ataques ya se pintan dentro de
   // pedirRespuesta, pero las Mejoras y las tácticas no pasaban por ningún
@@ -3582,6 +4050,7 @@ function elegirObjetivo(k){
   // carta tiene que seguir en la mano. Así, un toque en una ficha nunca
   // puede lanzar un golpe que ya no existe.
   if(!ap || ESTADO.fase !== "apuntando") return;
+  if(!tutoPermite("objetivo", k)) return;
   if(!ESTADO.asientos[ap.asiento] || !ESTADO.asientos[ap.asiento].mano[ap.indiceMano]) return;
   if(pasaPorLaRed("apuntar", ap.asiento, k)) return;
   if(rivalesDe(ap.asiento).indexOf(k) === -1) return;
@@ -3604,6 +4073,8 @@ function rematarConObjetivo(indiceAsiento, indiceMano, objetivo, tras){
 
 function accionDescartarMano(indiceAsiento){
   if(pasaPorLaRed("descartar", indiceAsiento, 0)) return;
+  if(ESTADO.asientos[indiceAsiento].controlador !== "ia"
+     && !tutoPermite("descartar")) return;
   sonar("barajar");
   const a = ESTADO.asientos[indiceAsiento];
   const n = a.mano.length;
@@ -3627,12 +4098,21 @@ function accionDescartarMano(indiceAsiento){
 
 function noJugarNada(indiceAsiento){
   if(pasaPorLaRed("nada", indiceAsiento, 0)) return;
+  /* En la partida de prueba, "no jugar nada" es la otra salida de la carta
+     que regala una respuesta. Si se dejara abierta, el guion se quedaría
+     esperando para siempre una carta que ya no se va a jugar. */
+  if(TUTO.activo && ESTADO.asientos[indiceAsiento].controlador !== "ia"){
+    const e = tutoEscena();
+    if(e && e.pide && e.pide.trasRespuesta){ tutoNo(); return; }
+  }
   ESTADO.quienJuegaTras = null;
   terminarResolucion(true);
 }
 
 function accionCeder(indiceAsiento){
   if(pasaPorLaRed("ceder", indiceAsiento, 0)) return;
+  if(ESTADO.asientos[indiceAsiento].controlador !== "ia"
+     && !tutoPermite("ceder")) return;
   anotar(ESTADO.asientos[indiceAsiento].nombre + " cede la iniciativa.");
   evento(indiceAsiento, "iniciativa cedida", "sin jugar nada");
   soltarTurnoTrasAviso();
@@ -3656,6 +4136,7 @@ function soltarTurnoTrasAviso(){
 function accionJugarTrasRespuesta(indiceAsiento, indiceMano){
   if(pasaPorLaRed("trasResp", indiceAsiento, indiceMano)) return;
   const a = ESTADO.asientos[indiceAsiento];
+  if(a.controlador !== "ia" && !tutoPermite("trasResp", a.mano[indiceMano])) return;
   // La IA decide con retraso: si para cuando llega la orden esa carta ya no
   // está en la mano, se deja pasar en vez de romper la partida.
   if(!a.mano[indiceMano]){ ESTADO.quienJuegaTras = null; terminarResolucion(); return; }
@@ -4410,6 +4891,10 @@ function enemigoPrincipal(i){
 }
 
 function mejorObjetivo(i, c, D){
+  // En la partida de prueba, el objetivo lo manda el guion (ver tutoTurnoNori).
+  if(TUTO.activo && TUTO.objetivoIA !== null && TUTO.objetivoIA !== undefined){
+    const o = TUTO.objetivoIA; TUTO.objetivoIA = null; return o;
+  }
   sembrarIA();   // el mismo número en todas las pantallas
   const a = ESTADO.asientos[i];
   let mejor = null, mejorV = -Infinity;
@@ -4439,6 +4924,10 @@ function iaTurno(indiceAsiento){
   // aparecería de golpe cortando la animación.
   if(ESTADO.recogiendo){ tarde(lento(450), () => iaTurno(indiceAsiento)); return; }
 
+  if(TUTO.activo){
+    if(tutoFrena()){ TUTO.frenado = indiceAsiento; return; }
+    return tutoTurnoNori(indiceAsiento);
+  }
   const a = ESTADO.asientos[indiceAsiento];
   const r = enemigoPrincipal(indiceAsiento);
   const D = nivelIA(a);
@@ -4578,6 +5067,7 @@ function rentaRespuesta(x, p, victima, D, ap){
 }
 
 function iaElegirRespuesta(a, pendiente, opciones){
+  if(TUTO.activo) return tutoRespuestaNori(a, pendiente, opciones);
   sembrarIA();   // el mismo número en todas las pantallas
   const D = nivelIA(a);
   /* Quien se lleva el golpe puede ser ella o un compañero de bando. Antes se
@@ -4676,6 +5166,7 @@ function iaElegirRespuesta(a, pendiente, opciones){
    "piensan" la eligen con la misma cabeza que el turno entero; el de
    Entrenamiento se conforma con lo primero medio razonable. */
 function iaJugarTrasRespuesta(indiceAsiento){
+  if(TUTO.activo) return noJugarNada(indiceAsiento);
   /* CUANDO DECIDE NO JUGAR NADA, TAMBIÉN HAY QUE DECIRLO. Antes esta función
      se guardaba sus "pues nada" para sí misma: llamaba directamente a
      terminarResolucion, que no pasa por la red. En una mesa en red eso
@@ -6155,10 +6646,14 @@ function pintarAcciones(){
   const cont = document.getElementById("acciones");
   cont.innerHTML = "";
   const m = modoActual();
-  const boton = (t, f, p) => {
+  /* El cuarto argumento es el nombre del botón. No lo usa el juego: lo usa la
+     partida de prueba para poder iluminar UN botón y no los dos. */
+  const boton = (t, f, p, id) => {
     const b = document.createElement("button");
     b.className = "accion" + (p ? " principal" : "");
-    b.textContent = t; b.onclick = f; cont.appendChild(b);
+    b.textContent = t; b.onclick = f;
+    if(id) b.id = id;
+    cont.appendChild(b);
   };
   const mando = !RED.activa || RED.papel === "anfitrion";
   if(ESTADO.pausa){
@@ -6181,8 +6676,10 @@ function pintarAcciones(){
   }
   else if(m === "apuntando")     boton("Cancelar", cancelarObjetivo);
   else if(m === "miTurno"){
-    boton("Descartar mano y coger 5", () => accionDescartarMano(asientoLocal()));
-    boton("Ceder la iniciativa", () => accionCeder(asientoLocal()));
+    boton("Descartar mano y coger 5", () => accionDescartarMano(asientoLocal()),
+          false, "botDescartar");
+    boton("Ceder la iniciativa", () => accionCeder(asientoLocal()),
+          false, "botCeder");
   }
   else if(m === "respondiendo"){
     const p = ESTADO.pendiente;
@@ -6191,8 +6688,9 @@ function pintarAcciones(){
     // Al atacado se le ofrece preguntar a la mesa, pero solo si hay alguien
     // que de verdad pueda cubrirle y no lo ha pedido ya.
     if(!ajeno && p && !p.pidioAyuda && hayQuienCubra(p, yo))
-      boton("¿Alguien me cubre?", pedirAyuda);
-    boton(ajeno ? "No me meto" : "Encajar el golpe", () => rechazarRespuesta(), true);
+      boton("¿Alguien me cubre?", pedirAyuda, false, "botAyuda");
+    boton(ajeno ? "No me meto" : "Encajar el golpe", () => rechazarRespuesta(),
+          true, "botEncajar");
   }
   else if(m === "trasRespuesta")  boton("No jugar nada", () => noJugarNada(asientoLocal()));
 }
@@ -6271,6 +6769,10 @@ function mesaLibre(){
 }
 
 function anunciarAsalto(seguir){
+  /* En la partida de prueba no hay rótulo de asalto. Aquí no se viene a
+     pelear, se viene a que te expliquen: dos carteles a pantalla completa
+     antes de la primera parada solo hacen esperar. */
+  if(TUTO.activo){ seguir(); return; }
   const n = ESTADO.asalto;
   // Con 2 asaltos para ganar, el tercero es siempre el que decide.
   const ultimo = n >= REGLAS.asaltosParaGanar * 2 - 1;
@@ -6824,6 +7326,7 @@ function pintar(){
     if(d) d.style.visibility = "hidden";
   }
   vigilarLupa();
+  tutoRevisar();          // el globo de la partida de prueba, si está puesta
   /* La zona de juego se rehace entera en cada repintado y se lleva por delante
      lo que le hayamos colgado. El botón se repone aquí: si ya está, la función
      no hace nada, así que no cuesta nada llamarla siempre. */
@@ -7107,7 +7610,7 @@ function vigilarLupa(){
    aqui, se pinta en la portada y se manda por la red al entrar en una sala.
    Al sacar version nueva se cambia esta linea y ya esta: el titulo de la
    pestana se pone solo. */
-const VERSION = "2.0.1";
+const VERSION = "2.0.2";
 /* El número vive AQUÍ y en ningún sitio más. Escribirlo también en el título
    a mano ya se quedó descolgado una vez: la página decía 1.4 con el juego en
    la 1.5, que es justo la confusión que el sello viene a evitar. */
@@ -7361,15 +7864,263 @@ document.addEventListener("click", e => {
 });
 
 document.addEventListener("click", e => {
-  if(e.target.closest("#historial") || e.target.closest(".portada")) return;
+  if(e.target.closest("#historial") || e.target.closest(".portada") ||
+     e.target.closest("#reglas") || e.target.closest("#visita")) return;
   if(e.target.closest(".direccion")){
     // segundo toque en el rodillo: se cierra
     if(document.getElementById("historial")) cerrarHistorial();
     else abrirHistorial();
+    // El cartel de la partida de prueba se aparta solo si el rodillo se abre
+    // debajo: si no, tapa justo lo que acaba de decir que se puede abrir.
+    if(TUTO.activo) tutoRevisar();
     return;
   }
   cerrarHistorial();          // tocar en cualquier otro sitio también lo cierra
 });
+
+/* ═══ CÓMO SE JUEGA ════════════════════════════════════════════════════
+   Las reglas del juego de cartón, apretadas para un móvil. Cada apartado es
+   una tira que se abre al tocarla; el primero viene abierto para que se
+   entienda el gesto. Lo raro va al final de cada apartado, en gris, como
+   apunte: hay que tenerlo escrito, pero no hay que aprendérselo para jugar.
+
+   El texto vive aquí, en una lista, y no repartido por el código: se cambia
+   una regla y se cambia en un sitio. */
+const HOJAS_REGLAS = [
+  { titulo:"El objetivo", cuerpo:
+    '<p>Cada luchador empieza el asalto con <b>22 puntos de vida</b>.</p>' +
+    '<p>Quien deja a su rival a cero gana el asalto. Gana el combate el ' +
+    'primero que gane <b>dos asaltos</b>.</p>' },
+
+  { titulo:"Tu turno", cuerpo:
+    '<p>Cuando te toca, lo primero es <b>coger una carta</b> de tu mazo. ' +
+    'Después haces una sola de estas tres cosas:</p>' +
+    '<ul class="lista">' +
+      '<li><b>Jugar una carta</b> de tu mano. Si es un golpe, señalas a ' +
+      'quién atacas.</li>' +
+      '<li><b>Descartar toda la mano</b> y coger cinco nuevas. Ese turno ya ' +
+      'no juegas nada más.</li>' +
+      '<li><b>Ceder</b> sin hacer nada.</li>' +
+    '</ul>' +
+    '<p>Y el turno pasa al siguiente.</p>' +
+    '<p class="apunte">Si tu mazo se queda sin cartas, se baraja la pila de ' +
+    'técnicas usadas y vuelve a ser tu mazo. En la mano no puedes tener más ' +
+    'de trece cartas.</p>' },
+
+  { titulo:"Subir de nivel", cuerpo:
+    '<p>Todos empiezan siendo <b>Básicos</b>. Tu mazo trae cuatro cartas de ' +
+    'mejora: pones una en la mesa y, al poner la segunda, subes de nivel y ' +
+    'las dos se descartan.</p>' +
+    '<p>Puedes usar las cartas de tu nivel <b>y las de todos los ' +
+    'anteriores</b>. Un Básico solo puede jugar cartas básicas; un Experto ' +
+    'juega básicas, avanzadas y expertas.</p>' +
+    '<p class="apunte">Al llegar a <b>Maestro</b> las mejoras ya no se ' +
+    'descartan: se quedan en la mesa y cada técnica maestra gasta una. Sin ' +
+    'ninguna en la mesa sigues siendo Maestro, pero no puedes usar técnicas ' +
+    'maestras hasta que pongas otra.</p>' },
+
+  { titulo:"Golpes y respuestas", cuerpo:
+    '<p>Cuando alguien ataca, el atacado —o cualquier otro— puede frenarlo ' +
+    'con una <b>carta de respuesta</b>, siempre que su nivel se lo permita: ' +
+    'no se puede responder a una técnica más alta que tu nivel.</p>' +
+    '<p>Una respuesta también se puede responder. Así se encadenan, hasta ' +
+    'que alguien no tiene con qué seguir.</p>' +
+    '<p>Algunas respuestas, además de evitar el daño, te dejan <b>jugar otra ' +
+    'carta</b> ahí mismo. Otras devuelven el golpe.</p>' +
+    '<p class="apunte">Por bandos, solo respondes cuando atacan a alguien de ' +
+    'tu bando. Todos contra todos, puede responder cualquiera, aunque el ' +
+    'golpe no fuera para él.</p>' },
+
+  { titulo:"Los cuatro tipos de carta", cuerpo:
+    '<ul class="lista">' +
+      '<li><b>Ataque.</b> Empieza un golpe.</li>' +
+      '<li><b>Respuesta.</b> Frena un golpe o una respuesta.</li>' +
+      '<li><b>Táctica.</b> Coger cartas, ganar ventaja, estorbar al rival.</li>' +
+      '<li><b>Mejora.</b> Sube de nivel.</li>' +
+    '</ul>' +
+    '<p class="apunte">Toda carta lleva escrito lo que hace. Deja el dedo ' +
+    'encima de una carta de tu mano para verla de cerca.</p>' },
+
+  { titulo:"Las marcas de nivel", cuerpo:
+    '<p>En la esquina de cada carta, estos trazos dicen a partir de qué ' +
+    'nivel se puede usar:</p>' +
+    '<div class="marcas">' +
+      marcaRegla(1, "Básica") +
+      marcaRegla(2, "Avanzada") +
+      marcaRegla(3, "Experta") +
+      marcaRegla(4, "Maestra · gasta una mejora") +
+    '</div>' },
+
+  { titulo:"Formas de jugar", cuerpo:
+    '<ul class="lista">' +
+      '<li><b>Duelo.</b> Dos luchadores, uno contra otro.</li>' +
+      '<li><b>Todos contra todos.</b> Tres o cuatro, cada uno a lo suyo. ' +
+      'Gana el último en pie.</li>' +
+      '<li><b>Por bandos.</b> Cuatro, dos contra dos, sentados alternos.</li>' +
+    '</ul>' }
+];
+
+// Una fila del glosario: los mismos trazos que llevan las cartas de verdad,
+// dibujados por la misma función, así que no pueden desincronizarse.
+function marcaRegla(n, que){
+  return '<span class="m n' + n + '">' + svgNivel(n) + '</span>' +
+         '<span class="q">' + que + '</span>';
+}
+
+/* ═══ DOS PUERTAS, NO UNA LISTA LARGA ═══════════════════════════════════
+   "Cómo se juega" son dos cosas distintas y se aprenden de dos maneras: una
+   se juega y la otra se lee. Metidas en la misma lista, el tutorial quedaba
+   como el octavo apartado de un índice, que es donde no lo busca nadie. Así
+   que primero se elige, y después se entra. */
+function abrirReglas(){
+  REGLAS_VISTA = "puertas";
+  document.body.classList.add("enReglas");
+  dibujarReglas();
+}
+
+let REGLAS_VISTA = "puertas";
+
+function dibujarReglas(){
+  if(REGLAS_VISTA === "puertas") return reglasPuertas();
+  if(REGLAS_VISTA === "cartas")  return reglasCartas();
+  return reglasInstrucciones();
+}
+
+function reglasPuertas(){
+  const r = document.getElementById("reglas");
+  r.innerHTML =
+    '<div class="cabecera"><h1>Cómo se juega</h1>' +
+      '<p class="sub">Se puede aprender jugando o leyendo. Tú mismo.</p></div>' +
+    '<div class="cuerpo"><div class="puertas">' +
+      '<button class="puerta" id="puertaTuto"><b>Tutorial</b>' +
+        '<small>Una partida de prueba contra la máquina, guiada carta a ' +
+        'carta. Se aprende a jugar y de paso te aprendes la pantalla. Unos ' +
+        'minutos, y se puede dejar a medias.</small></button>' +
+      '<button class="puerta" id="puertaTexto"><b>Instrucciones</b>' +
+        '<small>Las reglas escritas, por apartados: el objetivo, el turno, ' +
+        'subir de nivel, los golpes y las respuestas, las marcas de las ' +
+        'cartas y las formas de jugar.</small></button>' +
+    '</div></div>' +
+    '<div class="pie"><button class="cerrar-hoja" id="cerrarReglas">Volver</button></div>';
+  r.classList.add("abierta");
+  r.querySelector("#cerrarReglas").onclick = cerrarReglas;
+  r.querySelector("#puertaTexto").onclick = () => {
+    REGLAS_VISTA = "texto"; dibujarReglas();
+  };
+  r.querySelector("#puertaTuto").onclick = () => {
+    /* La partida de prueba se monta ella sola su combate, así que se puede
+       empezar desde cualquier sitio. Lo único que se avisa es que se lleva
+       por delante el combate que estuvieras jugando. */
+    if(hayTablero() && !confirm("Se empieza la partida de prueba y se pierde " +
+       "el combate que tienes a medias. ¿Seguimos?")) return;
+    abrirTutorial();
+  };
+}
+
+/* ═══ LAS CARTAS ══════════════════════════════════════════════════════
+   Los cuatro mazos, técnica a técnica, con su foto, su texto y cuántas
+   copias lleva el mazo.
+
+   No hay ni un dato escrito aquí: todo sale de la tabla de cartas del propio
+   juego, la misma que reparte y resuelve. Si mañana cambias el daño de una
+   Patada, esta pantalla lo dice sin que nadie la toque. Y las caras son las
+   mismas que se ven en la mesa, dibujadas por la misma función, así que no
+   pueden acabar enseñando una carta distinta de la que se juega.
+
+   Cada técnica sale UNA vez, con un "×3" al lado. Repetirla tres veces sería
+   más fiel al mazo de cartón, pero se lee peor y esconde lo que de verdad
+   interesa: cuántas copias hay, que es media estrategia del juego. */
+let CARTAS_MAZO = "roku";
+
+function reglasCartas(){
+  const r = document.getElementById("reglas");
+  const tecnicas = CARTAS.filter(c => c.mazo === CARTAS_MAZO && c.tipo !== "personaje");
+  const copias = tecnicas.reduce((n, c) => n + c.copias, 0);
+  const TITULO = ["Mejoras", "Básicas", "Avanzadas", "Expertas", "Maestras"];
+
+  let lista = "";
+  for(let n = 0; n <= 4; n++){
+    const grupo = tecnicas.filter(c => c.nivel === n);
+    if(!grupo.length) continue;
+    lista += '<h2><span class="n' + n + '">' + svgNivel(n) + '</span>' +
+             TITULO[n] + '<span class="filo"></span></h2>';
+    lista += grupo.map(c => {
+      const foto = estiloFoto(c.id);
+      return '<button class="fila-carta" data-carta="' + c.id + '">' +
+        '<span class="tacon">' + (foto ? '<span class="foto" style="' + foto + '"></span>'
+                                       : svgReserva(c.arte)) + '</span>' +
+        '<span class="lado">' +
+          '<span class="nom">' + c.nombre +
+            '<span class="cuantas mono">×' + c.copias + '</span></span>' +
+          '<span class="cual mono">' + c.tipo + '</span>' +
+          '<span class="dice">' + (c.texto || resumenEfecto(c)) + '</span>' +
+        '</span></button>';
+    }).join("");
+  }
+
+  r.innerHTML =
+    '<div class="cabecera"><h1>Las cartas</h1>' +
+      '<p class="sub">Toca una carta para verla entera.</p>' +
+      '<div class="luchadores">' +
+        MAZOS.map(m => '<button data-mazo="' + m.id + '"' +
+          (m.id === CARTAS_MAZO ? ' class="puesto"' : '') + '>' + m.corto +
+          '</button>').join("") +
+      '</div></div>' +
+    '<div class="cuerpo"><div class="hojas">' + lista +
+      '<p class="cuenta mono">' + (copias + 1) + ' cartas en el mazo · ' +
+      tecnicas.length + ' técnicas distintas y la de personaje</p>' +
+    '</div></div>' +
+    '<div class="pie"><button class="cerrar-hoja" id="cerrarReglas">Volver</button></div>';
+  r.classList.add("abierta");
+  r.querySelector("#cerrarReglas").onclick = () => {
+    REGLAS_VISTA = "texto"; dibujarReglas();
+  };
+  r.querySelectorAll("[data-mazo]").forEach(b => b.onclick = () => {
+    CARTAS_MAZO = b.dataset.mazo; reglasCartas();
+  });
+  // La carta grande es la MISMA lupa de la mesa, con su foto y su cita.
+  r.querySelectorAll("[data-carta]").forEach(b => b.onclick = () => {
+    abrirLupa(b.dataset.carta, null, false);
+  });
+}
+
+function reglasInstrucciones(){
+  const r = document.getElementById("reglas");
+  r.innerHTML =
+    '<div class="cabecera"><h1>Cómo se juega</h1>' +
+      '<p class="sub">Toca cada apartado para abrirlo.</p></div>' +
+    '<div class="cuerpo"><div class="hojas">' +
+      HOJAS_REGLAS.map(h =>
+        '<details>' +
+          '<summary>' + h.titulo + '</summary>' +
+          '<div class="texto">' + h.cuerpo + '</div>' +
+        '</details>').join("") +
+      /* La última entrada no se abre para leerla: lleva a otra pantalla. Por
+         eso va con flecha en vez del "+" de las demás, y por eso está pegada
+         a ellas: consultar una carta es parte de leerse las reglas. */
+      '<button class="ir-visita" id="verCartas">Las cartas' +
+        '<span class="flecha">›</span></button>' +
+    '</div></div>' +
+    '<div class="pie"><button class="cerrar-hoja" id="cerrarReglas">Volver</button></div>';
+  r.classList.add("abierta");
+  // "Volver" desde las instrucciones vuelve a la elección, no a la partida:
+  // así se puede pasar de leer a jugar sin salir y entrar otra vez.
+  r.querySelector("#cerrarReglas").onclick = () => {
+    REGLAS_VISTA = "puertas"; dibujarReglas();
+  };
+  r.querySelector("#verCartas").onclick = () => {
+    REGLAS_VISTA = "cartas"; dibujarReglas();
+  };
+}
+
+function cerrarReglas(){
+  REGLAS_VISTA = "puertas";        // la próxima vez se vuelve a elegir
+  document.body.classList.remove("enReglas");
+  cerrarLupa();
+  const r = document.getElementById("reglas");
+  r.classList.remove("abierta");
+  r.innerHTML = "";              // no deja nada abierto para la próxima vez
+}
 
 /* ═══ EL CRUCE DE TRES CAMINOS ═════════════════════════════════════════
    La primera decisión de verdad, y hasta ahora estaba escondida: para jugar
@@ -7394,7 +8145,16 @@ function pasoCamino(){
        puerta: uno monta la sala y el otro entra en ella. Al fondo de la
        pantalla parecía otra cosa distinta. */
     '<button class="rellenar mono bajo-online" data-camino="codigo">tengo un código</button>' +
-    '</div></div>' +
+    '</div>' +
+    '</div>' +
+    /* Las reglas van abajo del todo, no colgando de los tres caminos: no son
+       otra forma de jugar, son lo que se lee antes de jugar. Pegadas a los
+       botones parecían una cuarta opción de la lista y le robaban el sitio;
+       al fondo de la pantalla, con su filete, se leen como lo que son. */
+    '<div class="pie-reglas">' +
+      '<div class="filete-reglas"></div>' +
+      '<button class="rellenar mono ver-reglas" data-reglas="1">Cómo se juega</button>' +
+    '</div>' +
     /* El aviso vive AQUÍ, en la primera pantalla, y no dentro de preparar ni
        de la sala: allí se metía entre las opciones y con cuatro luchadores y
        todo desplegado acababa solapándose. Aquí abajo del todo no le quita
@@ -7407,6 +8167,7 @@ function pasoCamino(){
     '<p class="sub lema-cruce">un juego de lucha con cartas</p>' +
     '<p class="sub sello">v' + VERSION + '</p>');
   p.classList.add("cruce");
+  p.querySelector("[data-reglas]").onclick = abrirReglas;
   p.querySelectorAll("[data-camino]").forEach(b => b.onclick = () => {
     const c = b.dataset.camino;
     /* ═══ SIEMPRE DE CERO ══════════════════════════════════════════════
@@ -7606,6 +8367,593 @@ function pasoPreparar(){
   };
 }
 
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ZONA 9: LA PARTIDA DE PRUEBA
+   -----------------------------------------------------------------------
+   Un combate de verdad —el motor entero, sin trampa ninguna— con los mazos
+   colocados a mano, de forma que se sabe qué carta va a coger cada uno en
+   cada turno. Encima, la capa que señala y va diciendo qué hacer.
+
+   Se aprende jugando y de paso se aprende la pantalla, porque la pantalla es
+   la de siempre. Lo único que se toca del reglamento son los puntos de vida:
+   10 en vez de 22, para que quepan dos asaltos en un rato. Se dice en voz
+   alta en la primera parada.
+
+   Tres piezas:
+     ESCENAS      · lo que se lee y lo que hay que hacer, por orden.
+     JUGADAS_NORI · lo que hace la máquina, por orden y por tipo.
+     MESAS_TUTO   · las manos y los mazos colocados de cada asalto.
+
+   Las tres se leen de arriba abajo como el guion de una obra. Si un día se
+   cambia una carta de sitio hay que recontar las tres, y por eso están
+   juntas y no repartidas por el código.                                  */
+
+const TUTO = { activo:false, paso:0, asaltoPrep:0, firma:"", pvAntes:0 };
+
+/* Lo que hace la máquina. Se saca por tipo y por dueño, no por posición:
+   "turno" cuando le toca jugar y "resp" cuando le preguntan si responde. Así,
+   si el guion de la persona se desfasa un paso, el de la máquina no se
+   descarrila con él. Sin dueño, vale para quien lo pida primero. */
+const JUGADAS_IA = [
+  /* --- el duelo --- */
+  { t:"turno", id:"nori_concentracion" },   // 2 · pone su primera mejora
+  { t:"turno", id:"nori_golpe_puno" },      // 4 · te ataca, lo esquivas
+  { t:"turno", id:"nori_concentracion" },   // 6 · sube a Avanzada
+  { t:"turno", id:"nori_patada" },          // 8 · te pega, tú devuelves
+  { t:"turno", id:"nori_golpe_puno" },      // 10 · lo encajas
+  { t:"turno", id:"nori_golpe_puno" },      // 12 · lo esquivas y rematas
+  /* --- la demostración de dos contra dos ---
+     La "a" es a quién le pega: con cuatro en la mesa no se puede dejar a
+     criterio de la máquina, porque el guion cuenta con un objetivo concreto. */
+  { t:"turno", de:"nori",   id:"nori_golpe_puno", a:2 },  // le pega a Néstor
+  { t:"turno", de:"nestor", id:"nestor_rabia" },
+  { t:"turno", de:"mailo",  id:"mailo_golpe_codo", a:0 }, // ahora te pegan a ti
+  // El "a:0" es la clave: Néstor solo se mete cuando el golpe va contra TI.
+  { t:"resp",  de:"nestor", a:0, id:"nestor_esquiva" },   // y Néstor te cubre
+  { t:"turno", de:"nori",   id:"nori_patada", a:2 }       // esta tumba a Néstor
+];
+
+/* Las manos y los mazos colocados, por luchador: mazo[0] es la carta que se
+   coge en el turno siguiente. Están contados para que cada carta del guion
+   esté en la mano justo cuando toca pedirla.
+
+   Hay dos mesas porque hay dos partidas: el duelo del principio, que se juega
+   entero, y la demostración de dos contra dos del final, que son cuatro
+   turnos y se corta. */
+const MESAS_TUTO = {
+  duelo: {
+    roku: { mano:["roku_concentracion","roku_concentracion","roku_patada",
+                  "roku_esquiva","roku_contra"],
+            mazo:["roku_patada","roku_contra","roku_palma_loto","roku_concentracion",
+                  "roku_contra","roku_esquiva","roku_golpe_puno","roku_patada",
+                  "roku_patada","roku_patada","roku_golpe_puno","roku_esquiva"] },
+    nori: { mano:["nori_concentracion","nori_golpe_puno","nori_concentracion",
+                  "nori_patada","nori_golpe_puno"],
+            mazo:["nori_golpe_puno","nori_patada","nori_esquiva","nori_concentracion",
+                  "nori_golpe_puno","nori_golpe_puno","nori_patada","nori_esquiva"] }
+  },
+  /* La demostración cae EN MITAD de un combate: por eso los cuatro llegan con
+     la vida a medias y con nivel puesto. Néstor llega a dos puntos, que es lo
+     que hace falta para que la cosa se decida en cuatro turnos. */
+  bandos: {
+    roku:   { pv:7, nivel:2,
+              /* La Contra está aquí a propósito: sin una respuesta que valga
+                 contra una Patada, la mesa ni te pregunta, y entonces no hay
+                 forma de enseñar el botón de "No me meto". */
+              mano:["roku_patada","roku_esquiva","roku_golpe_puno",
+                    "roku_contra","roku_golpe_puno"],
+              mazo:["roku_patada","roku_esquiva","roku_golpe_puno","roku_patada"] },
+    nori:   { pv:6, nivel:2,
+              mano:["nori_golpe_puno","nori_patada","nori_esquiva",
+                    "nori_golpe_puno","nori_concentracion"],
+              mazo:["nori_golpe_puno","nori_patada","nori_esquiva"] },
+    nestor: { pv:2, nivel:1,
+              mano:["nestor_rabia","nestor_esquiva","nestor_golpe_puno",
+                    "nestor_rabia","nestor_golpe_puno"],
+              mazo:["nestor_golpe_puno","nestor_esquiva","nestor_rabia"] },
+    mailo:  { pv:8, nivel:2,
+              mano:["mailo_golpe_codo","mailo_esquiva","mailo_motivacion",
+                    "mailo_patada","mailo_golpe_codo"],
+              mazo:["mailo_patada","mailo_esquiva","mailo_motivacion"] }
+  }
+};
+
+/* EL GUION. Cada escena es una parada:
+     di        · el título y el texto del globo
+     zona      · qué trozo de la pantalla se ilumina (opcional)
+     pide      · qué hay que hacer para pasar. Sin esto, basta con "Siguiente"
+     cuando    · "miTurno" espera a que te toque antes de enseñar el globo;
+                 mientras tanto el globo se quita y se ve jugar a Nori.       */
+const ESCENAS = [
+  { zona:"zonaTuya", titulo:"Tu hoja",
+    texto:"<p>Esta es tu hoja de personaje: PV, asaltos, nivel de maestría, " +
+          "cartas restantes y cartas en la mano (máx. 14).</p>" },
+
+  { zona:"franja", titulo:"La línea de estado", tocable:true,
+    texto:"<p>Aquí podrás seguir la partida paso a paso: te avisa en cada " +
+          "momento de en qué punto estás. Toca sobre ella para desplegar el " +
+          "historial.</p>" },
+
+  { zona:"combate", titulo:"La mesa",
+    texto:"<p>Estas son las cartas de tu oponente. Debajo se colocará la " +
+          "carta que juegue cada uno.</p>" },
+
+  { zona:"mano", titulo:"Tu mano", tocable:true,
+    texto:"<p>Arrastra cualquier carta para jugarla. Mantén pulsado para ver " +
+          "la información.</p>" },
+
+  { cuando:"miTurno", zona:"mano", titulo:"Empiezas tú",
+    pide:{ jugar:"roku_concentracion" },
+    texto:"<p>Solo puedes jugar cartas de tu nivel. Necesitas dos mejoras " +
+          "para subir de nivel. Una vez llegas a Maestro las necesitas para " +
+          "poder jugar cartas maestras.</p>" },
+
+  { cuando:"miTurno", zona:"mano", titulo:"La segunda",
+    pide:{ jugar:"roku_concentracion" },
+    texto:"<p>Juega otra mejora.</p>" },
+
+  { cuando:"respondiendo", zona:"mano", titulo:"Te atacan",
+    pide:{ responder:"roku_esquiva" },
+    texto:"<p>Nori te lanza un Golpe de puño. Puedes frenarlo con una carta " +
+          "de respuesta, si tu nivel te lo permite.</p>" +
+          "<p>Responde con la Esquiva, que evita las técnicas básicas.</p>" },
+
+  { cuando:"trasRespuesta", zona:"mano", titulo:"La carta de regalo",
+    pide:{ trasRespuesta:"roku_patada" },
+    texto:"<p>Esquivaste el golpe y te permite jugar otra carta. Nori sigue " +
+          "en nivel Básico: juega una Patada (nivel Avanzado) y no podrá " +
+          "defenderse.</p>" },
+
+  { cuando:"miTurno", zona:"botDescartar", titulo:"Descartar",
+    pide:{ boton:"descartar" },
+    texto:"<p>No tienes cartas que poder jugar. Descarta tu mano y roba 5.</p>" },
+
+  { cuando:"miTurno", zona:"zonaRival", titulo:"Nori ya es Avanzada",
+    texto:"<p>Nori ha puesto su segunda mejora y ya es Avanzada: a partir de " +
+          "ahora sí puede responderte a las técnicas avanzadas.</p>" },
+
+  { cuando:"miTurno", zona:"botCeder", titulo:"Ceder",
+    pide:{ boton:"ceder" },
+    texto:"<p>También puedes ceder el turno sin hacer nada, para guardarte " +
+          "una respuesta buena en vez de gastarla atacando.</p>" +
+          "<p>Cede la iniciativa.</p>" },
+
+  { cuando:"respondiendo", zona:"mano", titulo:"La Contra",
+    pide:{ responder:"roku_contra" },
+    texto:"<p>Juega una Contra. Evitarás el daño y le devolverás 2 más el " +
+          "que ibas a encajar tú.</p>" },
+
+  { cuando:"miTurno", zona:"mano", titulo:"Patada",
+    pide:{ jugar:"roku_patada" },
+    texto:"<p>Juega una Patada.</p>" },
+
+  { cuando:"respondiendo", zona:"botEncajar", titulo:"Encajar",
+    pide:{ encajar:true },
+    texto:"<p>A veces la mejor estrategia es guardarse la carta.</p>" },
+
+  { cuando:"miTurno", zona:"mano", titulo:"Otra Patada",
+    pide:{ jugar:"roku_patada" },
+    texto:"<p>Juega una Patada.</p>" },
+
+  { cuando:"respondiendo", zona:"mano", titulo:"Esquiva",
+    pide:{ responder:"roku_esquiva" },
+    texto:"<p>Juega una Esquiva.</p>" },
+
+  { cuando:"trasRespuesta", zona:"mano", titulo:"Remate",
+    pide:{ trasRespuesta:"roku_patada" },
+    texto:"<p>Juega una Patada.</p>" },
+
+  { cuando:"finCombate", zona:"acciones", titulo:"Combate ganado",
+    texto:"<p>Enviar cuaderno ayuda a mejorar la experiencia de juego. No se " +
+          "recopilan datos personales.</p>" },
+
+  /* ── LA DEMOSTRACIÓN DE DOS CONTRA DOS ──────────────────────────── */
+  { titulo:"2 vs 2", arranca:"bandos",
+    texto:"<p>2 vs 2 · Equipos. Entras a mitad de combate: tú y Néstor contra " +
+          "Nori y Mai-lo.</p>" },
+
+  { cuando:"miTurno", zona:"mano", zonaApuntando:"mesa", titulo:"A quién le pegas",
+    pide:{ jugar:"roku_patada", objetivo:1 },
+    texto:"<p>Al jugar una carta de ataque debes decidir a qué jugador " +
+          "atacas.</p>" +
+          "<p>Juega una Patada y toca la ficha de Nori.</p>" },
+
+  { cuando:"respondiendo", zona:"mano", titulo:"Cubrir al compañero",
+    pide:{ responder:"roku_esquiva" },
+    texto:"<p>Puedes cubrir a tu compañero cuando es atacado. Ayúdale jugando " +
+          "una Esquiva.</p>" },
+
+  { cuando:"trasRespuesta", zona:"mano", zonaApuntando:"mesa",
+    titulo:"Y encima juegas tú",
+    pide:{ trasRespuesta:"roku_golpe_puno", objetivo:3 },
+    texto:"<p>Juega un Golpe de puño y toca la ficha de Mai-lo.</p>" },
+
+  { cuando:"respondiendo", zona:"botAyuda", titulo:"Alguien me cubre",
+    pide:{ ayuda:true },
+    texto:"<p>Ahora te atacan a ti. Antes de gastar una carta puedes " +
+          "preguntar a la mesa: toca <b>¿Alguien me cubre?</b> y la pregunta " +
+          "pasa a Néstor. Si no se mete nadie, te vuelve a ti.</p>" },
+
+  { cuando:"miTurno", zona:"mano", zonaApuntando:"mesa", titulo:"Te ha cubierto",
+    pide:{ jugar:"roku_patada", objetivo:3 },
+    texto:"<p>Néstor ha respondido por ti y no has gastado nada.</p>" +
+          "<p>Juega una Patada y toca la ficha de Mai-lo.</p>" },
+
+  { cuando:"respondiendo", zona:"botEncajar", titulo:"No me meto",
+    pide:{ encajar:true },
+    texto:"<p>Le pegan a Néstor y esta vez sí podrías cubrirle, pero te " +
+          "costaría la Contra. Toca <b>No me meto</b> y mira lo que pasa.</p>" },
+
+  { cuando:"berserker", zona:"mesa", titulo:"Berserker",
+    texto:"<p>Néstor ha caído y te has quedado solo contra los dos. Entras en " +
+          "modo <b>berserker</b>: utilizas el turno de tu compañero como " +
+          "propio. Las posibilidades de resistir aumentan.</p>" },
+
+  { titulo:"Fin",
+    texto:"<p>Eso es todo. Lo que no te haya quedado claro está escrito en " +
+          "las instrucciones, apartado por apartado.</p>" +
+          "<p>Puedes repetir esta partida las veces que quieras.</p>" }
+];
+
+
+
+/* ═══ EL MOTOR DE LA PARTIDA DE PRUEBA ═════════════════════════════════
+   Todo lo de aquí abajo son enganches, no motor de juego: el combate lo
+   lleva el de siempre. Lo que hacen es tres cosas.
+
+     1 · Colocar los mazos al empezar cada asalto.
+     2 · Dejar pasar SOLO la jugada que toca. Lo demás se ignora sin castigo:
+         se puede toquetear la pantalla sin miedo a estropear el guion.
+     3 · Jugar por Nori lo que dice el guion, en vez de dejarla pensar.
+
+   El globo se rehace desde pintar(), así que se recoloca solo con cada
+   repintado del tablero y no hay que acordarse de refrescarlo a mano.      */
+
+// ¿Hay un combate delante, o estamos en la pantalla de inicio? Con la portada
+// puesta no hay nada que perder al empezar la partida de prueba.
+function hayTablero(){
+  const p = document.getElementById("portada");
+  return !!p && !p.classList.contains("abierta");
+}
+
+function abrirTutorial(){
+  cerrarReglas();
+  TUTO.activo = true;
+  TUTO.paso = 0;
+  TUTO.asaltoPrep = 0;
+  TUTO.firma = "";
+  TUTO.mesa = "duelo";
+  TUTO.objetivoIA = null;
+  TUTO.frenado = null;
+  TUTO.pendientes = JUGADAS_IA.map(x => ({ t:x.t, de:x.de, id:x.id, a:x.a }));
+  TUTO.pvAntes = REGLAS.pvIniciales;
+  TUTO.asaltosAntes = REGLAS.asaltosParaGanar;
+  /* Un asalto y a 10 puntos: lo justo para que quepa todo sin repetir. Las
+     dos cosas se dicen en voz alta dentro del guion, y las dos se devuelven a
+     su sitio al salir. */
+  REGLAS.pvIniciales = 10;
+  REGLAS.asaltosParaGanar = 1;
+  document.body.classList.add("enPrueba");
+  PARTIDA.n = 2; PARTIDA.bandos = false; PARTIDA.todosResponden = false;
+  PARTIDA.asientos[0] = { mazo:"roku", humano:true };
+  PARTIDA.asientos[1] = { mazo:"nori", humano:false };
+  const p = document.getElementById("portada");
+  p.classList.remove("abierta");
+  const v = document.getElementById("eligeL"); if(v) v.remove();
+  ajustarEscala();
+  iniciarCombate();
+  ESTADO.iniciativa = 0;             // empiezas tú, siempre
+  ESTADO.puntero = 0;
+  pintar();
+}
+
+function cerrarTutorial(){
+  TUTO.activo = false;
+  document.body.classList.remove("enPrueba");
+  REGLAS.pvIniciales = TUTO.pvAntes || 22;
+  REGLAS.asaltosParaGanar = TUTO.asaltosAntes || 2;
+  const v = document.getElementById("visita");
+  v.classList.remove("abierta"); v.innerHTML = ""; TUTO.firma = "";
+  mostrarPortada();
+}
+
+// Los mazos colocados. Se llama desde prepararAsalto, con el asalto ya hecho
+// por el motor: lo que se hace aquí es tirar sus cartas y poner las nuestras.
+function tutoPrepararAsalto(a){
+  const mesa = MESAS_TUTO[TUTO.mesa];
+  const suyo = mesa && mesa[a.mazoId];
+  if(!suyo) return;
+  a.mano = suyo.mano.slice();
+  a.mazo = suyo.mazo.slice();
+  a.manoEtq = a.mano.map(() => ++ETIQUETA);
+  a.descartes = [];
+  // La demostración cae en mitad de un combate: vida a medias y nivel puesto.
+  if(suyo.pv)    a.pv = suyo.pv;
+  if(suyo.nivel) a.nivel = suyo.nivel;
+}
+
+/* ═══ LA DEMOSTRACIÓN DE DOS CONTRA DOS ════════════════════════════════
+   Cuatro turnos y se corta: una tanda de golpes, el compañero que cae y el
+   berserker. No hace falta jugarla entera, hace falta VERLO, que es lo que
+   no se puede contar con palabras.
+
+   Se monta como un combate nuevo con el mismo motor de siempre. Los bandos
+   los reparte el motor por asiento: pares contra impares, o sea tú y Néstor
+   contra Nori y Mai-lo, sentados alternos como manda el reglamento. */
+function tutoMontarBandos(){
+  TUTO.mesa = "bandos";
+  PARTIDA.n = 4; PARTIDA.bandos = true; PARTIDA.todosResponden = false;
+  PARTIDA.asientos[0] = { mazo:"roku",   humano:true  };
+  PARTIDA.asientos[1] = { mazo:"nori",   humano:false };
+  PARTIDA.asientos[2] = { mazo:"nestor", humano:false };
+  PARTIDA.asientos[3] = { mazo:"mailo",  humano:false };
+  ajustarEscala();
+  iniciarCombate();
+  ESTADO.iniciativa = 0;             // empiezas tú
+  ESTADO.puntero = 0;
+  pintar();
+}
+
+function tutoEscena(){ return ESCENAS[TUTO.paso] || null; }
+
+function tutoAvanza(){
+  TUTO.plegado = false;          // lo nuevo se enseña abierto
+  const e = tutoEscena();
+  // Hay una escena que, al pasar de ella, monta la mesa de cuatro.
+  if(e && e.arranca === "bandos"){ TUTO.paso++; tutoMontarBandos(); return; }
+  TUTO.paso++;
+  tutoSoltarFreno();             // la partida vuelve a correr
+  if(TUTO.paso >= ESCENAS.length){ cerrarTutorial(); return; }
+  pintar();
+}
+
+/* ¿Está la partida en el momento que esa escena espera? Mientras no lo esté,
+   el globo se quita de en medio y se ve jugar a Nori. */
+function tutoEsSuMomento(e){
+  const mio = ESTADO.iniciativa === 0 && ESTADO.fase === "eligiendo";
+  if(e.cuando === "miTurno")     return mio;
+  if(e.cuando === "respondiendo")   return ESTADO.fase === "respondiendo";
+  if(e.cuando === "trasRespuesta")  return ESTADO.fase === "jugarTrasRespuesta";
+  if(e.cuando === "finAsalto")    return ESTADO.fase === "finAsalto";
+  if(e.cuando === "finCombate")   return ESTADO.fase === "finCombate";
+  /* El berserker se enciende en la ficha con retraso, a propósito: primero se
+     lee el golpe que ha tumbado al compañero y después sale el rótulo. El
+     globo espera a ese momento, o hablaría de un latido que aún no se ve. */
+  if(e.cuando === "berserker")
+    return ESTADO.asientos.some(x => x.berserker && Date.now() > x.marcaDesde);
+  return true;
+}
+
+/* ¿Deja el tutorial hacer esto? Fuera del tutorial, todo. Dentro, solo lo que
+   pida la escena de turno. Devolver false es "haz como si no te hubieran
+   tocado": ni se juega la carta ni se regaña a nadie. */
+function tutoPermite(que, id){
+  if(!TUTO.activo) return true;
+  const e = tutoEscena();
+  if(!e || !e.pide){ tutoNo(); return false; }
+  const p = e.pide;
+  /* La carta que hay que apuntar no da el paso al jugarla: lo da al tocar la
+     ficha. Si lo diera aquí, el globo cambiaría con la puntería abierta y la
+     escena siguiente saldría antes de haber pegado a nadie. */
+  if(p.objetivo !== undefined
+     && ((que === "jugar"    && p.jugar === id)
+      || (que === "trasResp" && p.trasRespuesta === id))) return true;
+  const vale = (que === "jugar"        && p.jugar === id)
+            || (que === "objetivo"     && p.objetivo === id)
+            || (que === "responder"    && p.responder === id)
+            || (que === "trasResp"     && p.trasRespuesta === id)
+            || (que === "encajar"      && p.encajar)
+            || (que === "ayuda"        && p.ayuda)
+            || (que === "descartar"    && p.boton === "descartar")
+            || (que === "ceder"        && p.boton === "ceder");
+  if(!vale){ tutoNo(); return false; }
+  TUTO.plegado = false;
+  /* El paso se da ANTES de que la jugada corra, porque la jugada arrastra
+     detrás repintados, animaciones y el turno de Nori: si se diera después,
+     el globo viejo se vería un instante encima de la mesa nueva. */
+  TUTO.paso++;
+  if(TUTO.paso >= ESCENAS.length) TUTO.paso = ESCENAS.length - 1;
+  return true;
+}
+
+// Un parpadeo del globo: "eso no, lo que te digo aquí".
+function tutoNo(){
+  const g = document.getElementById("globoV");
+  if(!g) return;
+  g.classList.remove("nope");
+  void g.offsetWidth;                 // reinicia la animación
+  g.classList.add("nope");
+}
+
+/* Nori no piensa durante el tutorial: hace lo que dice el guion. Se busca por
+   tipo, así que un desajuste de un paso no la descarrila. Si se queda sin
+   guion, cede el turno y no responde: no hace nada raro. */
+/* Saca la siguiente instrucción de la máquina. Además del tipo y del dueño se
+   puede exigir CONTRA QUIÉN va el golpe: sin eso, Néstor gastaba su "te
+   cubro" en el primer golpe que se cruzaba —el que iba contra él mismo— y
+   luego, cuando de verdad tocaba cubrirte, ya no le quedaba. */
+function tutoSacarIA(tipo, mazoId, entero, objetivo){
+  const k = TUTO.pendientes.findIndex(x => x.t === tipo && (!x.de || x.de === mazoId)
+              && (x.a === undefined || objetivo === undefined || x.a === objetivo));
+  if(k === -1) return entero ? null : undefined;
+  const j = TUTO.pendientes.splice(k, 1)[0];
+  return entero ? j : j.id;
+}
+
+/* ═══ EL FRENO ════════════════════════════════════════════════════════
+   Con un cartel puesto esperando un "Siguiente", la partida NO avanza. Antes
+   seguía corriendo por debajo mientras se leía, y lo que contaba el cartel ya
+   había pasado para cuando levantabas la vista. Lo peor era el berserker:
+   caía el compañero, salía el rótulo y se iba, todo mientras leías.
+
+   Se frena por donde entra la máquina a jugar, que es la única que se mueve
+   sola. Al dar a "Siguiente" se suelta y el turno que estaba esperando
+   arranca. */
+function tutoFrena(){
+  const e = tutoEscena();
+  return !!e && !e.pide && tutoEsSuMomento(e);
+}
+
+function tutoSoltarFreno(){
+  if(TUTO.frenado === null || TUTO.frenado === undefined) return;
+  const i = TUTO.frenado;
+  TUTO.frenado = null;
+  tarde(240, () => iaTurno(i));
+}
+
+function tutoTurnoNori(indiceAsiento){
+  const a = ESTADO.asientos[indiceAsiento];
+  const j = tutoSacarIA("turno", a.mazoId, true);
+  const k = j && j.id ? a.mano.indexOf(j.id) : -1;
+  if(k === -1) return accionCeder(indiceAsiento);
+  /* Con cuatro en la mesa, a quién le pega la máquina no se puede dejar a su
+     criterio: el guion cuenta con que le pega a uno concreto. Se deja dicho
+     aquí y lo recoge mejorObjetivo, que es por donde pasa siempre. */
+  TUTO.objetivoIA = (j.a === undefined ? null : j.a);
+  accionJugarCarta(indiceAsiento, k);
+}
+
+/* Qué responde la máquina. Aquí SOLO se apuntan las respuestas que de verdad
+   ocurren: no responder es el comportamiento por defecto, y no hace falta
+   escribirlo.
+
+   Escribirlo fue un error que costó caro. El motor ni siquiera pregunta a
+   quien no tiene una carta capaz de parar el golpe, así que aquellos "no
+   responde" se quedaban sin gastar en la cola y más tarde los cogía otro
+   momento que sí preguntaba: Néstor tenía apuntado cubrirte, pero al llegar
+   el turno se llevaba el "no responde" viejo de tres turnos antes y te
+   dejaba tirado. */
+function tutoRespuestaNori(a, pendiente, opciones){
+  const id = tutoSacarIA("resp", a.mazoId, false,
+                         pendiente ? pendiente.objetivo : undefined);
+  if(!id) return null;
+  /* Ojo con la forma de "opciones": no son índices sueltos, son fichas
+     { i, c } con el índice dentro. Tratarlas como números devolvía siempre
+     "no responde" en silencio, y Néstor te dejaba tirado justo en la parada
+     que enseña que te cubre. */
+  const o = opciones.find(x => a.mano[x.i] === id);
+  return o ? o.i : null;
+}
+
+/* ═══ EL GLOBO ════════════════════════════════════════════════════════
+   Se rehace desde pintar(), pero SOLO si ha cambiado algo: si se rehiciera
+   siempre, cada repintado del tablero cortaría la animación del globo y
+   perdería el toque a medias. */
+function tutoRevisar(){
+  const capa = document.getElementById("visita");
+  if(!capa) return;
+  if(!TUTO.activo){
+    if(TUTO.firma){ capa.classList.remove("abierta"); capa.innerHTML = ""; TUTO.firma = ""; }
+    return;
+  }
+  const e = tutoEscena();
+  const ahora = e && tutoEsSuMomento(e);
+  const firma = !ahora ? "espera"
+              : TUTO.paso + "|" + (e.zona || "") + "|" + (ESTADO.fase === "apuntando");
+  if(firma === TUTO.firma){ if(ahora) tutoColocar(); return; }
+  TUTO.firma = firma;
+  capa.classList.add("abierta");
+  if(!ahora){                        // le toca a Nori: fuera el globo
+    capa.classList.add("pasa");
+    capa.innerHTML = '<button class="saltar" id="saltarV">SALIR</button>';
+    capa.querySelector("#saltarV").onclick = cerrarTutorial;
+    return;
+  }
+  /* Con una carta que jugar hay que poder tocar el tablero, así que la capa
+     deja pasar los dedos y solo el globo los recoge. Sin nada que hacer, la
+     capa los para: así no se toquetea el tablero por error mientras se lee. */
+  /* Hay carteles que piden tocar el tablero aunque no haya jugada que hacer:
+     abrir el historial, o mantener el dedo en una carta para verla. En esos,
+     la capa deja pasar los dedos igual que cuando hay que jugar. */
+  capa.classList.toggle("pasa", !!e.pide || !!e.tocable);
+  capa.innerHTML =
+    (e.zona ? '<div class="hueco" id="huecoV"></div>' : "") +
+    '<div class="globo" id="globoV">' +
+      '<button class="plegar" id="plegarV" aria-label="Plegar">–</button>' +
+      /* El título no se pinta: el cartel tiene tres líneas y un encabezado
+         encima de tres líneas es un estorbo. Solo asoma cuando el cartel está
+         plegado, y ahí no es un título sino la etiqueta de lo que hay dentro. */
+      '<h3>' + e.titulo + '</h3>' + e.texto +
+      '<div class="pieG"><div class="barra-paso"><i style="width:' +
+        Math.round((TUTO.paso + 1) / ESCENAS.length * 100) + '%"></i></div>' +
+      (e.pide ? '<span class="tetoca">te toca</span>'
+              : '<button class="sigue" id="sigueV">' +
+                (TUTO.paso === ESCENAS.length - 1 ? "Terminar" : "Siguiente") +
+                '</button>') +
+      '</div>' +
+    '</div>' +
+    '<button class="saltar" id="saltarV">SALIR</button>';
+  capa.querySelector("#saltarV").onclick = cerrarTutorial;
+  const s = capa.querySelector("#sigueV");
+  if(s) s.onclick = tutoAvanza;
+  /* Plegar y desplegar. El estado se guarda en TUTO y no en la clase, porque
+     el globo se rehace en cada parada: si viviera en el HTML, se desplegaría
+     solo al cambiar de escena. Y al pasar de parada se despliega a propósito,
+     que si no lo nuevo no se lee. */
+  const globo = capa.querySelector("#globoV");
+  globo.classList.toggle("plegado", !!TUTO.plegado);
+  const pl = capa.querySelector("#plegarV");
+  pl.textContent = TUTO.plegado ? "+" : "–";
+  pl.onclick = () => {
+    TUTO.plegado = !TUTO.plegado;
+    globo.classList.toggle("plegado", TUTO.plegado);
+    pl.textContent = TUTO.plegado ? "+" : "–";
+    tutoColocar();
+  };
+  tutoColocar();
+}
+
+// El agujero y la altura del globo. Va aparte de rehacer el contenido porque
+// esto sí hay que recalcularlo en cada repintado: el tablero se mueve.
+function tutoColocar(){
+  const e = tutoEscena();
+  if(!e) return;
+  const globo = document.getElementById("globoV");
+  if(!globo) return;
+  /* Con el rodillo abierto el cartel se pliega solo. No se toca TUTO.plegado:
+     esto no es una decisión de la persona, es apartarse un momento. */
+  globo.classList.toggle("plegado", !!TUTO.plegado || !!document.getElementById("historial"));
+  const hueco = document.getElementById("huecoV");
+  let r = null;
+  /* Hay paradas de dos tiempos: primero se juega la carta —y lo que hay que
+     mirar es la mano— y después se elige a quién se le pega —y lo que hay que
+     mirar son las fichas—. Con una sola zona, la mano se quedaba a oscuras
+     justo cuando había que sacar una carta de ella. */
+  const cual = (ESTADO.fase === "apuntando" && e.zonaApuntando) ? e.zonaApuntando : e.zona;
+  /* Si la zona señalada es uno de los botones de abajo, además del foco se le
+     pone el aro azul: el foco dice dónde mirar y el aro dice qué tocar. */
+  document.querySelectorAll(".accion.senalado").forEach(b => b.classList.remove("senalado"));
+  if(cual && cual.indexOf("bot") === 0){
+    const b = document.getElementById(cual);
+    if(b) b.classList.add("senalado");
+  }
+  if(cual && hueco){
+    const zona = document.getElementById(cual);
+    if(zona){
+      r = zona.getBoundingClientRect();
+      const aire = 6;
+      hueco.style.top    = (r.top - aire) + "px";
+      hueco.style.left   = (r.left - aire) + "px";
+      hueco.style.width  = (r.width + aire * 2) + "px";
+      hueco.style.height = (r.height + aire * 2) + "px";
+    }
+  }
+  const alto = globo.offsetHeight || 150;
+  if(!r){                            // sin zona que señalar, al centro
+    globo.style.top = Math.max(52, (window.innerHeight - alto) / 2) + "px";
+    return;
+  }
+  /* Al lado que TENGA sitio, no siempre al contrario: la mesa está en el
+     centro y deja hueco por arriba y por abajo. */
+  const debajo = window.innerHeight - r.bottom, encima = r.top;
+  let y;
+  if(debajo >= alto + 24)      y = r.bottom + 18;
+  else if(encima >= alto + 24) y = r.top - alto - 18;
+  else                         y = debajo > encima ? r.bottom + 18 : r.top - alto - 18;
+  globo.style.top = Math.max(52, Math.min(y, window.innerHeight - alto - 16)) + "px";
+}
 
 /* ═══════════════════════════════════════════════════════════════════════
    ZONA 8: EL CUADERNO  ·  apuntar partidas para entrenar a la máquina
@@ -9166,6 +10514,10 @@ window.addEventListener("orientationchange", () => setTimeout(ajustarEscala, 250
 /* Fuera el botón de ritmo. Las pausas se quedan en los números que tiene
    RITMO ahí arriba (los de "normal"); si algún día quieres el juego más
    pausado o más vivo, se tocan esos números y ya. */
+
+/* El "?" de la barra abre las mismas reglas en mitad del combate. La partida
+   se queda debajo tal cual: la hoja no toca el motor. */
+document.getElementById("ayuda").onclick = abrirReglas;
 
 // "reiniciar" vuelve a la portada: así de paso se puede cambiar de dificultad.
 document.getElementById("reiniciar").onclick = () => {
