@@ -320,6 +320,17 @@ img,.lupa img,.carta,.avatar,.mini,.mini-m{-webkit-touch-callout:none;
 .luchador{display:flex;align-items:center;gap:6px;position:relative;padding:4px 5px;
   border-radius:6px;transition:background .3s,opacity .3s}
 
+/* ═══ TU BLOQUE EN EL DUELO ═══════════════════════════════════════════
+   El borde dice UNA sola cosa: cuál de los dos eres tú. No cambia con el
+   turno, y eso es a propósito: de quién es el turno ya lo dicen el
+   resplandor del fondo, el latido del retrato y el rodillo. Un borde que
+   además parpadeara sería la cuarta voz diciendo lo mismo, y encima
+   moviéndose justo donde estás mirando tus cartas. */
+/* Sin borde. Cuál eres tú ya lo dice el "TÚ" que llevas al lado del nombre,
+   y en un duelo solo hay dos bloques: no hay a quién confundir. El recuadro
+   era una tercera manera de decir lo mismo y encerraba media pantalla. */
+.luchador{border:1px solid transparent}
+
 /* ═══ LOS CUATRO COLORES DE ASIENTO ═══════════════════════════════════
    Cada asiento lleva su color en una clase: aN en el tablero de duelo, eN en
    la mesa de tres y cuatro. TODO lo que va del color de alguien (la barra de
@@ -486,7 +497,19 @@ img,.lupa img,.carta,.avatar,.mini,.mini-m{-webkit-touch-callout:none;
 .ficha.activo{background:radial-gradient(ellipse 100% 130% at 50% 40%,
   rgba(var(--t-rgb),.26) 0%, rgba(var(--t-rgb),.05) 60%, transparent 78%)}
 /* El marco de cobre marca QUIÉN TIENE EL MÓVIL en la mano ahora mismo. */
-.ficha.yo{border-color:rgba(201,123,62,.75)}
+/* ═══ TU FICHA, Y SI ADEMÁS TE TOCA ═══════════════════════════════════
+   El borde de tu ficha marca cuál eres tú entre las cuatro, y eso hay que
+   poder verlo siempre. Pero iba en el naranja de la madera y no cambiaba
+   nunca: daba igual de quién fuera el turno, tu ficha se veía igual, así que
+   el dato más importante de la mesa —¿me toca o no?— lo tenías que sacar de
+   otro sitio.
+
+   Ahora el borde dice las dos cosas: apagado mientras esperas y encendido
+   con TU color cuando te toca mover, con un halo suave para que se note de
+   reojo sin tener que buscarlo. */
+.ficha.yo{border-color:rgba(201,123,62,.42)}
+.ficha.yo.activo{border-color:var(--t-vivo);
+  box-shadow:0 0 0 1px rgba(var(--t-halo),.35),0 0 12px rgba(var(--t-halo),.32)}
 /* Se ha quedado solo de su bando: pelea por los dos. Se le da algo más de
    sitio que a los otros dos, para que se vea que la mesa se ha recolocado
    alrededor de él. */
@@ -579,6 +602,27 @@ img,.lupa img,.carta,.avatar,.mini,.mini-m{-webkit-touch-callout:none;
 .ficha .cuenta-f{display:flex;align-items:center;gap:2px;font-size:9.5px;
   color:var(--pergamino-2);font-family:ui-monospace,Menlo,Consolas,monospace}
 .ficha .cuenta-f svg{width:11px;height:13px;flex:0 0 11px}
+/* ═══ EL ICONO DEL MAZO, CON EL DORSO DE VERDAD ═══════════════════════
+   Antes eran tres rectángulos naranjas dibujados a mano. Ahora son tres
+   cartas con el mismo dorso que tienen todas las del juego, apiladas
+   igual que antes: la de abajo asomando por la izquierda y la de arriba
+   entera.
+
+   La imagen NO va metida en el HTML de cada ficha: la mesa se rehace
+   entera en cada repintado y meter el dorso en base64 cuatro veces por
+   fotograma es medio mega de texto por repintado. Va una sola vez en una
+   variable de CSS (--dorso, se pone al arrancar) y aquí solo se nombra.
+
+   Las de detrás van oscurecidas para que se lean los tres cantos: con las
+   tres a la misma luz, a 11 píxeles se ve un borrón. */
+.cuenta-d .ic-mazo,.ficha .cuenta-f .ic-mazo{position:relative;display:inline-block;
+  width:11px;height:13px;flex:0 0 11px}
+.ic-mazo i{position:absolute;width:7.5px;height:9px;border-radius:1px;
+  border:1px solid #0B0A08;background-image:var(--dorso);
+  background-size:cover;background-position:center 22%}
+.ic-mazo .m1{left:0;top:2.4px;filter:brightness(.6)}
+.ic-mazo .m2{left:1px;top:1.2px;filter:brightness(.85)}
+.ic-mazo .m3{left:2px;top:0;filter:brightness(1.35) contrast(1.08)}
 /* Elegir a quién se golpea: los alcanzables se levantan y se ribetean. */
 .ficha.blanco{opacity:1;animation:pulsoObj 1.3s ease-in-out infinite}
 .ficha.blanco::after{content:"";position:absolute;inset:-1px;border-radius:6px;
@@ -850,9 +894,16 @@ img,.lupa img,.carta,.avatar,.mini,.mini-m{-webkit-touch-callout:none;
    seguidas: si tardan lo mismo, la mano parece que se llena a cámara lenta. */
 .vuelo.reparto{transition:transform calc(.52s * var(--vel)) cubic-bezier(.22,.61,.36,1)}
 /* carta que sigue al dedo */
+/* El clon lleva DOS transformaciones que no se pueden mezclar: la de moverse
+   con el dedo, que cambia sesenta veces por segundo, y la del levantado (un
+   poco más grande y torcida), que es fija. Si las escribiera las dos en el
+   mismo sitio, al mover se borraría el levantado. Por eso el movimiento va en
+   este nodo y el levantado en el de dentro. */
 .clon{position:fixed;left:0;top:0;z-index:60;pointer-events:none;
-  transform-origin:center;transform:scale(1.12) rotate(-3deg);
+  will-change:transform;
   box-shadow:0 12px 26px rgba(0,0,0,.7)}
+.clon > *{transform-origin:center;transform:scale(1.12) rotate(-3deg);
+  display:block}
 
 /* ---------- mano ---------- */
 /* Alto pensado para que la carta levantada quepa ENTERA aquí dentro
@@ -876,6 +927,9 @@ img,.lupa img,.carta,.avatar,.mini,.mini-m{-webkit-touch-callout:none;
 .mano::-webkit-scrollbar-thumb{background:var(--tinta-3)}
 
 /* carta del rival volando de su mano a la mesa, girándose */
+/* Sin giro: la cara de delante deja de estar volteada, porque no hay nada
+   que voltear. */
+.vuelo.sin-giro .frente{transform:none}
 .vuelo{position:fixed;z-index:70;transform:scale(.45);transform-style:preserve-3d;
   transition:transform calc(.78s * var(--vel)) cubic-bezier(.32,.8,.35,1);pointer-events:none}
 .vuelo .cara{position:absolute;inset:0;border-radius:8px;
@@ -953,8 +1007,31 @@ button.accion:active{background:var(--tinta-2)}
 /* La página de título va centrada DE ARRIBA ABAJO, título incluido: no tiene
    nada que la haga crecer, así que no hay saltos que temer. En las demás la
    cabecera se queda clavada arriba, que es lo que evita los saltos. */
-.portada.titulo .cabecera{margin-top:auto;padding-bottom:0}
-.portada.titulo .cuerpo{flex:0 0 auto;margin-bottom:auto;overflow:visible}
+/* EL TÍTULO, MÁS ARRIBA. Antes llevaba "margin-top:auto", que lo empujaba
+   hasta el centro exacto de la pantalla junto con el lema. Centrado del todo
+   quedaba flotando y comía el sitio de arriba sin usarlo. Ahora se descuelga
+   una parte de ese hueco y el bloque entero sube. */
+.portada.titulo .cabecera{margin-top:7vh;padding-bottom:0}
+/* ═══ CÓMO SE REPARTE LA PÁGINA DE TÍTULO ══════════════════════════════
+   Tres alturas, no una. Arriba el nombre del juego con su filete y su lema,
+   que van juntos porque son la misma cosa. En el CENTRO de lo que queda, el
+   "toca para empezar", que es lo único que hay que hacer ahí y por eso se
+   pone donde cae la vista. Y abajo del todo el crédito, que no estorba.
+   Antes iba todo apelotonado debajo del título y el "toca" quedaba perdido
+   entre el lema y el crédito. */
+/* El "toca" va centrado contra LA PÁGINA, no contra el hueco que queda entre
+   el lema y el crédito. Repartiendo el sobrante quedaba en 518 de 844, o sea
+   caído hacia abajo, porque arriba pesa el bloque del título y abajo no pesa
+   casi nada. Sacándolo del reparto y colocándolo a media altura cae donde
+   uno lo busca. El crédito, abajo del todo. */
+.portada.titulo .cuerpo{flex:1 1 auto;display:flex;flex-direction:column;
+  align-items:center;overflow:visible;padding-bottom:18px}
+/* Anclado a .portada, que ocupa la pantalla entera, y NO al cuerpo: el cuerpo
+   empieza por debajo del título, así que su mitad cae bastante más abajo que
+   la mitad de la pantalla (501 en vez de 422 en un móvil normal). */
+.portada.titulo .toca{position:absolute;top:50%;left:0;right:0;
+  transform:translateY(-50%);text-align:center;margin:0}
+.portada.titulo .credito{margin-top:auto}
 .portada.abierta{display:flex}
 .portada h1{font-size:25px;font-weight:400;letter-spacing:.04em;text-align:center;
   color:var(--pergamino);line-height:1.2}
@@ -986,16 +1063,22 @@ button.accion:active{background:var(--tinta-2)}
   color:var(--madera-viva);font-family:ui-monospace,Menlo,Consolas,monospace;
   margin-top:10px;animation:respira 2.6s ease-in-out infinite}
 @keyframes respira{0%,100%{opacity:.35}50%{opacity:1}}
-/* El sello de version. Va en TODAS las pantallas de portada, arriba a la
-   derecha, pequeno pero legible. Existe por una razon muy concreta: cuando
-   varios juegan por internet, saber en dos segundos que version lleva cada
-   uno es la diferencia entre arreglar algo en un minuto y pasarte una noche
-   dando vueltas. */
-.portada .sello{position:absolute;top:10px;right:12px;z-index:5;
-  font-size:11px;letter-spacing:.12em;color:#6E6152;
+/* EL SELLO DE VERSION. Ya no es una chapa en la esquina: es una linea de
+   texto pelada, debajo del lema, en las dos pantallas que lo llevan (la de
+   titulo y el cruce). Existe por una razon muy concreta: cuando varios
+   juegan por internet, saber en dos segundos que version lleva cada uno es
+   la diferencia entre arreglar algo en un minuto y pasarte una noche dando
+   vueltas. Debajo del lema se lee igual de bien y no se le echa encima al
+   titulo. */
+.portada .sello{display:block;text-align:center;
+  font-size:10px;letter-spacing:.12em;color:#6E6152;
   font-family:ui-monospace,Menlo,Consolas,monospace;
-  padding:3px 7px;border:1px solid #332C24;border-radius:4px;
-  background:rgba(0,0,0,.28);pointer-events:none}
+  opacity:.8;margin:5px auto 0;pointer-events:none}
+/* En la pantalla de titulo el cuerpo es una columna con 16 px de hueco entre
+   cada cosa. Ese hueco separaria el numero del lema como si fueran dos
+   apartados distintos, y son lo mismo: se recorta para que quede pegado
+   debajo, a la misma distancia que en el cruce. */
+.portada.titulo .sello{margin-top:-11px}
 .portada .credito{position:absolute;left:0;right:0;bottom:16px;text-align:center;
   font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#4A4034;
   font-family:ui-monospace,Menlo,Consolas,monospace}
@@ -1035,10 +1118,32 @@ button.accion:active{background:var(--tinta-2)}
 
 /* ---------- portada: preparar la partida ---------- */
 .prep{width:100%;max-width:330px}
-.prep h2{font-size:14px;font-weight:400;letter-spacing:.02em;margin:13px 0 6px;
-  color:var(--madera-viva)}
+/* ═══ LOS RÓTULOS NO SON BOTONES ══════════════════════════════════════
+   Iban en el naranja de la madera, a 14 y con el mismo peso visual que lo de
+   debajo. El problema no era el tamaño: era que en este juego el naranja
+   significa "esto se toca" —el código de la sala, la puerta al online— y
+   cuatro preguntas seguidas en ese color te reclaman la vista todo el rato
+   para decirte cosas que solo hay que LEER una vez.
+
+   Ahora van en el tono apagado del pergamino, algo más pequeñas y con las
+   letras separadas: se leen igual de bien, pero se quedan quietas y dejan que
+   el color lo lleven los botones, que es lo que hay que mirar. */
+.prep h2{font-size:11px;font-weight:400;letter-spacing:.13em;
+  text-transform:uppercase;margin:13px 0 6px;
+  /* Tono de papel viejo, no gris. Al quitarles el naranja se me fueron al
+     gris ceniza y la pantalla entera se apagó: el problema del naranja no
+     era que tuviera color, era que tuviera EL color de "esto se toca".
+     Este es cálido y se lee bien, pero no compite con los botones. */
+  color:#C4B79A;opacity:.82}
+/* ═══ AIRE ENTRE LAS PREGUNTAS ════════════════════════════════════════
+   El rótulo estaba a 6 píxeles de sus botones y a 13 del bloque anterior:
+   casi igual de cerca de lo suyo que de lo ajeno, así que el ojo no separaba
+   los grupos y las cuatro preguntas se leían como una lista apretada. Ahora
+   la distancia de dentro (9) es menos de la mitad que la de fuera (20), que
+   es lo que hace que se vean como cuatro cosas y no como una. */
+.prep h2{margin:20px 0 9px}
 .prep h2:first-child{margin-top:0}
-.opciones{display:flex;gap:6px}
+.opciones{display:flex;gap:7px}
 /* La sala pone sus opciones una debajo de otra: son frases, no palabras
    sueltas, y en una fila se parten en cuatro líneas cada una. */
 .opciones.col{flex-direction:column;gap:9px}
@@ -1059,13 +1164,33 @@ button.accion:active{background:var(--tinta-2)}
    es un botón, pero no debe parecer un botón más de la portada, así que
    conserva el aspecto del texto y solo se insinúa con un subrayado punteado
    y un icono pequeño al lado. */
-.clave{letter-spacing:.22em;color:var(--madera-viva);font-family:inherit;
-  font-size:inherit;background:none;border:0;padding:2px 4px;cursor:pointer;
-  border-bottom:1px dashed rgba(200,140,70,.45);border-radius:0;
-  transition:color .15s,border-color .15s}
-.clave:active{color:var(--pergamino)}
-.clave .copia{letter-spacing:0;font-size:.62em;opacity:.55;margin-left:6px;
-  vertical-align:middle}
+/* EL AVISO DE LA SALA. Va debajo del código y es una explicación, no un
+   titular: en el tamaño de antes competía con las cuatro letras, que es lo
+   único que hay que leer ahí. Pequeño, centrado y pegado al código, para que
+   se lean como una sola cosa. */
+.prep > .pista{font-size:11px;line-height:1.35;color:var(--pergamino-2);
+  text-align:center;opacity:.75;max-width:300px;margin:-8px auto 12px}
+/* La frase que acompaña al código: pequeña, centrada y PEGADA a él. Iba de
+   tamaño normal y con un hueco de doce píxeles por debajo, y parecía un
+   párrafo suelto en vez del pie del recuadro. */
+.prep > .clave + .pista{font-size:10px;opacity:.6;margin:0 auto 2px;
+  max-width:260px;letter-spacing:.02em}
+
+/* EL CÓDIGO, ENMARCADO Y SOLO. Antes iba de acompañante de la palabra "Sala"
+   y en letra de titular: se leía como un título más y había que buscarlo. Es
+   lo único de esa pantalla que hay que dictar o pegar por WhatsApp, así que
+   ahora va solo, grande y dentro de un recuadro que dice "esto se coge". */
+/* Subido: el código es lo primero que se busca en esa pantalla, así que
+   cuanto menos aire tenga por encima, antes lo encuentra el ojo. */
+.clave{display:block;width:100%;box-sizing:border-box;margin:-10px 0 3px;
+  letter-spacing:.26em;text-indent:.26em;color:var(--madera-viva);
+  font-family:ui-monospace,Menlo,monospace;font-size:21px;line-height:1;
+  background:rgba(200,140,70,.07);border:1px solid rgba(200,140,70,.5);
+  border-radius:8px;padding:8px 8px 6px;cursor:pointer;
+  transition:color .15s,border-color .15s,background .15s}
+.clave:active{color:var(--pergamino);background:rgba(200,140,70,.16)}
+.clave .copia{display:block;letter-spacing:.04em;text-indent:0;
+  font-size:10px;opacity:.55;margin:4px 0 0}
 /* Al copiar, el propio código dice que se ha copiado. Verde apagado: es un
    aviso, no una celebración. */
 .clave.hecho{color:#8FBF7A;border-bottom-color:transparent}
@@ -1077,24 +1202,41 @@ input.codigo:focus{border-color:var(--madera-viva)}
 /* Los tres de la dificultad piden más aire: son los nombres más largos y
    pegados no se distinguen de un vistazo. */
 .opciones.aire{gap:11px}
-.opciones.aire button{padding:11px 4px}
+.opciones.aire button{padding:13px 4px}
+/* Botones más altos: de 36 a 42. No es solo estética, es que un blanco de 42
+   se acierta con el pulgar sin mirar y uno de 36 no siempre. */
 .opciones button{flex:1 1 0;background:rgba(255,255,255,.03);border:1px solid var(--tinta-3);
   border-radius:5px;color:var(--pergamino-2);font-family:inherit;font-size:13px;
-  padding:9px 4px;line-height:1.25}
-.opciones button.on{border-color:var(--madera-viva);color:var(--pergamino);
-  background:rgba(201,123,62,.13)}
+  padding:12px 4px;line-height:1.25}
+/* EL SELECCIONADO, EN GRIS. Iba en el naranja de la madera, que en este juego
+   es el color de lo que hay que TOCAR (el código de la sala, la puerta al
+   online). Usarlo también para "ya está elegido" mezclaba dos cosas: lo que
+   invita a pulsar y lo que ya está pulsado. En gris claro sobre gris oscuro
+   se ve igual de bien cuál está puesto, y el naranja vuelve a significar una
+   sola cosa. */
+.opciones button.on{border-color:#8A8378;color:#E8E4DC;
+  background:rgba(232,228,220,.10)}
 .opciones button small{display:block;font-size:9.5px;color:var(--pergamino-2);
   font-family:ui-monospace,Menlo,monospace;margin-top:2px}
 /* Mismo código de color que los niveles de luchador: verde lo fácil, rojo lo
    que te va a costar sangre. */
-.opciones button.n1{color:#7FC48A;border-color:rgba(127,196,138,.30)}
-.opciones button.n2{color:#DEBC49;border-color:rgba(222,188,73,.30)}
-.opciones button.n3{color:#E88C4C;border-color:rgba(232,140,76,.30)}
-.opciones button.n4{color:#E36259;border-color:rgba(227,98,89,.35)}
-.opciones button.n1.on{border-color:#7FC48A;background:rgba(127,196,138,.15)}
-.opciones button.n2.on{border-color:#DEBC49;background:rgba(222,188,73,.15)}
-.opciones button.n3.on{border-color:#E88C4C;background:rgba(232,140,76,.15)}
-.opciones button.n4.on{border-color:#E36259;background:rgba(227,98,89,.15)}
+/* ═══ LA DIFICULTAD, EN COLOR PERO SIN GRITAR ═════════════════════════
+   El código de color merece la pena: verde lo fácil, rojo lo que te va a
+   costar sangre, y se entiende sin leer. Lo que sobraba era la intensidad.
+   Estos son los mismos cuatro colores rebajados hacia el tono del pergamino:
+   siguen distinguiéndose de un vistazo, pero ya no le roban la vista a los
+   asientos, que es lo que uno viene a tocar en esa pantalla. */
+.opciones button.n1{color:#7FBF8D;border-color:rgba(127,191,141,.28)}
+.opciones button.n2{color:#D3B85E;border-color:rgba(211,184,94,.28)}
+.opciones button.n3{color:#DC8756;border-color:rgba(220,135,86,.28)}
+.opciones button.n4{color:#D96F67;border-color:rgba(217,111,103,.30)}
+/* Y el elegido se marca con SU propio color, no en gris: es lo que hacía que
+   se leyera de un golpe cuál está puesto. Apagado también, para que "elegido"
+   no pese más que el resto de la pantalla. */
+.opciones button.n1.on{border-color:rgba(127,191,141,.85);background:rgba(127,191,141,.14)}
+.opciones button.n2.on{border-color:rgba(211,184,94,.85);background:rgba(211,184,94,.14)}
+.opciones button.n3.on{border-color:rgba(220,135,86,.85);background:rgba(220,135,86,.14)}
+.opciones button.n4.on{border-color:rgba(217,111,103,.85);background:rgba(217,111,103,.14)}
 /* VENTANA PARA ELEGIR LUCHADOR
    La misma forma que el cartel de descartar cartas: se pone por encima de
    todo, con las cuatro cartas de personaje, y se toca la que se quiere. */
@@ -1121,6 +1263,9 @@ input.codigo:focus{border-color:var(--madera-viva)}
   text-decoration:underline;text-underline-offset:3px;opacity:.75;
   padding:4px 8px;cursor:pointer}
 .rellenar:active{opacity:1;color:var(--madera-viva)}
+/* "rellenar asientos" habla de los asientos que tiene justo encima, así que
+   va pegado a ellos y no flotando a medio camino del siguiente bloque. */
+.rellenar.pegado{margin-top:0}
 
 #eligeL .cerrar{background:transparent;border:1px solid var(--tinta-3);border-radius:5px;
   color:var(--pergamino-2);font-family:inherit;font-size:13px;padding:9px 22px}
@@ -1166,11 +1311,204 @@ input.codigo:focus{border-color:var(--madera-viva)}
 .conmutador button.on{background:var(--tinta-3);color:var(--pergamino)}
 /* Vive en el pie, así que ya está siempre abajo y a la vista: no necesita
    ni "sticky" ni sombras que lo despeguen del fondo. */
+/* LA PUERTA AL JUEGO EN RED. Iba en letra de once píxeles y subrayada, con la
+   misma pinta que "rellenar asientos", y no se veía: es un camino entero del
+   juego, no una opción menor. Ahora tiene cuerpo de botón, pero perfilado en
+   vez de macizo, para que siga sin competir con "Empezar el combate", que es
+   lo que hay que tocar la mayoría de las veces. */
+/* ═══ DOS ENLACES QUE NO SE MUEVEN ════════════════════════════════════
+   "volver" iba justo detrás de lo último de la pantalla, así que subía y
+   bajaba según cuántos luchadores hubieras puesto: en la de dos aparecía a
+   media altura y en la de cuatro casi tocando el borde. Cambiar de sitio un
+   botón que siempre hace lo mismo obliga a buscarlo cada vez.
+
+   Ahora se queda clavado abajo, a la altura que tenía en la pantalla más
+   larga de todas (cuatro luchadores, todos contra todos), subido lo justo
+   para que ahí tampoco salga la barra de desplazamiento. */
+/* ═══ EL CRUCE ════════════════════════════════════════════════════════
+   El lema va pegado al título, como en la página de portada, para que se lea
+   como su continuación y no como un aviso suelto. Y los tres botones bajan:
+   pegados al título parecían parte de la cabecera, y hay sitio de sobra para
+   darles aire. */
+.portada.cruce .lema-cruce{font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;font-family:ui-monospace,Menlo,Consolas,monospace;
+  opacity:.7;margin:7px auto 0}
+/* ═══ QUE LA DE CUATRO QUEPA ══════════════════════════════════════════
+   Con cuatro luchadores y todas las opciones desplegadas el contenido pasaba
+   de 731 en un hueco de 694: barra de desplazamiento justo en la pantalla
+   más cargada. Los 37 que sobraban se recortan de los espacios ENTRE
+   bloques, que es donde no se echan de menos, y no de los botones, que hay
+   que poder tocar con el dedo. */
+.portada:not(.titulo) .cuerpo{gap:9px}
+
+/* Pegado debajo de "jugar online", sin el hueco que separa los bloques. */
+/* ═══ QUE QUEPA TAMBIÉN EN MÓVILES CORTOS ═════════════════════════════
+   La configuración más cargada —cuatro luchadores, todos contra todos y
+   responde cualquiera— cabía holgada en una pantalla de 844 pero se salía en
+   una de 667, que es un móvil de los pequeños. Aquí se aprieta lo que no se
+   toca con el dedo: el aire entre grupos y el que hay antes de los asientos.
+   Los botones se quedan igual de grandes, que es lo que importa. */
+}
+/* ═══ LA CAJA DE LOS AJUSTES ══════════════════════════════════════════
+   Guarda las preguntas de arriba y reserva SIEMPRE el alto que ocupan cuando
+   están todas, aunque falten. Así la mesa de asientos arranca a la misma
+   altura con dos luchadores que con cuatro, y el retrato que ibas a tocar
+   sigue donde lo dejaste al cambiar de modo. Las preguntas se quedan
+   pegadas arriba y el hueco que sobra cae por debajo, como un desplegable
+   que va llenándose. */
+.ajustes{display:flex;flex-direction:column;align-items:center;
+  width:100%;min-height:270px;justify-content:flex-start}
+/* La caja de la SALA reserva menos: allí no hay pregunta de dificultad de la
+   máquina (los asientos vacíos los llena la máquina sin preguntar), así que
+   guardar el mismo alto que en preparar era regalar un bloque entero de aire
+   —y es justo lo que dejaba a la sala sin colchón en móviles cortos. */
+.ajustes.sala{min-height:206px}
+.ajustes > *{width:100%}
+/* ═══ EL APRETÓN, POR TRAMOS ══════════════════════════════════════════
+   Antes esto entraba de golpe por debajo de 700 y hasta ahí no hacía nada.
+   Pero la sala se salía ya en 740, que es un móvil de los normales, y
+   preparar rozaba por un píxel en 640. Ahora se aprieta en dos tramos: uno
+   suave para los móviles medianos y otro más firme para los cortos, con
+   holgura de sobra en los dos para que no vuelva a rozar. */
+@media (max-height:780px){
+  .ajustes{min-height:290px}
+  .portada:not(.titulo) .cuerpo{gap:7px}
+  .prep h2{margin:15px 0 8px}
+  .opciones button{padding:10px 4px}
+  .opciones.aire button{padding:11px 4px}
+  .portada .sitios{margin-top:12px !important}
+  .clave{font-size:21px;padding:8px 8px 6px;margin-bottom:3px}
+  .clave .copia{font-size:9.5px;margin-top:3px}
+  .prep > .clave + .pista{font-size:9.5px;margin-bottom:4px}
+}
+@media (max-height:700px){
+  .portada:not(.titulo) .cuerpo{gap:4px;padding-top:2px}
+  .portada .sitios{margin-top:8px !important}
+  .portada .cabecera{padding-top:10px;padding-bottom:2px}
+  .ajustes{min-height:246px}
+  /* El aire completo no cabe en un móvil corto: aquí se da la mitad. Sigue
+     habiendo más distancia fuera que dentro, que es lo que separa los
+     grupos; solo que en menos sitio. */
+  .prep h2{margin:6px 0 4px}
+  .opciones button{padding:9px 4px}
+  .opciones.aire button{padding:10px 4px}
+  /* La sala lleva además el código enmarcado y su frase, que en preparar no
+     están: en un móvil corto eso es lo que la sacaba de la pantalla. */
+  .clave{font-size:19px;padding:7px 8px 5px;margin-bottom:2px}
+  .clave .copia{font-size:9px;margin-top:2px}
+  .prep > .clave + .pista{font-size:9px;margin-bottom:0}
+  .salir-sala{margin-bottom:0;padding:5px 14px}
+}
+/* ═══ AIRE PARA LAS PREGUNTAS ═════════════════════════════════════════
+   Los huecos se habían apretado hasta 9 píxeles peleando para que la
+   pantalla más cargada cupiera en un móvil corto, y en un móvil normal eso
+   dejaba las cuatro preguntas apelotonadas una encima de otra.
+
+   Pero el colchón que sobra NO es el mismo en todos: 148 píxeles en una
+   pantalla de 844, 66 en una de 740 y solo 13 en una de 667. Así que el aire
+   se reparte según lo que haya, no a ojo: mucho arriba, algo en las
+   medianas, y en las cortas se quedan como están, que es lo único que las
+   hace caber. La caja de ajustes crece a la vez, para que la mesa siga
+   anclada donde estaba. */
+@media (min-height:781px){
+  .portada:not(.titulo) .cuerpo{gap:18px}
+  .opciones button{padding:11px 4px}
+  .opciones.aire button{padding:13px 4px}
+  .ajustes{min-height:328px}
+  .ajustes.sala{min-height:252px}
+  .portada .sitios{margin-top:26px !important}
+}
+
+/* Al moverlo debajo de "jugar online" quedó DENTRO del bloque de opciones, y
+   se llevó de rebote el aspecto de botón grande de sus vecinos. Aquí se le
+   devuelve el suyo: enlace pequeño y en cursiva, que es lo que distingue una
+   puerta de servicio de una puerta principal. */
+/* El aviso del cuaderno y el botón de enviarlo: los dos discretos. */
+/* El aviso tiene que estar, pero no puede costar sitio: va en una línea, sin
+   márgenes propios y encajado en el aire que ya había antes de los asientos.
+   Con dos líneas sacaba barra de desplazamiento en móviles normales. */
+/* Abajo del todo de la primera pantalla, en el hueco que ya sobraba. Se lee
+   si te fijas y no se cruza con nada. */
+.portada.cruce .aviso-cuaderno{margin-top:auto;margin-bottom:4px;
+  font-size:9px;opacity:.42;max-width:300px;line-height:1.35;
+  text-align:center;color:var(--pergamino-2)}
+.cuaderno-b{font-style:italic;opacity:.6}
+.opciones .bajo-online{flex:0 0 auto;width:auto;align-self:center;
+  background:none;border:0;border-radius:0;padding:4px 8px;
+  margin:4px 0 0;color:var(--pergamino-2);font-size:11px;font-style:italic;
+  letter-spacing:.05em;text-decoration:underline;text-underline-offset:3px;
+  opacity:.75;line-height:1.2}
+.opciones .bajo-online:active{opacity:1;color:var(--madera-viva)}
+
+/* ═══ PEGADOS AL BOTÓN DE EMPEZAR ═════════════════════════════════════
+   "volver" y "salir de la sala" van descolgados al fondo del cuerpo, justo
+   encima del botón grande. Entre uno y otro había 31 píxeles: 2 de margen,
+   16 del fondo del cuerpo y 12 de la ceja del pie. Sumados parecían un hueco
+   a propósito, y el enlace quedaba flotando en tierra de nadie en vez de
+   leerse como lo que es: el hermano pequeño del botón de abajo. Se recortan
+   los dos que sobran y queda pegado sin llegar a tocarlo. */
+/* Un respiro entre el subtítulo y la primera pregunta: pegadas al encabezado
+   parecían parte de él. */
+.portada:not(.titulo) .cuerpo{padding-bottom:4px;padding-top:22px}
+.portada:not(.titulo) .pie{padding-top:6px}
+/* ═══ "VOLVER", CON LA MISMA FORMA QUE "SALIR DE LA SALA" ═════════════
+   Las dos hacen lo mismo —dejar esta pantalla y retroceder— y estaban
+   contadas de dos maneras distintas: una como enlace subrayado y la otra
+   como botón perfilado. Ahora comparten forma, tamaño y sitio. Lo que no
+   comparten es el color: la de la sala va en rojo apagado porque además
+   corta una conexión y deja a la gente que estaba dentro; ésta no rompe
+   nada, así que va en el tono del pergamino. */
+.cuerpo .rellenar.abajo-fijo{margin-top:auto;margin-bottom:2px;
+  display:block;width:auto;background:none;
+  border:1px solid rgba(200,190,165,.32);border-radius:6px;
+  color:var(--pergamino-2);font-family:inherit;font-size:12px;
+  letter-spacing:.04em;padding:6px 16px;
+  text-decoration:none;opacity:1}
+.cuerpo .rellenar.abajo-fijo:active{background:rgba(200,190,165,.14);
+  color:var(--pergamino)}
+/* El de desarrolladores, al fondo del todo: no es una forma de jugar y no
+   tiene por qué compartir sitio con las dos que sí lo son. */
+.cuerpo .rellenar.al-fondo{margin-top:auto;margin-bottom:10px}
+   Del tamaño de los otros botones acaparaba la vista y parecía la acción
+   principal. Ahora va estrecha y centrada: se ve, y no compite. */
+.empuja{flex:1 1 auto;min-height:0}
+.salir-sala{display:block;width:auto;margin:0 auto 2px;
+  background:none;border:1px solid rgba(226,99,90,.4);border-radius:6px;
+  color:rgba(226,99,90,.85);font-family:inherit;font-size:12px;
+  letter-spacing:.04em;padding:6px 16px;cursor:pointer}
+.salir-sala:active{background:rgba(226,99,90,.15);color:var(--pergamino)}
+
+.puerta-red{display:block;width:100%;max-width:330px;margin:14px auto 0;
+  box-sizing:border-box;background:rgba(200,140,70,.06);
+  border:1px solid rgba(200,140,70,.55);border-radius:6px;
+  color:var(--madera-viva);font-family:inherit;font-size:14.5px;
+  letter-spacing:.03em;padding:11px 8px;cursor:pointer}
+.puerta-red:active{background:rgba(200,140,70,.16);color:var(--pergamino)}
+
 .empezar{width:100%;max-width:330px;background:rgba(255,255,255,.03);
   border:1px solid var(--madera);border-radius:6px;color:var(--pergamino);
   font-family:inherit;font-size:16px;padding:12px}
 .empezar:active{background:rgba(255,255,255,.09)}
+/* ═══ VERDE CUANDO YA SE PUEDE ════════════════════════════════════════
+   El botón cambiaba de texto ("Faltan asientos" / "Empezar el combate") y de
+   opacidad, pero seguía siendo del mismo color apagado que todo lo demás.
+   Al ponerse verde en cuanto la mesa está lista, se ve desde el otro lado de
+   la pantalla que ya no falta nada: es el único sitio del juego donde el
+   verde significa "adelante". Vale para las dos, la de jugar solo y la de la
+   sala, porque las dos usan este mismo botón. */
+.empezar:not(:disabled){border-color:rgba(127,191,141,.75);
+  color:#CFE9D3;background:rgba(127,191,141,.13)}
+.empezar:not(:disabled):active{background:rgba(127,191,141,.24);
+  color:var(--pergamino)}
 .empezar:disabled{opacity:.4;border-color:var(--tinta-3);color:var(--pergamino-2)}
+/* ═══ VERDE CUANDO YA SE PUEDE EMPEZAR ════════════════════════════════
+   Apagado dice "aquí falta algo", pero no dice CUÁNDO deja de faltar: había
+   que leer el texto del botón para enterarse. El verde se ve sin leer, y es
+   el mismo que usa el juego para lo fácil y lo que va bien. Vale para las dos
+   pantallas: la de preparar y la de la sala. */
+.empezar.listo{border-color:rgba(127,191,141,.75);color:#CDEBD3;
+  background:rgba(127,191,141,.13)}
+.empezar.listo:active{background:rgba(127,191,141,.24);color:#F0FBF2}
 /* El enlace al juego en red va en el cuerpo, como todo lo demas, pero
    descolgado hasta el fondo del recuadro: el "auto" de arriba se come el
    hueco que sobra y lo empuja abajo. Si la lista de asientos llegara a
@@ -1211,6 +1549,20 @@ input.codigo:focus{border-color:var(--madera-viva)}
    las caras se colocarían respecto a la página entera y acabarían fuera.
    No cambia nada de lo que ya hay dentro. */
 #combate{position:relative}
+/* ═══ LA TENSIÓN DEL DAÑO QUE SE VA MONTANDO ══════════════════════════
+   No hay número nuevo en el tablero: el aviso de arriba YA dice cuánto daño
+   lleva el golpe y hacia quién va. Lo único que faltaba era el pulso. */
+#direccion.late .fuerte{display:inline-block;
+  animation:lateCifra 1s ease-in-out infinite;animation-delay:var(--lat,0s)}
+#direccion.late-fuerte{animation:lateMarco .78s ease-in-out infinite;
+  animation-delay:var(--lat,0s)}
+#direccion.late-fuerte .fuerte{animation-duration:.78s}
+@keyframes lateCifra{0%,100%{transform:scale(1);text-shadow:none}
+  50%{transform:scale(1.14);text-shadow:0 0 14px rgba(226,75,74,.7)}}
+@keyframes lateMarco{0%,100%{box-shadow:none}
+  50%{box-shadow:0 0 16px rgba(226,75,74,.42)}}
+@media (prefers-reduced-motion:reduce){
+  #direccion.late .fuerte,#direccion.late-fuerte{animation:none}}
 
 /* ---------- los emoticonos ----------
    El botón vive en la esquina muerta de abajo a la derecha de la zona de
@@ -1219,20 +1571,57 @@ input.codigo:focus{border-color:var(--madera-viva)}
    La cara usa la MISMA curva que los números de daño (sube), para que el
    gesto sea el del juego y no uno nuevo. Sale pegada a la ficha de quien
    habla; el daño sale por la derecha, así que no se pisan. */
-#botonCaras{position:absolute;right:8px;bottom:8px;z-index:6;
-  width:40px;height:40px;border-radius:50%;font-size:19px;line-height:1;
+/* ═══ POR QUÉ ESTO VIVE APARTE DEL TABLERO ════════════════════════════
+   El botón y la tira colgaban de #combate, y #combate se rehace entero en
+   cada repintado. En tu turno el tablero está quieto y la tira aguantaba;
+   en el turno de los demás se repinta a cada jugada y se la llevaba por
+   delante, así que la tira se cerraba sola en mitad de la partida.
+   Aquí no la toca nadie. */
+#zonaCaras{position:fixed;right:0;bottom:0;z-index:6;
+  display:flex;align-items:center;justify-content:flex-end;gap:5px;
+  padding:8px 8px 3px;pointer-events:none}
+/* ═══ MIENTRAS ESTÁ DESPLEGADA, LA TIRA MANDA ═════════════════════════
+   Cerrada, el botón se queda abajo del todo (z-index 6): es un adorno de la
+   esquina y no tiene por qué taparle nada a nadie.
+
+   Abierta es otra cosa. La tira es un menú puesto a propósito, y una carta
+   que cruza volando (z-index 70) le pasaba justo por encima: se tapaban los
+   emoticonos en el momento de elegir. Al abrirse sube por encima de todo lo
+   que vuela sobre el tablero —cartas, calcos, números de daño, carteles— y
+   así se ve entera pase lo que pase debajo.
+
+   Sigue por DEBAJO de lo que ocupa la pantalla entera: la lupa de una carta,
+   el historial y la portada. Eso es lo correcto: ahí la tira ya no pinta
+   nada, y además se cierra sola al abrirse un cartelón de esos. */
+#zonaCaras.desplegada{z-index:79}
+#zonaCaras > *{pointer-events:auto}
+#zonaCaras[hidden]{display:none}
+#botonCaras{width:40px;height:40px;border-radius:50%;font-size:19px;line-height:1;
   border:0.5px solid #8A7B62;background:#241E18;color:#C9BCA6;
   padding:0;cursor:pointer;opacity:.75;transition:opacity .15s}
 #botonCaras.abierto,#botonCaras:active{opacity:1}
-#tiraCaras{position:absolute;right:54px;bottom:8px;z-index:6;
-  display:flex;gap:5px;padding:5px 8px;border-radius:24px;
+#tiraCaras{display:flex;gap:5px;padding:5px 8px;border-radius:24px;
   border:0.5px solid #5C4A33;background:#16120F}
 .cara-b{width:38px;height:38px;border:0;background:none;padding:0;
   font-size:23px;line-height:1;border-radius:50%;cursor:pointer}
 .cara-b:active{background:#2A231C}
-.cara-vuela{position:fixed;font-size:30px;line-height:1;z-index:5;
-  text-shadow:0 2px 6px #000;pointer-events:none;
-  animation:sube 1.05s ease-out forwards}
+/* La capa de las caras: pegada arriba a la izquierda del documento, sin
+   tamaño y sin estorbar a los dedos. Solo existe para tener un punto de
+   referencia que no se rehace nunca (ver pintarCara). */
+#capaCaras{position:absolute;left:0;top:0;width:0;height:0;
+  pointer-events:none;z-index:5}
+/* Cuelga de esa capa, no del retrato ni de la pantalla. Arranca pegada al
+   borde de abajo del retrato y sube desde ahí. */
+.cara-vuela{position:absolute;font-size:30px;line-height:1;
+  text-shadow:0 2px 6px #000;pointer-events:none;white-space:nowrap;
+  animation:subeCara 1.5s ease-out forwards}
+/* Igual que "sube" pero con más recorrido de sobra al principio y un final
+   más lento: la cara sale un poco más abajo y se queda un pelín más. */
+@keyframes subeCara{
+  0%{opacity:0;transform:translateY(10px) scale(.7)}
+  18%{opacity:1;transform:translateY(0) scale(1.14)}
+  70%{opacity:1;transform:translateY(-20px) scale(1)}
+  100%{opacity:0;transform:translateY(-34px) scale(1)}}
 
 /* ---------- daño ---------- */
 .golpe{position:absolute;right:10px;top:0;font-size:30px;color:var(--alarma);
@@ -1320,6 +1709,16 @@ details.registro{border-top:1px solid var(--tinta-3);padding-top:6px}
    ocupar media pantalla. Aquí no crece: ocupa lo que ocupa su palabra. */
 #soltar button.accion{flex:0 0 auto;align-self:center;
   padding:9px 26px;height:auto;font-size:14px}
+
+/* ═══ EL RELLENO DEL CRUCE, AL FINAL ══════════════════════════════════
+   Va aquí abajo del todo a propósito. Los ajustes por tamaño de pantalla
+   están más arriba y, puesto entre ellos, cualquiera de esos bloques le
+   ganaba por ir después y el cruce se quedaba con el relleno de preparar.
+   Al final de la hoja gana sin necesidad de "!important", que era la otra
+   salida y la que se colaba en pantallas donde no tocaba. */
+.portada.cruce .cuerpo{padding-top:112px}
+@media (max-height:780px){ .portada.cruce .cuerpo{padding-top:78px} }
+@media (max-height:700px){ .portada.cruce .cuerpo{padding-top:54px} }
 </style>
 </head>
 <body>
@@ -1648,7 +2047,7 @@ const CARTAS = [
      verdad; cuando las cuentes, se cambian aquí y ya está.
      ======================================================================= */
 
-  { id:"nestor_personaje", mazo:"nestor", nombre:"Nestor Valdez", tipo:"personaje",
+  { id:"nestor_personaje", mazo:"nestor", nombre:"Néstor Valdez", tipo:"personaje",
     nivel:0, copias:1, texto:"", cita:"", arte:"personaje", efecto:{} },
 
   { id:"nestor_rabia", mazo:"nestor", nombre:"Rabia", tipo:"mejora",
@@ -1821,7 +2220,7 @@ const CARTAS = [
 const MAZOS = [
   { id:"roku",   nombre:"Roku Shoju",    corto:"Roku" },
   { id:"nori",   nombre:"Nori Akunawa",  corto:"Nori" },
-  { id:"nestor", nombre:"Nestor Valdez", corto:"Nestor" },
+  { id:"nestor", nombre:"Néstor Valdez", corto:"Néstor" },
   { id:"mailo",  nombre:"Mai-lo Verion", corto:"Mai-lo" }
 ];
 
@@ -1832,11 +2231,16 @@ const MAZOS = [
 
 const REGLAS = { pvIniciales:22, manoInicial:5, topeMano:13, asaltosParaGanar:2,
   /* ¿Puede responder a un golpe CUALQUIERA de la mesa, aunque no sea de su
-     bando? El reglamento de cartón lo permite en el Combate Múltiple. Aquí va
-     apagado a propósito: con el móvil pasando de mano en mano, preguntarle a
-     todo el mundo por cada golpe alarga las partidas sin que nadie gane nada
-     (en libre no tienes ningún motivo para salvar a un rival). Ponlo en true
-     y vuelve a ser exactamente lo que dice el libro. */
+     bando? El reglamento de cartón lo permite en el Combate Múltiple.
+
+     ESTO NO SE TOCA A MANO: lo pone la pregunta "¿Quién puede responder?"
+     de la pantalla de preparación (y la misma pregunta en la sala, si se
+     juega en red). Sale a partir de tres luchadores y sin bandos, que es la
+     única mesa donde la regla cambia algo: en el duelo no hay terceros, y
+     en bandos el manual ya dice que responde el bando.
+
+     El valor de aquí abajo es solo el que trae puesto el menú al abrirlo.
+     iniciarCombate lo vuelve a escribir con lo que hayas elegido.        */
   respondenTodos:false,
 
   /* ¿El que se queda solo de su bando hereda el turno de su compañero?
@@ -1868,6 +2272,10 @@ const VELOCIDAD = 1.35;
 function lento(ms){ return Math.round(ms * VELOCIDAD); }
 // Las animaciones viven en el CSS: se les pasa la velocidad como variable.
 document.documentElement.style.setProperty("--vel", VELOCIDAD);
+/* El dorso de las cartas, disponible para el CSS. Lo usa el icono del mazo
+   de la hoja de personaje; así la imagen viaja una vez y no en cada ficha. */
+if(IMAGENES.dorso && IMAGENES.dorso.src)
+  document.documentElement.style.setProperty("--dorso", "url(" + IMAGENES.dorso.src + ")");
 
 const RITMO_BASE = {
   turno:         1650,   // antes de jugar su carta del turno. Solo esta: es
@@ -2150,6 +2558,13 @@ function idMejora(mazoId){
   return c ? c.id : null;
 }
 
+// Y su NOMBRE, para los carteles: "Concentración", "Rabia" o "Motivación",
+// según el luchador. Sale de la tabla de cartas, nunca escrito a mano.
+function nombreMejora(mazoId){
+  const c = CARTAS.find(x => x.mazo === mazoId && x.tipo === "mejora");
+  return c ? c.nombre : "Mejora";
+}
+
 // Contador de etiquetas. Cada carta que llega a una mano recibe un número
 // distinto que no se repite en toda la partida. Sirve para una sola cosa:
 // que la pantalla sepa qué cartas son nuevas y las haga entrar volando.
@@ -2160,7 +2575,7 @@ function crearAsiento(nombre, mazoId, controlador, dif){
            pv:0, nivel:1, mejorasEnMesa:0, aturdido:false,
            mano:[], manoEtq:[], mazo:[], descartes:[], asaltos:0, ultimaJugada:null, sello:0,
            ultimaMejora:null, selloMejora:0, paciencia:0, avisadoLleno:false,
-           berserker:false, inicioBers:0 };
+           berserker:false, inicioBers:0, marcaDesde:0 };
 }
 
 function prepararAsalto(a){
@@ -2168,7 +2583,7 @@ function prepararAsalto(a){
   a.fuera = false;
   a.mano = []; a.manoEtq = []; a.descartes = []; a.ultimaJugada = null;
   a.ultimaMejora = null; a.selloMejora = 0; a.paciencia = 0; a.avisadoLleno = false;
-  a.berserker = false; a.inicioBers = 0;
+  a.berserker = false; a.inicioBers = 0; a.marcaDesde = 0;
   // Cuaderno en blanco: lo aprendido en el asalto anterior ya no vale, porque
   // los mazos se rehacen enteros y las manos son nuevas.
   ESTADO.cronica = []; ESTADO.ultimoGolpe = null;
@@ -2188,11 +2603,18 @@ function reciclarMazo(a){
   return true;
 }
 
+/* ═══ EL TOPE DE 13 ES SOLO DEL ROBO DE TURNO ═══════════════════════════
+   Manda el cartón. El manual pone el tope en un único sitio: al empezar tu
+   turno coges una carta "siempre que no poseas MÁS de 13 cartas en tu mano".
+   O sea: con 13 justas SÍ se roba (te quedas con 14); a partir de 14 ya no.
+
+   Y las tácticas ("coge las tres cartas superiores") no llevan tope ninguno
+   en el reglamento, así que aquí tampoco. Por eso robar() ya no mira el tope:
+   lo mira empezarTurno, que es donde lo pone el manual.                    */
 function robar(a, cuantas){
   sonar("robo");
   let n = 0;
   for(let i = 0; i < cuantas; i++){
-    if(a.mano.length >= REGLAS.topeMano) break;
     if(a.mazo.length === 0 && !reciclarMazo(a)) break;
     a.mano.push(a.mazo.shift()); a.manoEtq.push(++ETIQUETA); n++;
   }
@@ -2200,10 +2622,10 @@ function robar(a, cuantas){
   return n;
 }
 
-// Avisa una sola vez cada vez que la mano se llena. Se rearma sola en cuanto
-// baja de 13, así que si vuelves a llenarla te lo vuelve a decir.
+// Avisa una sola vez cada vez que la mano pasa del tope. Se rearma sola en
+// cuanto vuelve a bajar, así que si te vuelves a pasar te lo vuelve a decir.
 function revisarManoLlena(a){
-  if(a.mano.length >= REGLAS.topeMano){
+  if(a.mano.length > REGLAS.topeMano){
     if(!a.avisadoLleno){ a.avisadoLleno = true; avisarManoLlena(a); }
   }else a.avisadoLleno = false;
 }
@@ -2268,13 +2690,13 @@ function jugarMejora(a, indiceMano){
     a.nivel++;
     sonar("nivel");
     anotar(a.nombre + " sube a " + NOMBRE_NIVEL[a.nivel] + ".", "hito");
-    evento(a, "nivel " + NOMBRE_NIVEL[a.nivel], "gasta sus Concentraciones");
+    evento(a, "nivel " + NOMBRE_NIVEL[a.nivel], "gasta sus Mejoras");
     subeMarca("▲ " + NOMBRE_NIVEL[a.nivel], "niv" + a.nivel + " chico");
     if(a.nivel === 4) anotar("Las dos Mejoras se quedan en la mesa para las técnicas Maestras.");
     else { a.mejorasEnMesa = 0; a.descartes.push(id, id); a.selloMejora = ++ESTADO.sello; }
   }else{
     anotar(a.nombre + " pone una Mejora en la mesa (" + a.mejorasEnMesa + ").");
-    evento(a, "Concentración");
+    evento(a, nombreMejora(a.mazoId));
   }
 }
 
@@ -2289,7 +2711,11 @@ function lanzarTecnica(origen, objetivo, carta){
   if(window.__m) window.__m.ataques[origen]++;
   ESTADO.pendiente = { origen, objetivo, dano: carta.efecto.dano || 0, nivel: carta.nivel,
                        inevitable: !!carta.efecto.inevitable, aturde: !!carta.efecto.aturde,
-                       nombre: carta.nombre };
+                       nombre: carta.nombre,
+                       /* El número de ESTE intercambio. Lo hereda cada rebote,
+                          para poder contar cuántas veces ha subido el daño sin
+                          perder la cuenta cada vez que cambia de dirección. */
+                       intercambio: ++ESTADO.sello };
   anotar(ESTADO.asientos[origen].nombre + " usa " + carta.nombre + " ("
          + NOMBRE_NIVEL[carta.nivel] + ") contra " + ESTADO.asientos[objetivo].nombre + ".", "nuevo");
   if(carta.efecto.inevitable) anotar("Es inevitable: no admite respuesta.");
@@ -2499,6 +2925,7 @@ function usarRespuesta(indiceAsiento, indiceMano){
     anotar("Devuelve " + p.dano + " + " + c.efecto.devuelve + " = " + total + " de daño.");
     ESTADO.pendiente = { origen: indiceAsiento, objetivo: p.origen, dano: total,
                          nivel: c.nivel, inevitable: false, nombre: c.nombre,
+                         intercambio: p.intercambio,   // sigue siendo el mismo golpe
                          reflejo: true };   // va de rebote: se resuelve rápido
     pedirRespuesta();
     return;
@@ -2671,10 +3098,8 @@ function aplicarEfectoNoAtaque(a, c, seguir, objetivo){
   if(!c.efecto.roba){ seguir(); return; }
   const n = robar(a, c.efecto.roba);
   anotar(a.nombre + " usa " + c.nombre + " y coge " + n + " cartas"
-         + (n < c.efecto.roba ? " (tope de mano)" : "") + ".", "nuevo");
+         + (n < c.efecto.roba ? " (no le quedaban más)" : "") + ".", "nuevo");
   evento(a, "+" + n + (n === 1 ? " carta" : " cartas"), c.nombre);
-  // Se quedó corto por el tope: conviene avisarlo, no es un fallo del juego.
-  if(n < c.efecto.roba) avisarManoLlena(a);
   const sueltas = Math.min(c.efecto.descarta || 0, n);
   if(!sueltas){ seguir(); return; }
   elegirDescartes(a, n, sueltas, seguir);
@@ -2724,6 +3149,12 @@ function soltarLoElegido(quien, elegidas){
 
 function empezarTurno(){
   if(ESTADO.fase === "finAsalto" || ESTADO.fase === "finCombate") return;
+  /* Con un berserker en el aire, el turno espera: si no, se roba una carta y
+     se reparte mientras la ficha está saltando. */
+  if(berserkerEnMarcha()){
+    tarde(PARADA_BERS - Date.now() + 30, empezarTurno);
+    return;
+  }
   /* ═══ RED DE SEGURIDAD ══════════════════════════════════════════════
      Empezar un turno cancela cualquier puntería que se hubiera quedado a
      medias. Sin esto, si una carta se quedaba apuntando y el turno cambiaba
@@ -2747,7 +3178,9 @@ function empezarTurno(){
     return;
   }
   if(!ESTADO.primeraAccion){
-    if(a.mano.length >= REGLAS.topeMano){
+    // "Siempre que no posea MÁS de 13 cartas en su mano" (manual). Con 13
+    // justas todavía se roba; el turno se queda sin robo a partir de 14.
+    if(a.mano.length > REGLAS.topeMano){
       // Aquí el tope cuesta una carta de verdad, así que se avisa siempre.
       anotar(a.nombre + " no roba: tope de " + REGLAS.topeMano + " cartas.");
       a.avisadoLleno = true;
@@ -2934,7 +3367,7 @@ function revisarBerserker(){
     if(ahora === !!s.berserker) return;      // sigue igual que estaba
     s.berserker = ahora;
     if(!ahora){
-      s.inicioBers = 0;
+      s.inicioBers = 0; s.marcaDesde = 0;
       anotar(s.nombre + " ya no está en inferioridad: se acaba el berserker.", "hito");
       return;
     }
@@ -2946,6 +3379,18 @@ function revisarBerserker(){
     // El rótulo espera a que la mesa se haya recogido: si sale ahora se come
     // el aviso del golpe que acaba de tumbar al compañero.
     const espera = RITMO.recoge + RITMO.barrido, LEE = 2400;
+    /* ═══ HASTA AQUÍ LA FICHA NO CAMBIA ═══════════════════════════════
+       La hora en que se retira el cartel. Hasta ese momento la ficha se
+       dibuja como estaba: sin marco rojo, sin latido y sin rótulo. Antes
+       esto lo llevaba la congelación de la mesa, pero el golpe mortal
+       repinta la pantalla ANTES de congelar nada (danoDirecto avisa y
+       pinta en el acto), y en ese repintado el compañero ya está a cero,
+       así que la ficha se encendía en el mismo instante de la muerte:
+       medido, marca roja en el segundo 0,0 y cartel en el 3,1. Con la
+       hora apuntada aquí da igual quién repinte por el camino. */
+    s.marcaDesde = Date.now() + espera + LEE;
+    /* Hasta que aterrice: el cartel, más el salto (640) y un respiro. */
+    PARADA_BERS = Date.now() + espera + LEE + 820;
     /* Y hasta que ese rótulo no se va, en la mesa NO SE MUEVE NADIE: el
        caído sigue en su sitio y el berserker late donde está. Cuando el
        cartel desaparece, se descongela y las fichas se deslizan. */
@@ -3005,6 +3450,7 @@ function finAsalto(ganador){
   if(combate){
     ESTADO.fase = "finCombate";
     anotar("═ " + nombres + " " + verbo + " el combate ═", "hito");
+    cuadernoCerrar();          // la partida ya tiene final: se archiva
   }else ESTADO.fase = "finAsalto";
   pintar();
   // Las cartas del intercambio tardan en barrerse (1200 ms de margen + 640 de
@@ -3349,7 +3795,12 @@ const DIFICULTADES = [
     penalTempo:0, valorAturdir:0, piensaTras:false, manoMala:"tira",
     sopesa:1.15, cubrirAjeno:-2.5, aprende:false, instinto:0 },
 
-  { id:"campeonato", nombre:"Campeonato", clase:"n3",
+  /* Amarillo, no naranja. La escala de colores se heredó de cuando había
+     CUATRO niveles (verde, amarillo, naranja, rojo); al quedarse en tres, el
+     de en medio se quedó con el naranja y saltándose el amarillo. Y el
+     naranja en este juego ya significa otra cosa —"esto se toca"—, así que
+     además de saltar un escalón, confundía. */
+  { id:"campeonato", nombre:"Campeonato", clase:"n2",
     pie:"El combate de verdad. Mejora en cuanto puede, no falla un remate y aprovecha cada respuesta. Ataca de frente: no mide lo que le puedes devolver, y ahí es donde se le gana.",
     despiste:.04, veLetal:1, respondeFlojo:.70, respondeFuerte:1,
     usaMaestras:true, prudente:false, ahorra:true,
@@ -4430,15 +4881,18 @@ function htmlMejoras(a, indice){
 }
 
 /* LAS DOS CUENTAS DEL DUELO
-   Cartas en la mano y cartas que quedan en el mazo, debajo del nivel. Son
+   Cartas que quedan en el mazo y cartas en la mano, debajo del nivel. Son
    los MISMOS iconos que lleva la ficha de la mesa de tres y cuatro, y llevan
    los mismos identificadores (mn0, mz0, mn1, mz1...), asi que las
    animaciones no tienen que preguntar en que modo estan: buscan el icono del
-   asiento y ya. */
+   asiento y ya.
+
+   El mazo va PRIMERO y la mano DESPUÉS. Solo cambia el sitio de cada uno:
+   los identificadores siguen atados a lo que cuentan, no a donde salen. */
 function htmlCuentas(a, indice){
   return '<div class="cuentas-d">' +
-    '<span class="cuenta-d" id="mn' + indice + '">' + IC_MANO + a.mano.length + '</span>' +
     '<span class="cuenta-d" id="mz' + indice + '">' + IC_MAZO + a.mazo.length + '</span>' +
+    '<span class="cuenta-d" id="mn' + indice + '">' + IC_MANO + a.mano.length + '</span>' +
   '</div>';
 }
 
@@ -4494,7 +4948,10 @@ function pintarDorsosRival(){
   // mano cabe enfrente. Con tres o cuatro, cada uno lleva su cuenta en la ficha.
   if(mesaGrande()){ caja.innerHTML = ""; caja.dataset.clave = ""; return; }
   const a = ESTADO.asientos[asientoOtro()];
-  const n = Math.min(a.mano.length, 13);
+  // Hasta 14: es lo máximo que puede tener una mano con la regla del cartón
+  // (con 13 justas todavía se roba). Así el abanico y el número de la ficha
+  // dicen siempre lo mismo.
+  const n = Math.min(a.mano.length, REGLAS.topeMano + 1);
   /* EL ABANICO DE DORSOS SOLO DEPENDE DE CUÁNTOS SON
      Antes se rehacía en CADA repintado del tablero. Como la carta que el
      rival acaba de robar entra con una animación de medio segundo, cualquier
@@ -4553,6 +5010,7 @@ function pintarLuchador(indice, contenedorId){
 
   document.getElementById(contenedorId).innerHTML =
     '<div class="luchador a' + tinte(indice) + (activo ? ' activo' : '') +
+      (indice === asientoLocal() ? ' yo' : '') +
       (destello ? ' toca' : '') + (espera ? ' espera' : '') + '" id="lu' + indice + '">' +
       '<div class="avatar" data-lupa="' + a.mazoId + '_personaje" style="' + (avatar || "") + '">' +
         (avatar ? "" : svgReserva("personaje")) + '</div>' +
@@ -4586,7 +5044,10 @@ function pintarLuchador(indice, contenedorId){
    devuelve null, y quien llame se las arregla sin vuelo. */
 function anclaMazo(i){
   const caja = document.getElementById("mz" + i);
-  return caja ? (caja.querySelector("svg") || caja) : null;
+  /* El dibujo puede ser un svg (la mano) o el apilado del mazo, que ya no
+     es un svg sino tres cantos con el dorso. Si no se nombra aquí, el vuelo
+     se ancla al recuadro entero —icono MÁS número— y sale descentrado. */
+  return caja ? (caja.querySelector("svg,.ic-mazo") || caja) : null;
 }
 
 // Cartel que dice cuánto daño hay en el aire y hacia quién va.
@@ -4760,7 +5221,7 @@ const TURNOS_MUDOS = ["te toca a ti…", "le toca a la IA…",
 
 /* Coletillas que repiten lo que ya dice la línea. Se añaden o se quitan de
    aquí; el motor las sigue mandando, solo no se pintan. */
-const PIES_MUDOS = ["el golpe entra", "gasta sus Concentraciones",
+const PIES_MUDOS = ["el golpe entra", "gasta sus Mejoras",
                     "pierde su próximo turno", "pierde el turno",
                     "pierde su turno", "sin jugar nada"];
 
@@ -4905,13 +5366,21 @@ function htmlDireccion(){
      mitad del temblor, volvía a rojo porque el turno seguía siendo suyo.
      Texto y recuadro cambian ahora en el mismo instante, siempre. */
   const color = (ahora && ahora.d >= 0) ? "a" + ahora.d : "neutro";
-  return '<div class="direccion ' + color +
+  /* El latido del daño acumulado se escribe AQUÍ, no después. Si se pusiera
+     encima del recuadro ya hecho, la siguiente línea que entrase en el
+     rodillo lo rehace y se lo lleva por delante: eso es lo que apagaba el
+     pulso justo al aparecer la pregunta. */
+  apuntarSubida();
+  const pulso = pulsoMonton();
+  const late = pulso ? " late" + (pulso.fuerte ? " late-fuerte" : "") : "";
+  const desfase = pulso ? ' style="--lat:' + retrasoDelPulso(pulso) + '"' : "";
+  return '<div class="direccion ' + color + late +
     /* El rodillo se repinta muchas veces por turno. Si la vuelta del
        triangulito viviera solo en la clase que pone abrirHistorial, el
        primer repintado la borraria y el triangulito volveria a apuntar
        hacia abajo con el historial todavia abierto. Se mira aqui. */
-    (document.getElementById("historial") ? " abierto" : "") + '" id="direccion">' +
-         cuerpo + '</div>';
+    (document.getElementById("historial") ? " abierto" : "") + '" id="direccion"' +
+    desfase + '>' + cuerpo + '</div>';
 }
 
 
@@ -4971,6 +5440,92 @@ function pintarCombate(){
   }
   while(caja.nextSibling) zona.removeChild(caja.nextSibling);
   caja.insertAdjacentHTML("afterend", htmlSecuencia());
+  apuntarSubida();
+  pintarMonton();
+}
+
+/* ═══ EL PULSO DEL DAÑO ACUMULADO ═════════════════════════════════════
+   Late a partir de la SEGUNDA subida, no de la primera: un golpe suelto no
+   tiene nada de tenso, y duplicar la cifra en la carta que lo empieza
+   sobraba.
+
+   Y a partir de 5 acumulado el latido se acelera y arrastra al marco. El 5
+   no salió a ojo: medidos 15.521 golpes de 400 partidas, el 63% son de 1 o
+   2 y la mediana es 2; de 5 en adelante queda el 6,4% de los golpes —uno de
+   cada quince— y de esos mata uno de cada cuatro. Con 4 saltaría demasiado
+   (uno de cada seis) y con 6 casi no se vería. */
+const MONTON_GORDO = 5;
+const MONTON = { quien:null, ultimo:0, subidas:0, desde:0 };
+
+/* Cuántas veces ha subido el daño de ESTE golpe. La primera no cuenta. */
+function apuntarSubida(){
+  const p = ESTADO.pendiente;
+  if(!p || !(p.dano > 0)){ MONTON.quien = null; MONTON.subidas = 0; MONTON.ultimo = 0; MONTON.desde = 0; return; }
+  /* ═══ EL INTERCAMBIO, NO LA DIRECCIÓN ═══════════════════════════════
+     Esta huella era "quién pega a quién", y el daño solo sube cuando alguien
+     DEVUELVE el golpe... que es justo cuando se da la vuelta la dirección.
+     Así que la huella cambiaba en cada subida, la cuenta volvía a empezar y
+     nunca llegaba a dos: medido en un intercambio de 2 → 3 → 4 → 6, las
+     subidas se quedaron en 1 las cuatro veces y el rodillo no latió ni una.
+     Ahora la huella es el número del intercambio, que los rebotes heredan.
+     Sin él (una partida en red que venga de otro móvil) se usa la pareja,
+     sin orden: da igual hacia dónde vaya el golpe, es el mismo pique. */
+  const huella = (p.intercambio
+                  || Math.min(p.origen, p.objetivo) + "-" + Math.max(p.origen, p.objetivo))
+                 + ":" + ESTADO.asalto;
+  if(MONTON.quien !== huella){
+    MONTON.quien = huella; MONTON.subidas = 1; MONTON.ultimo = p.dano;
+    MONTON.desde = 0;                 // pique nuevo, latido nuevo
+    return;
+  }
+  if(p.dano > MONTON.ultimo){ MONTON.subidas++; MONTON.ultimo = p.dano; }
+}
+
+/* ¿Late ahora mismo el rodillo, y con qué fuerza? Una sola función para
+   decidirlo, que es lo que hacía falta: antes lo decidía pintarMonton() y lo
+   escribía SOBRE el recuadro ya pintado.
+
+   ═══ POR QUÉ SE PARABA JUSTO EN LA PREGUNTA ══════════════════════════
+   El latido vivía en una clase que se le ponía al recuadro DESPUÉS de
+   dibujarlo, y solo desde pintarCombate(). Pero cuando entra una línea nueva
+   —"responde o encájalo", por ejemplo— no se repinta la mesa entera: solo se
+   rehace la franja, y al rehacerla nace un recuadro nuevo, sin la clase. El
+   daño seguía ahí, en la línea pequeña, pero ya no latía. Y como en ese
+   momento la partida está parada esperándote, no llegaba ningún repintado
+   que se la devolviera: el latido se quedaba apagado toda la pregunta.
+
+   Ahora la clase se escribe DENTRO del propio recuadro, así que da igual
+   cuántas veces se rehaga la franja: nace latiendo si tiene que latir.   */
+function pulsoMonton(){
+  const p = ESTADO.pendiente;
+  const total = p ? (p.dano || 0) : 0;
+  if(!p || total <= 0 || MONTON.subidas < 2){ MONTON.desde = 0; return null; }
+  /* La hora a la que empezó a latir. Sirve para que el latido NO vuelva a
+     empezar de cero en cada repintado: se le resta lo que ya lleva andado y
+     retoma por donde iba. Es el mismo truco que el latido del berserker; sin
+     él, cada línea nueva del rodillo le daba un tirón al pulso. */
+  if(!MONTON.desde) MONTON.desde = Date.now();
+  return { fuerte: total >= MONTON_GORDO, desde: MONTON.desde };
+}
+
+function pintarMonton(){
+  const caja = document.getElementById("direccion");
+  if(!caja) return;
+  const pulso = pulsoMonton();
+  if(!pulso){
+    caja.classList.remove("late", "late-fuerte");
+    caja.style.removeProperty("--lat");
+    return;
+  }
+  caja.classList.add("late");
+  caja.classList.toggle("late-fuerte", pulso.fuerte);
+  caja.style.setProperty("--lat", retrasoDelPulso(pulso));
+}
+
+// Lo que ya lleva andado el latido, en negativo: así arranca por ahí.
+function retrasoDelPulso(pulso){
+  const ciclo = pulso.fuerte ? 780 : 1000;
+  return "-" + ((Date.now() - pulso.desde) % ciclo) + "ms";
 }
 
 // La carta que juega la IA sale de su abanico, vuela hasta la mesa y se gira.
@@ -4995,7 +5550,7 @@ function volarCarta(cartaId, destino, opciones){
      hasta cuándo dura el vuelo y se vuelve a esconder en cada repintado. */
   if(o.ocultarDestino){
     destino.style.visibility = "hidden";
-    VUELO.volando = Date.now() + 820;
+    VUELO.volando = Date.now() + lento((opciones && opciones.dura) || 780) + 40;
   }
 
   const v = document.createElement("div");
@@ -5004,8 +5559,37 @@ function volarCarta(cartaId, destino, opciones){
   v.style.width = an + "px"; v.style.height = al + "px";
   v.style.left = x0 + "px"; v.style.top = y0 + "px";
   const fondo = IMAGENES.dorso ? "background-image:url(" + IMAGENES.dorso.src + ")" : "";
-  v.innerHTML = '<div class="cara atras" style="' + fondo + '"></div>' +
-                '<div class="cara frente"><div class="carta">' + htmlCarta(defCarta(cartaId)) + '</div></div>';
+  /* ═══ LA TUYA NO SE GIRA ══════════════════════════════════════════
+     El vuelo nació para las cartas de los DEMÁS: salen de su abanico de
+     dorsos, llegan boca abajo y se giran al posarse. Para la tuya eso no
+     tiene sentido —la sueltas mirándola— y lo que se veía era la carta
+     dando una vuelta de campana en el aire. Con "sinGiro" nace ya de cara
+     y solo viaja. */
+  if(o.sinGiro){
+    v.classList.add("sin-giro");
+    v.innerHTML = '<div class="cara frente"><div class="carta">' +
+                  htmlCarta(defCarta(cartaId)) + '</div></div>';
+  }else{
+    v.innerHTML = '<div class="cara atras" style="' + fondo + '"></div>' +
+                  '<div class="cara frente"><div class="carta">' + htmlCarta(defCarta(cartaId)) + '</div></div>';
+  }
+  /* ═══ SALE DEL TAMAÑO QUE TENÍA EN TU MANO ═══════════════════════════
+     El calco nace con el tamaño del HUECO DE LA MESA y la clase .vuelo lo
+     arranca al 45%, que para las cartas del rival está bien: salen de un
+     abanico de dorsos diminuto. Para la tuya no: la sueltas con el dedo,
+     donde ocupaba 129 px, y aparecía de golpe un naipe de 51 px que luego
+     crecía. Se veía un tirón justo al soltar.
+
+     Con esto arranca midiendo EXACTAMENTE lo que medía en tu mano y en el
+     sitio donde la soltaste, y de ahí viaja al hueco encogiendo hasta
+     posarse. El cambiazo del clon del dedo por el calco no se ve. */
+  if(o.desdeTamano && r1.width && an)
+    v.style.transform = "scale(" + (r1.width / an).toFixed(3) + ")";
+  /* Y más rápida que la del rival: la del rival cuenta algo que no has visto
+     hacer, la tuya solo acompaña a tu propio dedo. Si la quieres más lenta o
+     más viva, este es el número (en milisegundos). */
+  const DURA = o.dura || 780;
+  if(o.dura) v.style.transitionDuration = "calc(" + (o.dura / 1000) + "s * var(--vel))";
   document.body.appendChild(v);
   /* Leer una medida del calco recién puesto obliga al navegador a calcular su
      postura de salida. Sin esto puede no ver nunca el "antes" y plantar la
@@ -5017,7 +5601,8 @@ function volarCarta(cartaId, destino, opciones){
   const esc = o.escala || 1;
   requestAnimationFrame(() => {
     v.style.transform = "translate(" + dx.toFixed(1) + "px," + dy.toFixed(1)
-                      + "px) rotateY(180deg) scale(" + esc + ")";
+                      + "px)" + (o.sinGiro ? "" : " rotateY(180deg)")
+                      + " scale(" + esc + ")";
   });
   setTimeout(() => {
     v.remove();
@@ -5025,7 +5610,7 @@ function volarCarta(cartaId, destino, opciones){
     const d = destino.isConnected ? destino
                                   : document.querySelector("#combate .paso.ult .carta");
     if(o.ocultarDestino && d) d.style.visibility = "";
-  }, lento(820));
+  }, lento(DURA + 40));
 }
 
 /* --- qué puedo hacer ahora mismo --- */
@@ -5068,6 +5653,7 @@ function indicesJugables(){
 }
 
 function jugarIndice(i){
+  if(berserkerEnMarcha()) return;      // la mesa está en el aire: espera
   const m = modoActual();
   const yo = asientoLocal();
   if(!indicesJugables().includes(i)) return;
@@ -5523,6 +6109,10 @@ function pintarMano(){
 // Cartelón para elegir qué cartas soltar. Sale por encima de todo y no deja
 // seguir hasta que hayas marcado exactamente las que toca.
 function pedirDescartes(a, idx, cuantas, listo){
+  /* La tira de emoticonos, abierta, va por encima de lo que vuela sobre el
+     tablero. Este cartelón ocupa la pantalla entera y manda más: se recoge
+     la tira para que no se le quede flotando en una esquina. */
+  cerrarCaras();
   const caja = document.createElement("div");
   caja.id = "soltar";
   caja.innerHTML =
@@ -5574,7 +6164,18 @@ function pintarAcciones(){
   if(ESTADO.pausa){
     if(mando) boton("Continuar", () => continuar(), true);
   }
-  else if(ESTADO.fase === "finCombate") boton("Otro combate", mostrarPortada, true);
+  else if(ESTADO.fase === "finCombate"){
+    /* Se llama "Salir" y no "Otro combate" porque es lo que hace: te devuelve
+       a la pantalla de inicio (y cierra la sala si estabas online). Llamarlo
+       "otro combate" hacía que el que no quería ni repetir ni enviar nada no
+       supiera por dónde salir, cuando la salida era justo ese botón. */
+    boton("Salir", mostrarPortada, true);
+    /* Aquí y no solo en la primera pantalla: el cuaderno se cierra justo al
+       acabar el combate, y este es el único momento en que quien ha jugado
+       está mirando y sabe de qué partida se le habla. En la portada el
+       enlace lo encuentra quien lo busca; aquí lo ve quien no lo buscaba. */
+    if(cuadernoCuantas()) boton("Enviar cuaderno", cuadernoEnviar);
+  }
   else if(ESTADO.fase === "finAsalto"){
     if(mando) boton("Siguiente asalto", () => siguienteAsalto(), true);
   }
@@ -5799,6 +6400,20 @@ function pintarAsientos(){
        Ocho píxeles es menos de lo que mide una letra: por debajo de eso no
        se ha movido nadie, es aritmética. */
     if(Math.abs(dx) < 8) return;
+    /* ═══ CON LA MESA CONGELADA NO SE ANIMA NADA ═══════════════════
+       Durante el anuncio del berserker la mesa está congelada: sigue el
+       caído en su sitio y nadie se ha recolocado todavía. Pero los anchos
+       se reajustan igual, y eso movía las fichas unos veinte píxeles.
+
+       Esos veinte píxeles se comían EL SALTO: saltoBerserker se disparaba
+       ahí —medido, dx=-19 con la mesa aún congelada y las cuatro fichas
+       puestas—, marcaba el salto como dado, y cuando llegaba el movimiento
+       de verdad hasta el centro ya solo quedaba deslizarse. Se veía temblar
+       sin haberse movido, que es exactamente lo que pasaba.
+
+       Mientras esté congelada no se anima nada: el salto es para el viaje
+       de verdad, el que sale cuando el cartel se retira. */
+    if(mesaCongelada()) return;
     const asiento = +el.id.replace("lu", "");
     const s = ESTADO.asientos[asiento];
     /* Y aunque se moviera de verdad otra vez, se salta UNA SOLA VEZ por
@@ -5873,6 +6488,19 @@ function pintarAsientos(){
    (getBoundingClientRect cuenta la transformación) y la lanzaría otra vez
    desde donde estuviera. Se veía un tartamudeo.                          */
 let VUELO_FICHA = 0;
+
+/* ═══ EL JUEGO ESPERA A QUE EL BERSERKER ATERRICE ═════════════════════
+   La mesa ya se quedaba quieta durante el anuncio y el salto, pero el JUEGO
+   no: se seguían robando cartas y pasando turnos por debajo. El resultado
+   era que el salto se veía a destiempo, con cartas repartiéndose encima de
+   la ficha en el aire.
+
+   Aquí se apunta hasta cuándo dura toda la escena —el cartel, el salto y el
+   aterrizaje— y ni se roba, ni se juega, ni piensa la máquina hasta que se
+   acaba. Es medio segundo de nada, y es el único momento del combate en el
+   que interesa que no pase otra cosa. */
+let PARADA_BERS = 0;
+function berserkerEnMarcha(){ return Date.now() < PARADA_BERS; }
 let SALTO_DADO = 0;      // el inicioBers del berserker que ya dio su salto
 
 /* ═══ EL CIERRE DE LA MESA ════════════════════════════════════════════
@@ -6013,14 +6641,25 @@ function ordenFichas(){
 /* Una ficha de la mesa grande. Lleva lo mismo que la de siempre pero en
    vertical y encogido: retrato, PV, vida, nivel, Mejoras puestas, y las dos
    cuentas (cartas en la mano y cartas que le quedan en el mazo). */
-const IC_MANO = '<svg viewBox="0 0 12 14"><g fill="#EFE7D2" fill-opacity=".85" stroke="#0B0A08" stroke-width=".7">' +
-  '<rect x="0.5" y="4" width="5" height="8" rx="1" transform="rotate(-16 3 8)"/>' +
-  '<rect x="3.5" y="3" width="5" height="8" rx="1"/>' +
-  '<rect x="6.5" y="4" width="5" height="8" rx="1" transform="rotate(16 9 8)"/></g></svg>';
-const IC_MAZO = '<svg viewBox="0 0 12 14"><g stroke="#0B0A08" stroke-width=".8">' +
-  '<rect x="1" y="4.4" width="7.5" height="8.6" rx="1" fill="#8A4B22"/>' +
-  '<rect x="2" y="3.2" width="7.5" height="8.6" rx="1" fill="#A96330"/>' +
-  '<rect x="3" y="2" width="7.5" height="8.6" rx="1" fill="#C97B3E"/></g></svg>';
+/* ═══ LA MANO ════════════════════════════════════════════════════════
+   Eran tres cartitas en abanico, que a 11 píxeles se confundían con el
+   icono del mazo de al lado: dos montoncitos de rectángulos casi iguales.
+   Ahora es una mano abierta con los dedos separados, una sola silueta.
+   Se dibuja de una pieza (un solo trazo cerrado) a propósito: con los
+   dedos por separado, a este tamaño los huecos entre ellos se cierran y
+   parece una zarpa. */
+const IC_MANO = '<svg viewBox="0 0 12 14">' +
+  /* En amarillo, no en hueso: al lado del mazo (que ahora es gris oscuro) los
+     dos iconos en color pergamino se leían como una misma cosa. El amarillo
+     los separa de un vistazo y es el color que ya usa el juego para avisar. */
+  '<path fill="#F2C744" fill-opacity=".95" stroke="#0B0A08" stroke-width=".7" ' +
+  'stroke-linejoin="round" d="M2.2 8.1 L1.0 6.4 a.9 .9 0 0 1 1.5 -1 L3.6 6.9 L3.3 2.6 ' +
+  'a.95 .95 0 0 1 1.9 -.1 L5.5 6.4 L5.6 1.6 a.95 .95 0 0 1 1.9 0 L7.6 6.4 L8.0 2.5 ' +
+  'a.95 .95 0 0 1 1.9 .2 L9.6 7.4 L10.6 5.6 a.85 .85 0 0 1 1.4 .9 L10.6 9.6 ' +
+  'a4 4 0 0 1 -3.9 3.3 h-.6 a4 4 0 0 1 -3.9 -4.8 Z"/></svg>';
+/* El mazo: el mismo apilado de siempre, pero cada carta con su dorso. La
+   imagen la pone el CSS (var(--dorso)), aquí solo van los tres cantos. */
+const IC_MAZO = '<span class="ic-mazo"><i class="m1"></i><i class="m2"></i><i class="m3"></i></span>';
 
 function htmlFicha(a, i){
   const yo = asientoLocal();
@@ -6064,7 +6703,13 @@ function htmlFicha(a, i){
      Mientras suena el cartel la ficha todavía NO lleva esa clase, así que se
      lo comía el otro latido, el de 2,1 s del turno: cada repintado le movía
      la fase y el corazón daba un tirón. Las dos señas van juntas. */
-  const marcaBers = (enBerserker(i) || eraBerserker(i)) && !despertando(i);
+  /* La marca la manda la CASILLA del asiento, no la pregunta en vivo: la
+     casilla la enciende revisarBerserker, que va después de congelar la
+     mesa, mientras que enBerserker(i) ya dice que sí en el repintado del
+     golpe mortal, tres segundos antes del cartel. Y aun encendida, no se
+     enseña hasta la hora apuntada en marcaDesde. */
+  const anunciado = !a.marcaDesde || Date.now() >= a.marcaDesde;
+  const marcaBers = (!!a.berserker || eraBerserker(i)) && !despertando(i) && anunciado;
   let latido = "";
   if(marcaBers && enBerserker(i) && a.inicioBers)
     latido = ";animation-delay:-" + ((Date.now() - a.inicioBers) % 1150) + "ms";
@@ -6114,8 +6759,8 @@ function htmlFicha(a, i){
       '<span class="mejs-f">' + mejoras + extra + '</span>' +
     '</div>' +
     '<div class="cuentas-f">' +
-      '<span class="cuenta-f" id="mn' + i + '">' + IC_MANO + a.mano.length + '</span>' +
       '<span class="cuenta-f" id="mz' + i + '">' + IC_MAZO + a.mazo.length + '</span>' +
+      '<span class="cuenta-f" id="mn' + i + '">' + IC_MANO + a.mano.length + '</span>' +
     '</div>' +
   '</div>';
 }
@@ -6292,40 +6937,113 @@ function empezarArrastre(el, x, y){
   clon.style.zIndex = "";
   clon.style.bottom = "";
   clon.style.width = r.width + "px";
+  /* El clon se coloca SOLO con transform (ver moverArrastre), así que su
+     esquina tiene que estar en el cero del documento. */
+  clon.style.left = "0px";
+  clon.style.top  = "0px";
   document.body.appendChild(clon);
   el.style.opacity = ".25";
   devolverCarta(el);
   arrastre = { el, clon, indice: parseInt(el.dataset.indice, 10),
-               dx: x - r.left, dy: y - r.top };
+               carta: el.dataset.lupa,
+               dx: x - r.left, dy: y - r.top,
+               zona: medirZona(), dentro: null };
   moverArrastre(x, y);
   if(navigator.vibrate) navigator.vibrate(10);
 }
 
+/* ═══ POR QUÉ SE MUEVE CON "TRANSFORM" Y NO CON LEFT/TOP ══════════════
+   Arrastrando, esta función se llama en CADA movimiento del dedo, unas
+   sesenta veces por segundo. Antes hacía dos cosas caras en cada una:
+   escribía left/top (que obliga al navegador a recolocar la página) y medía
+   el tablero y la mano con getBoundingClientRect (que le obliga a calcular
+   esa recolocación en el acto, sin poder aplazarla). Resultado: el tirón al
+   arrastrar.
+
+   Con transform el navegador mueve el clon por su cuenta sin tocar la
+   página, y los dos recuadros de la zona se miden UNA vez al empezar el
+   arrastre, que es cuando de verdad cambian. */
 function moverArrastre(x, y){
-  arrastre.clon.style.left = (x - arrastre.dx) + "px";
-  arrastre.clon.style.top  = (y - arrastre.dy) + "px";
-  const zona = document.getElementById("combate");
-  zona.classList.toggle("soltar", enZona(x, y));
+  arrastre.clon.style.transform =
+    "translate3d(" + (x - arrastre.dx) + "px," + (y - arrastre.dy) + "px,0)";
+  const dentro = enZona(x, y);
+  if(dentro !== arrastre.dentro){
+    arrastre.dentro = dentro;
+    document.getElementById("combate").classList.toggle("soltar", dentro);
+  }
 }
 
 function enZona(x, y){
-  const r = document.getElementById("combate").getBoundingClientRect();
-  const mano = document.getElementById("mano").getBoundingClientRect();
-  return y < mano.top - 4 && y > r.top - 90;   // margen generoso a propósito
+  /* Con las medidas tomadas al empezar; si por lo que sea no las hay, se
+     miden ahora (es el caso de la primera llamada). */
+  const z = (arrastre && arrastre.zona) || medirZona();
+  return y < z.manoArriba - 4 && y > z.combateArriba - 90;   // margen generoso a propósito
 }
 
+function medirZona(){
+  const r = document.getElementById("combate").getBoundingClientRect();
+  const mano = document.getElementById("mano").getBoundingClientRect();
+  return { combateArriba: r.top, manoArriba: mano.top };
+}
+
+/* ═══ QUE SE VEA CAER ═════════════════════════════════════════════════
+   Antes esto borraba el clon y DESPUÉS jugaba la carta: desaparecía de tu
+   dedo de golpe y un instante más tarde ya estaba puesta en la mesa, sin que
+   se viera el trayecto. Las cartas de los demás sí vuelan
+   (volarLoQueHanJugado), pero a propósito se salta la tuya, porque la tuya la
+   mueves tú; el problema es que arrastrando la sueltas a medio camino y ahí
+   no queda nada que llegue.
+
+   Ahora el clon se queda quieto donde lo soltaste, se juega la carta, y en
+   cuanto la mesa tiene sitio para ella el clon sale volando hasta su hueco.
+   El trayecto empieza donde estaba tu dedo, que es de donde el ojo espera
+   que salga. */
+/* ═══ SOLTAR LA CARTA ═════════════════════════════════════════════════
+   Como fue siempre: se retira el clon y se juega la carta. Sin vuelo.
+
+   Hubo un intento de hacerla volar desde el dedo hasta la mesa reutilizando
+   volarCarta, y estaba mal por una razón que no se ve leyendo el código: esa
+   función es la de las cartas de LOS DEMÁS, que salen de espaldas y se giran
+   en el aire para enseñar la cara. La tuya ya está boca arriba en tu mano,
+   así que el giro no revelaba nada, solo daba vueltas.
+
+   Y el problema que se quería arreglar no era ese: era que arrastrar iba a
+   tirones, y eso se arregló donde tocaba (ver moverArrastre). */
+/* ═══ QUE SE VEA CAER ═════════════════════════════════════════════════
+   Esto borraba el clon y DESPUÉS jugaba la carta: desaparecía de tu dedo de
+   golpe y un instante más tarde ya estaba puesta en la mesa, sin que se
+   viera el trayecto. Las cartas de los demás sí vuelan, pero a propósito se
+   salta la tuya —la mueves tú—; el problema es que arrastrando la sueltas a
+   medio camino y ahí no queda nada que llegue.
+
+   Ahora el clon se queda quieto donde lo soltaste, se juega la carta, y en
+   cuanto la mesa tiene sitio para ella sale volando hasta su hueco. */
 function soltarArrastre(x, y){
   const dentro = enZona(x, y);
-  const indice = arrastre.indice;
+  const indice = arrastre.indice, carta = arrastre.carta, clon = arrastre.clon;
+  if(!dentro){ cancelarArrastre(); pintar(); return; }
+
+  arrastre.clon = null;          // se lo queda el vuelo, que no lo borre nadie
   cancelarArrastre();
-  if(dentro) jugarIndice(indice);
-  else pintar();
+  clon.id = "clonVuelo";
+  jugarIndice(indice);
+
+  /* El hueco en la mesa no existe hasta que el motor repinta, así que se
+     espera al siguiente fotograma. Si no aparece (la jugada no valía), el
+     clon se retira sin ruido en vez de quedarse colgado. */
+  requestAnimationFrame(() => {
+    const destino = document.querySelector("#combate .paso.ult .carta");
+    if(destino && carta)
+      volarCarta(carta, destino, { ocultarDestino: true, desde: "clonVuelo",
+                                   sinGiro: true, desdeTamano: true, dura: 520 });
+    clon.remove();
+  });
 }
 
 function cancelarArrastre(){
   if(!arrastre) return;
   cerrarLupa();
-  arrastre.clon.remove();
+  if(arrastre.clon) arrastre.clon.remove();   // soltarArrastre puede habérselo quedado
   if(arrastre.el) arrastre.el.style.opacity = "";
   document.getElementById("combate").classList.remove("soltar");
   arrastre = null;
@@ -6389,12 +7107,11 @@ function vigilarLupa(){
    aqui, se pinta en la portada y se manda por la red al entrar en una sala.
    Al sacar version nueva se cambia esta linea y ya esta: el titulo de la
    pestana se pone solo. */
-const VERSION = "1.5";
+const VERSION = "2.0.1";
 /* El número vive AQUÍ y en ningún sitio más. Escribirlo también en el título
    a mano ya se quedó descolgado una vez: la página decía 1.4 con el juego en
    la 1.5, que es justo la confusión que el sello viene a evitar. */
 document.title = "Sombras sobre Isla Negra · " + VERSION;
-document.title = "Sombras sobre Isla Negra \u00b7 " + VERSION;
 
 function panelPortada(html, pie, bajoTitulo){
   const p = document.getElementById("portada");
@@ -6404,8 +7121,13 @@ function panelPortada(html, pie, bajoTitulo){
      sin haber tocado el título, ese toque seguía puesto por debajo y
      cualquier botón que pulsaras te devolvía a preparar la partida. */
   p.onclick = null;
+  /* La marca del cruce se queda pegada al panel si no se quita aquí, y con
+     ella su relleno de arriba: la pantalla de preparar heredaba 84 píxeles
+     de aire que no eran suyos y en móviles cortos sacaba barra de
+     desplazamiento. Misma trampa que el toque del título, que ya se limpia
+     una línea más arriba. */
+  p.classList.remove("cruce");
   p.innerHTML =
-    '<span class="sello">v' + VERSION + '</span>' +
     '<div class="cabecera"><h1>Sombras sobre Isla Negra</h1>' +
       (bajoTitulo || "") + '</div>' +
     '<div class="cuerpo">' + html + '</div>' +
@@ -6427,13 +7149,14 @@ function mostrarPortada(){
   ESTADO.selloPartida++;          // cualquier orden de la partida vieja caduca
   ESTADO.selloAnuncio++;
   if(!TITULO_VISTO) pasoTitulo();
-  else pasoPreparar();
+  else pasoCamino();
 }
 
 function pasoTitulo(){
   const p = panelPortada(
     '<div class="filete"></div>' +
     '<span class="lema">juego de lucha con cartas</span>' +
+    '<span class="sello">v' + VERSION + '</span>' +
     '<span class="toca">toca para empezar</span>' +
     '<span class="credito">cub de jocs</span>');
   p.classList.add("titulo");
@@ -6441,7 +7164,7 @@ function pasoTitulo(){
     TITULO_VISTO = true;
     p.classList.remove("titulo");
     p.onclick = null;
-    pasoPreparar();
+    pasoCamino();
   };
 }
 
@@ -6648,6 +7371,74 @@ document.addEventListener("click", e => {
   cerrarHistorial();          // tocar en cualquier otro sitio también lo cierra
 });
 
+/* ═══ EL CRUCE DE TRES CAMINOS ═════════════════════════════════════════
+   La primera decisión de verdad, y hasta ahora estaba escondida: para jugar
+   online había que pasar antes por la pantalla de preparar una partida
+   contra la máquina y encontrar un enlace pequeño al fondo. Aquí se
+   pregunta lo único que importa al abrir el juego: ¿solo o con gente?
+
+   El cruce: la primera decisión de verdad, y hasta hace poco estaba
+   escondida. Para jugar online había que pasar antes por la pantalla de
+   preparar una partida contra la máquina y encontrar un enlace pequeño al
+   fondo. Aquí se pregunta lo único que importa al abrir el juego: ¿solo o
+   con gente? Y debajo, en pequeño, la entrada para el que llega invitado con
+   un código, que no monta nada y solo quiere escribir cuatro letras. */
+function pasoCamino(){
+  const h = '<div class="prep solo">' +
+    '<div class="opciones col corto">' +
+      '<button data-camino="solo">Jugar solo</button>' +
+      '<button data-camino="online">Jugar online</button>' +
+    /* El que entra invitado no monta nada: le han pasado cuatro letras por
+       WhatsApp y lo único que quiere es escribirlas. Va pegado debajo de
+       "jugar online" porque es lo mismo —jugar con gente— pero por la otra
+       puerta: uno monta la sala y el otro entra en ella. Al fondo de la
+       pantalla parecía otra cosa distinta. */
+    '<button class="rellenar mono bajo-online" data-camino="codigo">tengo un código</button>' +
+    '</div></div>' +
+    /* El aviso vive AQUÍ, en la primera pantalla, y no dentro de preparar ni
+       de la sala: allí se metía entre las opciones y con cuatro luchadores y
+       todo desplegado acababa solapándose. Aquí abajo del todo no le quita
+       sitio a nada y lo ve todo el que abre el juego, que es de lo que se
+       trataba. El botón de enviar ya no hace falta arriba: sale al acabar el
+       combate, que es cuando tiene sentido. */
+    '<p class="aviso-cuaderno">Los datos de las partidas se recopilan de forma ' +
+    'voluntaria, y sin datos personales, para mejorar la experiencia de juego.</p>';
+  const p = panelPortada(h, null,
+    '<p class="sub lema-cruce">un juego de lucha con cartas</p>' +
+    '<p class="sub sello">v' + VERSION + '</p>');
+  p.classList.add("cruce");
+  p.querySelectorAll("[data-camino]").forEach(b => b.onclick = () => {
+    const c = b.dataset.camino;
+    /* ═══ SIEMPRE DE CERO ══════════════════════════════════════════════
+       La pantalla de preparar se acordaba de lo último que hubieras montado,
+       así que si probabas una de cuatro por bandos y volvías, te la volvía a
+       plantar delante. Al entrar por "jugar solo" se empieza como el primer
+       día: dos luchadores y los asientos vacíos. */
+    if(c === "solo"){
+      PARTIDA.n = 2; PARTIDA.bandos = false; PARTIDA.todosResponden = false;
+      PARTIDA.asientos.forEach((a, i) => { a.mazo = null; a.humano = (i === 0); });
+      pasoPreparar();
+      return;
+    }
+    if(c === "codigo"){
+      SALA.via = "internet";
+      SALA.paso = "entrar";
+      dibujarSala();
+      return;
+    }
+    /* Online va derecho a crear la sala: es lo que quiere el noventa por
+       ciento de las veces quien elige online, y el que viene invitado tiene
+       el botón de entrar con código en esa misma pantalla. */
+    SALA.via = "internet";
+    /* Derecho a crear la sala, sin la pantalla de en medio: el que elige
+       online casi siempre es el que monta la partida. Al que le han pasado un
+       código le espera el botón de entrar dentro de la propia sala. */
+    SALA.codigo = codigoDeSala();
+    SALA.paso = "dentro";
+    abrirRed("internet", "anfitrion", SALA.codigo);
+  });
+}
+
 function pasoPreparar(){
   const hayIA = PARTIDA.asientos.slice(0, PARTIDA.n).some(x => !x.humano);
   const equipos = PARTIDA.n === 4 && PARTIDA.bandos;
@@ -6657,6 +7448,13 @@ function pasoPreparar(){
   const bajoTitulo = '<p class="sub">Combate a ' + REGLAS.pvIniciales +
           ' puntos de vida, al mejor de 3 asaltos.</p>';
   let h = '<div class="prep">';
+  /* ═══ LA MESA SIEMPRE A LA MISMA ALTURA ════════════════════════════
+     Las preguntas de arriba no salen siempre todas: "modo de juego" y "quién
+     puede responder" solo aparecen a partir de tres luchadores. Al ir y venir
+     entre dos y cuatro, los asientos subían y bajaban y el retrato que ibas a
+     tocar ya no estaba donde lo habías dejado. Esta caja reserva el alto de
+     cuando están todas, así que la mesa no se mueve. */
+  h += '<div class="ajustes">';
 
   h += '<h2>¿Cuántos luchadores?</h2><div class="opciones">' +
        [2,3,4].map(k => '<button data-n="' + k + '"' +
@@ -6682,19 +7480,30 @@ function pasoPreparar(){
            '>Cualquiera de la mesa</button></div>';
 
   if(hayIA)
+    /* El color va SOLO en el elegido, igual que en la sala. Con los tres
+       coloreados a la vez la fila entera pedía atención y no se distinguía
+       cuál estaba puesto; así el color dice dos cosas de golpe: cuál has
+       elegido y lo dura que es. */
     h += '<h2>Dificultad IA</h2><div class="opciones aire">' +
-         DIFICULTADES.map((d, i) => '<button data-dif="' + i + '" class="' + d.clase +
-           (PARTIDA.dif === i ? ' on' : '') + '">' + d.nombre + '</button>').join("") + '</div>';
+         DIFICULTADES.map((d, i) => '<button data-dif="' + i + '"' +
+           (PARTIDA.dif === i ? ' class="on ' + d.clase + '"' : '') + '>' +
+           d.nombre + '</button>').join("") + '</div>';
 
+  h += '</div>';                // cierra .ajustes
   h += '<div class="sitios">';
   for(let i = 0; i < PARTIDA.n; i++){
     const sitio = PARTIDA.asientos[i];
     const m = MAZOS.find(x => x.id === sitio.mazo) || MAZOS[0];
-    // El color con el que se le verá en la mesa: por equipos si los hay, y
-    // si no, el suyo propio (solo desde tres, que es cuando hay mesa grande).
-    // El color con el que se le verá en la mesa: por bandos si los hay, y si
-    // no, el suyo propio (solo desde tres, que es cuando hay mesa grande).
-    const col = equipos ? (i % 2) : (PARTIDA.n >= 3 ? i : -1);
+    /* El color con el que se le verá en la mesa: por bandos si los hay, y si
+       no, el suyo propio.
+
+       Antes en el duelo no se pintaba ninguno (era el "-1"), porque en la
+       mesa de dos no hay fila de fichas de colores y se dio por hecho que el
+       color no significaba nada allí. Pero sí significa: en el duelo cada
+       luchador lleva su tinta en el nombre y en la barra de vida, así que
+       verlo ya aquí es lo coherente. Y con dos era además el único sitio
+       donde los asientos salían en gris, que parecía un fallo. */
+    const col = equipos ? (i % 2) : i;
     const vacio = !sitio.mazo;
     /* El asiento vacío ya se explica solo: el hueco del retrato lleva un "+"
        y el marco va punteado. La coletilla sobraba. */
@@ -6723,17 +7532,26 @@ function pasoPreparar(){
      grande: no compite con "Empezar el combate", que es lo que manda en
      esta pantalla. Solo sale si queda algún asiento libre. */
   if(!asientosLlenos())
-    h += '<button class="rellenar mono" data-rellenar="1">rellenar asientos</button>';
+    h += '<button class="rellenar mono pegado" data-rellenar="1">rellenar asientos</button>';
   h += '</div></div>';          // cierra .sitios y .prep
   /* La puerta al juego en red. Fuera del bloque de preparar, para poder
      descolgarla hasta el fondo del recuadro. Misma letra pequena que
      "rellenar asientos": es otro camino, no el principal. */
-  h += '<button class="rellenar mono abajo-p" data-red="1">jugar online</button>';
+  /* La puerta al juego en red ya no vive aquí: el que quiere jugar online lo
+     dice en el cruce, nada más abrir. */
   const listos = asientosLlenos();
-  const pie = '<button class="empezar"' + (listos ? '' : ' disabled') + '>' +
+  const pie = '<button class="empezar' + (listos ? ' listo' : '') + '"' +
+              (listos ? '' : ' disabled') + '>' +
               (listos ? 'Empezar el combate' : 'Faltan asientos por ocupar') + '</button>';
 
   const p = panelPortada(h, pie, bajoTitulo);
+  /* Vuelta al cruce. Sin esto, elegir "jugar solo" te encerraba aquí: la
+     única salida era recargar la página. */
+  const atras = document.createElement("button");
+  atras.className = "rellenar mono abajo-fijo";
+  atras.textContent = "volver";
+  atras.onclick = () => pasoCamino();
+  p.querySelector(".cuerpo").appendChild(atras);
   const refresca = () => pasoPreparar();
   p.querySelectorAll("[data-n]").forEach(b => b.onclick = () => {
     const eran = PARTIDA.n;
@@ -6786,6 +7604,168 @@ function pasoPreparar(){
     ajustarEscala();
     iniciarCombate();
   };
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ZONA 8: EL CUADERNO  ·  apuntar partidas para entrenar a la máquina
+   -----------------------------------------------------------------------
+   Para que la IA juegue como una persona hace falta ver decidir a personas.
+   El banco de pruebas puede jugar máquina contra máquina un millón de veces,
+   pero eso solo la enseña a ganar a otra máquina: se optimiza contra sus
+   propios errores y nunca sale de esa burbuja.
+
+   Lo que se apunta es LA MESA EN EL MOMENTO DE DECIDIR, no el marcador. Que
+   alguien ganara 2-1 no enseña nada; que con esta mano, contra este ataque y
+   a este nivel eligiera GUARDARSE la parada en vez de gastarla, lo enseña
+   todo.
+
+   ═══ QUÉ NO SE APUNTA ═══════════════════════════════════════════════
+   Nombres, códigos de sala, identificadores de nadie, ni cuándo se jugó con
+   más precisión que el día. No hace falta para entrenar y no se guarda. Los
+   asientos son números y los mazos son los cuatro luchadores de siempre.   */
+
+const CUADERNO = { llave:"islanegra-cuaderno", partida:null, tope:40 };
+
+function cuadernoLeer(){
+  try{ return JSON.parse(localStorage.getItem(CUADERNO.llave)) || []; }
+  catch(e){ return []; }
+}
+function cuadernoGuardar(lista){
+  try{ localStorage.setItem(CUADERNO.llave, JSON.stringify(lista.slice(-CUADERNO.tope))); }
+  catch(e){}   // sin sitio: se pierde lo viejo, no se rompe la partida
+}
+
+/* La foto de la mesa en el instante de decidir. Del que mueve se guarda la
+   mano ENTERA: sin saber qué opciones tenía, saber lo que eligió no dice
+   nada. De los demás solo lo que él puede ver, que es lo que él sabía. */
+/* Los nombres largos se repiten en cada uno de los doscientos pasos y son la
+   mitad del peso del archivo. Aquí van en corto: "a" por asalto, "f" por
+   fase... El diccionario está al final del envío, así que el archivo se
+   sigue entendiendo solo. La carta se guarda sin el prefijo del mazo, que ya
+   se sabe por el asiento. */
+function cortaCarta(id){
+  if(!id) return null;
+  const i = id.indexOf("_");
+  return i > 0 ? id.slice(i + 1) : id;
+}
+function cuadernoMesa(quien){
+  const yo = ESTADO.asientos[quien];
+  const m = {
+    a: ESTADO.asalto,
+    f: ESTADO.fase,
+    t: ESTADO.iniciativa,
+    mano: yo ? yo.mano.map(cortaCarta) : [],
+    s: ESTADO.asientos.map(x => [x.pv, x.nivel, x.mejorasEnMesa,
+         (x.aturdido ? 1 : 0) + (x.fuera ? 2 : 0), x.mano.length, x.mazo.length])
+  };
+  const p = ESTADO.pendiente;
+  if(p) m.p = [p.origen, p.objetivo, p.dano, p.nivel, p.responde];
+  return m;
+}
+
+function cuadernoApuntar(tipo, quien, dato){
+  if(!CUADERNO.partida) return;
+  const a = ESTADO.asientos[quien];
+  if(!a) return;
+  const paso = { q: quien, h: tipo, m: cuadernoMesa(quien) };
+  if(tipo === "jugar" || tipo === "responder") paso.c = cortaCarta(a.mano[dato]);
+  if(tipo === "apuntar" || tipo === "soltar") paso.d = dato;
+  CUADERNO.partida.pasos.push(paso);
+}
+
+function cuadernoEmpezar(){
+  CUADERNO.partida = {
+    version: VERSION,
+    /* La huella de la partida. La misma semilla en dos móviles es la MISMA
+       partida vista dos veces, así que sirve para quedarse una y tirar las
+       copias sin mirar nada más. */
+    semilla: AZAR.s,
+    dia: new Date().toISOString().slice(0, 10),   // el día, no la hora
+    modo: ESTADO.modo,
+    enRed: !!RED.activa,
+    mesa: ESTADO.asientos.map(a => ({
+      mazo: a.mazoId, quienEs: a.controlador,
+      dif: a.controlador === "ia" && a.dif ? a.dif.id : null
+    })),
+    pasos: [], fin: null
+  };
+}
+
+function cuadernoCerrar(){
+  if(!CUADERNO.partida || !CUADERNO.partida.pasos.length){ CUADERNO.partida = null; return; }
+  CUADERNO.partida.fin = {
+    asaltos: ESTADO.asientos.map(a => a.asaltos || 0),
+    pv: ESTADO.asientos.map(a => a.pv)
+  };
+  const lista = cuadernoLeer();
+  /* Si ya hay una partida con esta semilla, es la MISMA partida: puede pasar
+     si alguien se reconecta y el combate se vuelve a cerrar. Se queda la más
+     completa, que es la que tiene más decisiones apuntadas. */
+  const igual = lista.findIndex(x => x.semilla === CUADERNO.partida.semilla);
+  if(igual >= 0){
+    if(lista[igual].pasos.length < CUADERNO.partida.pasos.length)
+      lista[igual] = CUADERNO.partida;
+  }else lista.push(CUADERNO.partida);
+  cuadernoGuardar(lista);
+  CUADERNO.partida = null;
+}
+
+function cuadernoCuantas(){ return cuadernoLeer().length; }
+
+/* Mandarlo: se arma un archivo y se le pasa al móvil para que lo comparta
+   por donde quiera (WhatsApp, correo). Si el móvil no sabe compartir
+   archivos, se descarga y ya lo mandará a mano. */
+function cuadernoEnviar(){
+  const lista = cuadernoLeer();
+  if(!lista.length) return;
+  const texto = JSON.stringify({
+    que: "cuaderno de Sombras sobre Isla Negra",
+    comoLeerlo: {
+      partida: { version:"version del juego", dia:"dia", modo:"libre o equipos",
+                 enRed:"si fue online", mesa:"quien ocupa cada asiento", pasos:"las decisiones",
+                 fin:"asaltos ganados y vida al acabar" },
+      paso: { q:"asiento que decide", h:"que hizo", c:"carta jugada", d:"objetivo o descartes",
+              m:"la mesa EN EL MOMENTO de decidir" },
+      mesa: { a:"asalto", f:"fase", t:"de quien es el turno",
+              mano:"la mano entera de quien decide",
+              s:"por asiento: [vida, nivel, mejoras, estado, cartas en mano, cartas en mazo]",
+              estado:"0 normal, 1 aturdido, 2 fuera, 3 ambos",
+              p:"ataque en el aire: [de, a, dano, nivel, a quien toca responder]" }
+    },
+    cuaderno: lista
+  });
+  const nombre = "isla-negra-cuaderno-" + new Date().toISOString().slice(0,10) + ".json";
+  const trozo = new Blob([texto], { type:"application/json" });
+  const archivo = new File([trozo], nombre, { type:"application/json" });
+
+  /* Sin acuse de recibo uno no sabe si ha pasado algo: el panel de compartir
+     se abre y se cierra, y la pantalla se queda igual. El botón dice lo que
+     ha hecho durante unos segundos y luego vuelve a su ser. */
+  const avisar = t => {
+    const b = [...document.querySelectorAll("button")]
+      .find(x => /cuaderno/i.test(x.textContent));
+    if(!b) return;
+    if(!b.dataset.era) b.dataset.era = b.textContent;
+    b.textContent = t;
+    tarde(3200, () => { if(b.dataset.era) b.textContent = b.dataset.era; });
+  };
+  if(navigator.canShare && navigator.canShare({ files:[archivo] })){
+    navigator.share({ files:[archivo], title:"Cuaderno de Isla Negra" })
+      .then(() => avisar("Cuaderno enviado ✓"))
+      .catch(() => avisar("No se envió"));
+    return;
+  }
+  avisar("Cuaderno descargado ✓");
+  const url = URL.createObjectURL(trozo);
+  const a = document.createElement("a");
+  a.href = url; a.download = nombre;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+
+function cuadernoBorrar(){
+  try{ localStorage.removeItem(CUADERNO.llave); }catch(e){}
 }
 
 /* =========================================================================
@@ -6857,6 +7837,28 @@ const RED = {
 function piensaAqui(){ return !RED.activa || RED.papel === "anfitrion"; }
 
 function pasaPorLaRed(tipo, asiento, dato){
+  /* El cuaderno apunta AQUÍ y no dentro de cada acción: por esta puerta pasan
+     las diez jugadas posibles, con red y sin ella, y se pasa ANTES de
+     ejecutarlas, que es cuando la mesa todavía está como la vio quien
+     decidió. Apuntar después sería fotografiar el resultado, no la decisión.
+
+     ═══ APUNTAN TODOS, NO SOLO EL QUE CREÓ LA SALA ══════════════════
+     Antes solo apuntaba el anfitrión, y eso tenía un agujero: si se le iba
+     la conexión a mitad, su cuaderno se quedaba a medias y el que cogía el
+     mando no tenía la primera parte. La partida entera no la tenía nadie.
+
+     Y resulta que no hacía falta elegir: todas las pantallas calculan la
+     MISMA partida con la misma semilla, así que todas conocen la mesa
+     entera —incluidas las manos ajenas, aunque no las enseñen—. Apuntando
+     todas, da igual quién se caiga y quién envíe. Que lleguen repetidas no
+     es problema: cada partida lleva su semilla, y dos con la misma semilla
+     son la misma partida.
+
+     Se apunta cuando la jugada se va a APLICAR de verdad en esta pantalla:
+     o porque la decide aquí (no pasa por la red) o porque llega por el
+     cable y se está aplicando. Así se apunta una vez y no dos. */
+  if(!RED.activa || RED.aplicando || asiento === RED.mio)
+    cuadernoApuntar(tipo, asiento, dato);
   if(!RED.activa || RED.aplicando) return false;
   /* ¿Esta pantalla habla por ese asiento? Por el tuyo, siempre. Y el
      anfitrión, además, por los que lleva la máquina: la máquina piensa igual
@@ -6867,8 +7869,29 @@ function pasaPorLaRed(tipo, asiento, dato){
   const hablo = asiento === RED.mio ||
     (RED.papel === "anfitrion" && suyo && suyo.controlador === "ia");
   if(!hablo) return true;
-  if(RED.papel === "anfitrion") repartirOrden(tipo, asiento, dato);
-  else RED.tubo.enviar({ t:"peticion", tipo, asiento, dato });
+  /* ═══ NI SIQUIERA SE MANDA SI YA NO VALE ═══════════════════════════════
+     El toque doble. Tocas "Siguiente asalto", la mesa arranca el asalto, y
+     el dedo rebota: sale una segunda decisión sobre una mesa que ya no
+     existe. Antes se mandaba igual, se numeraba igual, y se quedaba
+     esperando un momento que no iba a volver: la partida entera detrás de
+     ella, parada para siempre.
+
+     Aquí se mira lo mismo que mirará la cola al aplicarla. Si ahora mismo
+     no se puede hacer, no sale de este móvil. Y como no sale, no puede
+     atascar a nadie.
+
+     Solo se comprueba lo que decide una PERSONA en esta pantalla. Lo que
+     juega la máquina lo pide el propio motor en el momento exacto en que
+     toca, nunca dos veces, y no hace falta ponerle puertas.             */
+  if(asiento === RED.mio){
+    const A = ACCIONES[tipo];
+    if(A && !A.listo(asiento)) return true;
+  }
+  /* La mesa que estoy mirando al decidir: cuántas jugadas llevo aplicadas.
+     Viaja con la jugada para que se pueda comprobar que sigue valiendo. */
+  const en = RED.siguiente;
+  if(RED.papel === "anfitrion") repartirOrden(tipo, asiento, dato, en);
+  else RED.tubo.enviar({ t:"peticion", tipo, asiento, dato, en });
   return true;
 }
 
@@ -6921,8 +7944,8 @@ const ACCIONES = {
   asalto:    { listo:() => ESTADO.fase === "finAsalto",
                hacer:() => siguienteAsalto() },
   /* Las dos de abajo no las decide nadie jugando: las suelta el jefe cuando
-     alguien se va o vuelve. Viajan por el mismo cable y con el mismo n\u00famero
-     que las dem\u00e1s para que el cambio de mano ocurra en el mismo instante en
+     alguien se va o vuelve. Viajan por el mismo cable y con el mismo número
+     que las demás para que el cambio de mano ocurra en el mismo instante en
      todas las pantallas. */
   ausente:   { listo:() => true,
                hacer:a => {
@@ -6942,8 +7965,25 @@ const ACCIONES = {
                } }
 };
 
-function repartirOrden(tipo, asiento, dato){
+/* ═══ CADA JUGADA LLEVA ESCRITO EN QUÉ MESA SE DECIDIÓ ════════════════════
+   El campo "en" es el número de jugadas que había aplicadas en la pantalla
+   de quien decidió, en el momento de decidir. O sea: la mesa que estaba
+   mirando. Si al numerarla le toca justo ese número, la mesa no se movió
+   entre decidir y numerar, y la jugada vale. Si le toca otro, es que en
+   medio pasó algo: lo que se decidió ya no existe.
+
+   Lo importante es que "o" y "en" viajan DENTRO del mensaje, así que todas
+   las pantallas ven los dos números iguales y todas toman la misma decisión.
+   Nunca puede pasar que una la aplique y otra la tire. (Ese fue el error del
+   descarte por tiempo que se quitó en su día: el reloj de cada móvil va por
+   su cuenta, y por eso aquello sí partía las mesas.)
+
+   Las jugadas que no decide nadie —las que suelta el jefe cuando alguien se
+   va o vuelve— van sin "en" y no se comprueban: no pertenecen a ninguna
+   mesa concreta, valen siempre.                                          */
+function repartirOrden(tipo, asiento, dato, en){
   const m = { t:"orden", o:++RED.orden, tipo, asiento, dato };
+  if(en !== undefined && en !== null) m.en = en;
   RED.tubo.enviar(m);
   encolar(m);
 }
@@ -6963,6 +8003,21 @@ function vaciarCola(){
     const m = RED.cola.find(x => x.o === RED.siguiente);
     if(!m) return;
     const A = ACCIONES[m.tipo];
+    /* ¿SIGUE VALIENDO ESTA JUGADA?
+       Se decidió mirando la mesa "m.en" y le tocó ser la "m.o". Si no son el
+       mismo número, entre decidir y numerar se aplicó algo más: la mesa que
+       tenía delante quien decidió ya no existe, y lo que pidió no se puede
+       hacer. Antes esto atascaba la cola para siempre —la jugada esperaba un
+       momento que no iba a llegar nunca y todas las de detrás con ella—. Se
+       tira, y se sigue.
+
+       Se tira en TODAS las pantallas a la vez, porque los dos números viajan
+       en el mensaje: no hay forma de que una mesa la aplique y otra no.   */
+    if(m.en !== undefined && m.en !== m.o){
+      RED.cola.splice(RED.cola.indexOf(m), 1);
+      RED.siguiente++;
+      continue;
+    }
     if(A && !A.listo(m.asiento)){
       /* Todavía no toca: la mesa de esta pantalla aún no ha llegado a ese
          punto (una carta volando, un golpe posándose). Se espera y se
@@ -6999,14 +8054,14 @@ setInterval(() => { if(RED.activa) vaciarCola(); }, 70);
    más.                                                                    */
 
 /* EL NOMBRE CON EL QUE UNO SE PRESENTA.
-   Antes se sorteaba uno nuevo cada vez que se abría la p\u00e1gina, y por eso
-   volver despu\u00e9s de una llamada o de bloquear el m\u00f3vil te converta en un
-   desconocido: tu asiento segu\u00eda ocupado por el que eras hace un minuto.
-   Ahora, para las salas de internet, el nombre se guarda en el propio m\u00f3vil
-   y se reutiliza. As\u00ed al volver te reconocen.
+   Antes se sorteaba uno nuevo cada vez que se abría la página, y por eso
+   volver después de una llamada o de bloquear el móvil te convertía en un
+   desconocido: tu asiento seguía ocupado por el que eras hace un minuto.
+   Ahora, para las salas de internet, el nombre se guarda en el propio móvil
+   y se reutiliza. Así al volver te reconocen.
 
-   En el modo de dos personas con el mismo m\u00f3vil NO se guarda: ah\u00ed las dos
-   pesta\u00f1as son el mismo navegador y compartir\u00edan nombre, que es justo lo
+   En el modo de dos personas con el mismo móvil NO se guarda: ahí las dos
+   pestañas son el mismo navegador y compartirían nombre, que es justo lo
    contrario de lo que hace falta. */
 function nombreDeCorreo(sala, guardar){
   const suelto = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
@@ -7022,11 +8077,11 @@ function nombreDeCorreo(sala, guardar){
 }
 
 /* ═══ LA FOTO DE LA PARTIDA ═══════════════════════════════════════════════
-   Todo el combate cabe en un objeto de datos: los asientos son n\u00fameros,
-   textos y listas de nombres de carta; lo que est\u00e1 a medias (un golpe sin
-   responder, a qui\u00e9n le toca jugar despu\u00e9s) se guarda por el n\u00famero del
+   Todo el combate cabe en un objeto de datos: los asientos son números,
+   textos y listas de nombres de carta; lo que está a medias (un golpe sin
+   responder, a quién le toca jugar después) se guarda por el número del
    asiento, no por el asiento mismo; y toda la suerte del combate cuelga de un
-   \u00fanico n\u00famero, el del dado.
+   único número, el del dado.
 
    Por eso, para meter a alguien de vuelta en una partida en marcha, no hace
    falta repetirle las jugadas una por una: se le manda la foto y aparece
@@ -7262,36 +8317,55 @@ function hayEmoticonos(){
 
 /* El emoticono sube desde debajo del retrato de quien lo manda, con la misma
    curva que los números de daño. Nadie dice quién habla porque el sitio ya lo
-   dice: cada uno sale de su propia ficha. */
+   dice: cada uno sale de su propia ficha.
+
+   ═══ POR QUÉ HAY UNA CAPA APARTE ═════════════════════════════════════
+   Dos cosas tiraban de lados contrarios y hubo que probar las dos para
+   entenderlo.
+
+   Con posición FIJA salía descolocada de vez en cuando, y la causa no está
+   en el código de las caras: el terremoto del berserker le pone una
+   transformación al <body>, y en cuanto un antepasado lleva transformación,
+   "posición fija" deja de medirse contra la pantalla y pasa a medirse contra
+   ESE antepasado. La cara se iba a donde el body estuviera en ese instante.
+
+   Colgándola del propio retrato eso se acaba... pero el bloque del luchador
+   se rehace entero en cada repintado, y en red se repinta a cada jugada, así
+   que la cara desaparecía antes de que te diera tiempo a verla.
+
+   La capa resuelve las dos: es hija directa del <body>, no se rehace nunca,
+   y la posición se calcula RESTANDO el recuadro del retrato menos el de la
+   capa, medidos en el mismo instante. Al ser una resta, la transformación
+   del terremoto se cancela sola y da igual lo que tiemble. */
+function capaDeCaras(){
+  let c = document.getElementById("capaCaras");
+  if(!c){
+    c = document.createElement("div");
+    c.id = "capaCaras";
+    document.body.appendChild(c);
+  }
+  return c;
+}
+
 function pintarCara(asiento, cara){
   const ficha = document.getElementById("lu" + asiento);
   if(!ficha) return;
-  const r = ficha.getBoundingClientRect();
+  const capa = capaDeCaras();
+  const r = ficha.getBoundingClientRect(), c = capa.getBoundingClientRect();
   const d = document.createElement("div");
   d.className = "cara-vuela";
   d.textContent = cara;
-  /* Va colgada de la PANTALLA, no de la zona de juego. Los retratos viven
-     arriba del todo y la zona de juego empieza mucho más abajo: metida ahí,
-     la cara salía con una posición negativa y no se veía nunca.
-     Con posición fija y las coordenadas que da el propio retrato, cae
-     exactamente donde tiene que caer sin cuentas de contenedores. */
-  d.style.top = (r.bottom - 4) + "px";
-  /* El de la derecha se ancla al borde derecho: con una coordenada desde la
-     izquierda se sale de la pantalla en móviles estrechos.
-
-     Y la referencia es EL TABLERO, no la ventana. En un móvil dan lo mismo
-     porque el tablero llena la pantalla, pero en una tableta o en el
-     ordenador el tablero va centrado y sobra hueco a los lados: midiendo
-     contra la ventana, el luchador de la izquierda del tablero cae a la
-     derecha del centro de la PANTALLA y la cara se despegaba del retrato
-     para irse al borde. */
+  d.style.top = (r.bottom - c.top - 12) + "px";
+  /* Al de la derecha se le ancla el borde derecho y al de la izquierda el
+     izquierdo, para que la cara salga por el lado de fuera del retrato y no
+     tape al compañero de al lado en las mesas de cuatro. */
   const zona = (ficha.parentElement || document.body).getBoundingClientRect();
   if(r.left + r.width / 2 > zona.left + zona.width / 2)
-    d.style.right = Math.max(2, window.innerWidth - r.right + 6) + "px";
+    d.style.right = (c.right - r.right + 6) + "px";
   else
-    d.style.left = Math.max(2, r.left + 6) + "px";
-  document.body.appendChild(d);
-  tarde(1250, () => d.remove());
+    d.style.left = (r.left - c.left + 6) + "px";
+  capa.appendChild(d);
+  tarde(1650, () => d.remove());
 }
 
 /* En cola, no encimados: si llegan tres a la vez salen uno detrás de otro.
@@ -7317,23 +8391,41 @@ function mandarCara(cara){
   if(RED.tubo) RED.tubo.enviar({ t:"cara", asiento:RED.mio, cara });
 }
 
+/* El rincón del chat: botón y tira. Se crea una sola vez y ya no se toca,
+   para que ningún repintado del tablero pueda cerrarlo (ver #zonaCaras). */
+function zonaDeCaras(){
+  let z = document.getElementById("zonaCaras");
+  if(!z){
+    z = document.createElement("div");
+    z.id = "zonaCaras";
+    z.hidden = true;
+    document.body.appendChild(z);
+  }
+  return z;
+}
+
 function cerrarCaras(){
   CHAT.abierto = false;
   const t = document.getElementById("tiraCaras");
   if(t) t.remove();
   const b = document.getElementById("botonCaras");
   if(b) b.classList.remove("abierto");
+  const z = document.getElementById("zonaCaras");
+  if(z) z.classList.remove("desplegada");
 }
 
 function abrirCaras(){
-  const mesa = document.getElementById("combate");
-  if(!mesa || CHAT.abierto) return;
+  if(CHAT.abierto) return;
   CHAT.abierto = true;
+  const z = zonaDeCaras();
+  z.classList.add("desplegada");   // por encima de lo que vuele por el tablero
   const t = document.createElement("div");
   t.id = "tiraCaras";
   t.innerHTML = CARAS.map(c =>
     '<button class="cara-b" data-cara="' + c + '">' + c + '</button>').join("");
-  mesa.appendChild(t);
+  /* La tira va ANTES del botón para que se despliegue hacia la izquierda y
+     el botón se quede siempre en la esquina, donde el pulgar lo busca. */
+  z.insertBefore(t, z.firstChild);
   t.querySelectorAll("[data-cara]").forEach(b =>
     b.onclick = e => { e.stopPropagation(); mandarCara(b.dataset.cara); });
   const b = document.getElementById("botonCaras");
@@ -7341,15 +8433,21 @@ function abrirCaras(){
 }
 
 function ponerBotonCaras(){
+  const z = zonaDeCaras();
+  if(!hayEmoticonos()){ z.hidden = true; cerrarCaras(); return; }
+  z.hidden = false;
+  /* ═══ PEGADO AL FONDO DE LA ZONA DE JUEGO, NO DE LA PANTALLA ═══════
+     Sacar esto del tablero arregló que los repintados se lo llevaran, pero
+     trajo un problema nuevo: al quedar suelto se pegó al fondo de la
+     PANTALLA, o sea encima de las cartas de la mano. Aquí se le vuelve a
+     poner la altura que tenía, la del borde de abajo del tablero, pero
+     siguiendo fuera de él para que nadie pueda borrarlo. */
   const mesa = document.getElementById("combate");
-  if(!mesa) return;
-  /* Si un repintado se llevó la tira mientras estaba abierta, hay que dar por
-     cerrada la tira: si no, el botón creería que sigue abierta y al tocarlo
-     intentaría cerrar algo que ya no existe, sin volver a abrirse nunca. */
-  if(CHAT.abierto && !document.getElementById("tiraCaras")) CHAT.abierto = false;
-  const viejo = document.getElementById("botonCaras");
-  if(!hayEmoticonos()){ if(viejo) viejo.remove(); cerrarCaras(); return; }
-  if(viejo) return;                            // ya está puesto
+  if(mesa){
+    const r = mesa.getBoundingClientRect();
+    if(r.height) z.style.bottom = Math.max(0, window.innerHeight - r.bottom) + "px";
+  }
+  if(document.getElementById("botonCaras")) return;   // ya está puesto
   const b = document.createElement("button");
   b.id = "botonCaras";
   b.setAttribute("aria-label", "emoticonos");
@@ -7358,7 +8456,7 @@ function ponerBotonCaras(){
     e.stopPropagation();
     CHAT.abierto ? cerrarCaras() : abrirCaras();
   };
-  mesa.appendChild(b);
+  z.appendChild(b);
 }
 
 /* ═══ LAS PLAZAS DE LA MESA ═══════════════════════════════════════════════
@@ -7393,12 +8491,12 @@ function mesaCompleta(){
 }
 function hayMaquina(){ return RED.plazas.some(p => p.tipo === "ia"); }
 
-/* ═══ QUI\u00c9N REPARTE LAS JUGADAS ═══════════════════════════════════════════
+/* ═══ QUIÉN REPARTE LAS JUGADAS ═══════════════════════════════════════════
    Uno de la mesa hace de jefe: numera las jugadas y las reparte, y es lo que
    mantiene a todas las pantallas contando la misma partida. Al empezar es
-   quien cre\u00f3 la sala. Si se va, hay que elegir otro, y AQU\u00cd EST\u00c1 LA GRACIA:
-   la regla no la decide nadie, la calcula cada m\u00f3vil por su cuenta y sale la
-   misma en todos. El de la plaza m\u00e1s baja que sea una persona y siga
+   quien creó la sala. Si se va, hay que elegir otro, y AQUÍ ESTÁ LA GRACIA:
+   la regla no la decide nadie, la calcula cada móvil por su cuenta y sale la
+   misma en todos. El de la plaza más baja que sea una persona y siga
    conectada. Sin votaciones y sin que dos se crean jefes a la vez.        */
 function elegirJefe(salvo){
   for(let i = 0; i < RED.plazas.length; i++){
@@ -7408,9 +8506,9 @@ function elegirJefe(salvo){
   return null;
 }
 
-/* El n\u00famero por el que va el reparto. Quien coge el mando tiene que seguir
-   contando donde lo dej\u00f3 el anterior, no volver a empezar: si no, las jugadas
-   nuevas llevar\u00edan n\u00fameros ya usados y las pantallas las tirar\u00edan por viejas. */
+/* El número por el que va el reparto. Quien coge el mando tiene que seguir
+   contando donde lo dejó el anterior, no volver a empezar: si no, las jugadas
+   nuevas llevarían números ya usados y las pantallas las tirarían por viejas. */
 function ultimoRepartido(){
   let n = RED.siguiente - 1;
   RED.cola.forEach(m => { if(m.o > n) n = m.o; });
@@ -7421,7 +8519,7 @@ function tomarElMando(){
   RED.papel = "anfitrion";
   RED.jefe = RED.yo;
   RED.orden = ultimoRepartido();
-  anotar("Repartes t\u00fa las jugadas a partir de ahora.", "hito");
+  anotar("Repartes tú las jugadas a partir de ahora.", "hito");
   pintar();
 }
 function difundirSala(){
@@ -7439,7 +8537,11 @@ function alLlegarMensaje(m){
   if(m.t === "peticion"){
     if(RED.papel !== "anfitrion") return;
     if(!ACCIONES[m.tipo]) return;
-    repartirOrden(m.tipo, m.asiento, m.dato);
+    /* El "en" es de QUIEN decidió, no del anfitrión: se pasa tal cual. Si el
+       invitado decidió mirando una mesa que ya ha cambiado (se le fue la
+       conexión y la máquina jugó por él, tocó dos veces...), el número no
+       cuadrará y la jugada se tirará en todas las pantallas a la vez. */
+    repartirOrden(m.tipo, m.asiento, m.dato, m.en);
     return;
   }
   if(m.t === "orden"){
@@ -7465,7 +8567,7 @@ function alLlegarMensaje(m){
     }
     /* SI HAY COMBATE EN MARCHA, esto no es alguien que llega: es alguien que
        VUELVE. Se le manda la foto de la mesa y entra por donde iba. Y si su
-       asiento lo llevaba la m\u00e1quina mientras faltaba, se le devuelve. */
+       asiento lo llevaba la máquina mientras faltaba, se le devuelve. */
     if(RED.activa){
       const k = plazaDe(m.de);
       if(k < 0) return;                       // no jugaba esta partida
@@ -7546,8 +8648,8 @@ function alLlegarMensaje(m){
       dibujarSala();
       return;
     }
-    /* EN MEDIO DEL COMBATE. La plaza NO se vac\u00eda: se le guarda el sitio por
-       si vuelve. Lo que cambia es qui\u00e9n la juega mientras tanto. */
+    /* EN MEDIO DEL COMBATE. La plaza NO se vacía: se le guarda el sitio por
+       si vuelve. Lo que cambia es quién la juega mientras tanto. */
     const k = plazaDe(m.de);
     const seVaElJefe = (m.de === RED.jefe);
     if(seVaElJefe){
@@ -7561,10 +8663,10 @@ function alLlegarMensaje(m){
       }
     }
     if(k >= 0)
-      anotar(ESTADO.asientos[k] ? ESTADO.asientos[k].nombre + " se ha ido. La m\u00e1quina "
+      anotar(ESTADO.asientos[k] ? ESTADO.asientos[k].nombre + " se ha ido. La máquina "
              + "le guarda el sitio." : "Un jugador se ha ido.", "hito");
-    /* Que la m\u00e1quina coja el asiento lo decide el jefe y viaja como una jugada
-       m\u00e1s, para que ocurra en el mismo punto en todas las pantallas. */
+    /* Que la máquina coja el asiento lo decide el jefe y viaja como una jugada
+       más, para que ocurra en el mismo punto en todas las pantallas. */
     if(RED.papel === "anfitrion" && k >= 0 &&
        ESTADO.asientos[k] && ESTADO.asientos[k].controlador === "humano")
       repartirOrden("ausente", k, null);
@@ -7585,9 +8687,9 @@ function abrirRed(via, papel, sala){
   RED.via = via; RED.papel = papel; RED.sala = sala;
   RED.yo = nombreDeCorreo(sala, via === "internet"); RED.enviados = 0;
   /* EL NOMBRE ES EL MISMO AL VOLVER; LA VISITA, NO.
-     Los mensajes se descartan por repetidos mirando su n\u00famero. Si al volver
-     se empezara otra vez por el uno, con el mismo nombre, los dem\u00e1s los
-     dar\u00edan por vistos y los tirar\u00edan sin decir nada. Por eso cada visita lleva
+     Los mensajes se descartan por repetidos mirando su número. Si al volver
+     se empezara otra vez por el uno, con el mismo nombre, los demás los
+     darían por vistos y los tirarían sin decir nada. Por eso cada visita lleva
      su propia marca. */
   RED.visita = Math.random().toString(36).slice(2, 8);
   RED.vistos = new Set();
@@ -7618,7 +8720,7 @@ function abrirRed(via, papel, sala){
   return cargarBuzon().then(() => {
     RED.tubo = tuboBuzon(sala, papel, alLlegarMensaje, (que, detalle) => {
       if(que === "esperando")
-        RED.aviso = "Sala abierta. Dales el código a los demás.";
+        RED.aviso = "Pásales el código para que entren.";
       else if(que === "reabriendo")
         RED.aviso = "Ese código estaba cogido de antes. Volviendo a abrirlo…";
       else if(que === "buscando")
@@ -7678,7 +8780,7 @@ function arrancarEnRed(foto){
   const v = document.getElementById("eligeL"); if(v) v.remove();
   ajustarEscala();
   iniciarCombate();
-  /* Si venimos de vuelta a una partida en marcha, el combate reci\u00e9n montado
+  /* Si venimos de vuelta a una partida en marcha, el combate recién montado
      se tira y se pone la foto encima. Montarlo primero no sobra: deja el
      tablero, la escala y los retratos en su sitio. */
   if(foto){
@@ -7704,9 +8806,9 @@ function pasoRed(){
 }
 
 function dibujarSala(){
-  /* EL CANDADO. Sin esto, alguien que volv\u00eda a entrar hac\u00eda que al anfitri\u00f3n
+  /* EL CANDADO. Sin esto, alguien que volvía a entrar hacía que al anfitrión
      se le abriera la pantalla de la sala ENCIMA del combate en curso: la
-     partida segu\u00eda viva por debajo, pero no se ve\u00eda. */
+     partida seguía viva por debajo, pero no se veía. */
   if(RED.activa) return;
   if(SALA.paso === "via")      return salaVia();
   if(SALA.paso === "puerta")   return salaPuerta();
@@ -7726,7 +8828,7 @@ function salaVia(){
     SALA.paso = "puerta";
     dibujarSala();
   });
-  p.querySelector("[data-atras]").onclick = () => pasoPreparar();
+  p.querySelector("[data-atras]").onclick = () => pasoCamino();
 }
 
 function salaPuerta(){
@@ -7742,7 +8844,7 @@ function salaPuerta(){
     abrirRed(SALA.via, "anfitrion", SALA.codigo);
   };
   p.querySelector("[data-unir]").onclick = () => { SALA.paso = "entrar"; dibujarSala(); };
-  p.querySelector("[data-atras]").onclick = () => { SALA.paso = "via"; dibujarSala(); };
+  p.querySelector("[data-atras]").onclick = () => pasoCamino();
 }
 
 function salaEntrar(){
@@ -7753,14 +8855,25 @@ function salaEntrar(){
     '<button class="empezar" data-ir="1">Entrar</button>');
   const caja = p.querySelector("#codigoSala");
   caja.focus();
-  p.querySelector("[data-ir]").onclick = () => {
+  const entrar = () => {
     const c = (caja.value || "").toUpperCase().replace(/[^A-Z]/g, "");
     if(c.length !== 4) return;
     SALA.codigo = c;
     SALA.paso = "dentro";
     abrirRed(SALA.via, "invitado", c);
   };
-  p.querySelector("[data-atras]").onclick = () => { SALA.paso = "puerta"; dibujarSala(); };
+  p.querySelector("[data-ir]").onclick = entrar;
+  /* El teclado del móvil enseña la tecla de intro estando en un campo de
+     texto, y darle es el gesto natural al acabar de escribir. Sin esto había
+     que cerrar el teclado a mano para poder ver el botón y tocarlo. */
+  caja.addEventListener("keydown", e => {
+    if(e.key === "Enter"){ e.preventDefault(); caja.blur(); entrar(); }
+  });
+  /* Volver desde el código lleva al CRUCE, no a la pantalla de "crear o
+     entrar": esa pantalla ya no está en el camino de nadie (online crea la
+     sala directo y el invitado llega aquí desde el cruce), así que devolver a
+     ella era mandarte a un sitio por el que no habías pasado. */
+  p.querySelector("[data-atras]").onclick = () => { cerrarRed(); pasoCamino(); };
 }
 
 /* Copiar el código al portapapeles, para pegarlo en el WhatsApp del otro.
@@ -7812,12 +8925,15 @@ function salaDentro(){
   };
 
   let h = '<div class="prep">' +
-    '<h2>Sala <button class="mono clave" data-copiar="1">' + SALA.codigo +
-    '<span class="copia">copiar</span></button></h2>';
+    '<button class="mono clave" data-copiar="1">' + SALA.codigo +
+    '<span class="copia">copiar</span></button>';
   if(RED.aviso) h += '<p class="pista">' + RED.aviso + '</p>';
 
   /* Las reglas de la mesa las pone el anfitrión. Los demás las ven puestas:
      mismo sitio, mismo aspecto, pero sin poder tocarlas. */
+  /* Misma caja de altura fija que en preparar: en la sala las preguntas
+     también van y vienen según los luchadores, y sin esto la mesa saltaba. */
+  h += '<div class="ajustes sala">';
   if(anfitrion){
     h += '<h2>¿Cuántos luchadores?</h2><div class="opciones">' +
       [2,3,4].map(k => '<button data-rn="' + k + '"' +
@@ -7836,7 +8952,7 @@ function salaDentro(){
         '<button data-rt="1"' + (RED.todos ? ' class="on"' : '') +
           '>Cualquiera</button></div>';
     if(hayMaquina())
-      h += '<h2>Maña de la máquina</h2><div class="opciones">' +
+      h += '<h2>Dificultad IA</h2><div class="opciones">' +
         DIFICULTADES.map((d, k) => '<button data-rd="' + k + '"' +
           (RED.dif === k ? ' class="on ' + d.clase + '"' : '') + '>' +
           d.nombre + '</button>').join("") + '</div>';
@@ -7847,7 +8963,8 @@ function salaDentro(){
     h += '<p class="pista">' + comoVa + '. Las reglas las pone quien ha creado la sala.</p>';
   }
 
-  h += '<h2>La mesa</h2><div class="sitios">';
+  h += '</div>';                // cierra .ajustes
+  h += '<div class="sitios">';
   for(let i = 0; i < RED.n; i++){
     const pl = RED.plazas[i];
     const suyo = pl.tipo === "persona" && pl.quien === RED.yo;
@@ -7878,13 +8995,24 @@ function salaDentro(){
     h += '</div>';
   }
   h += '</div>';
-  h += '<button class="rellenar mono" data-salir="1">salir de la sala</button>';
   h += '</div>';
+  /* FUERA del bloque .prep. Dentro, el "margin-top:auto" solo empujaba hasta
+     el fondo de ese bloque, que crece y encoge con las opciones de la mesa,
+     así que el botón subía y bajaba (370 con dos luchadores, 615 con cuatro).
+     Colgado del cuerpo se queda clavado abajo pase lo que pase. */
+  /* Un separador que se come todo el hueco sobrante y empuja el botón al
+     fondo. Con "margin-top:auto" no bastaba: el contenido de la sala llena
+     justo la caja, y sin hueco libre un margen automático no empuja nada.
+     Este crece y encoge solo, así que el botón se queda a la misma altura
+     con dos luchadores que con cuatro. */
+  h += '<div class="empuja" style="flex:1 1 auto;min-height:0"></div>';
+  h += '<button class="mono salir-sala" data-salir="1">Salir de la sala</button>';
 
   const listos = mesaCompleta();
   const faltaGente = RED.plazas.some(p => p.tipo === "persona" && !p.quien);
   const pie = anfitrion
-    ? '<button class="empezar"' + (listos ? '' : ' disabled') + '>' +
+    ? '<button class="empezar' + (listos ? ' listo' : '') + '"' +
+      (listos ? '' : ' disabled') + '>' +
       (listos ? "Empezar el combate"
         : (faltaGente ? "Faltan jugadores por llegar" : "Faltan luchadores por elegir")) +
       '</button>'
@@ -7934,7 +9062,11 @@ function salaDentro(){
   });
   const bCopia = p.querySelector("[data-copiar]");
   if(bCopia) bCopia.onclick = () => copiarCodigo(bCopia);
-  p.querySelector("[data-salir]").onclick = () => { cerrarRed(); pasoPreparar(); };
+  /* Al salir de una sala se vuelve al cruce, no a preparar una partida contra
+     la máquina: el que se sale de una sala no ha dicho en ningún momento que
+     quiera jugar solo, y plantarle ahí la pantalla de asientos y dificultad
+     es contestarle a una pregunta que no ha hecho. */
+  p.querySelector("[data-salir]").onclick = () => { cerrarRed(); pasoCamino(); };
 
   if(anfitrion && listos) p.querySelector(".empezar").onclick = () => {
     const semilla = (Date.now() ^ Math.floor(performance.now() * 1000)) >>> 0;
@@ -7974,6 +9106,7 @@ function iniciarCombate(){
   }
   // Quién mira la pantalla al empezar: la primera persona que haya sentada.
   ESTADO.local = Math.max(0, ESTADO.asientos.findIndex(a => a.controlador !== "ia"));
+  cuadernoEmpezar();           // cuaderno en blanco para este combate
   ESTADO.apuntando = null;
   ESTADO.registro = []; ESTADO.pendiente = null; ESTADO.quienJuegaTras = null;
   ESTADO.pausa = null; ESTADO.secuencia = []; ESTADO.nuevaSecuencia = true; ESTADO.recogiendo = false;
