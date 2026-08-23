@@ -1358,7 +1358,7 @@ button.accion:active{background:var(--tinta-2)}
    tamaño normal y con un hueco de doce píxeles por debajo, y parecía un
    párrafo suelto en vez del pie del recuadro. */
 .prep > .clave + .pista{font-size:10px;opacity:.6;margin:0 auto 2px;
-  max-width:260px;letter-spacing:.02em}
+  max-width:260px;letter-spacing:.02em;line-height:1.35;min-height:1.35em}
 
 /* EL CÓDIGO, ENMARCADO Y SOLO. Antes iba de acompañante de la palabra "Sala"
    y en letra de titular: se leía como un título más y había que buscarlo. Es
@@ -1449,7 +1449,7 @@ input.codigo:focus{border-color:var(--madera-viva)}
 .rellenar:active{opacity:1;color:var(--madera-viva)}
 /* "rellenar asientos" habla de los asientos que tiene justo encima, así que
    va pegado a ellos y no flotando a medio camino del siguiente bloque. */
-.rellenar.pegado{margin-top:0}
+.rellenar.pegado{margin-top:6px}
 
 #eligeL .cerrar{background:transparent;border:1px solid var(--tinta-3);border-radius:5px;
   color:var(--pergamino-2);font-family:inherit;font-size:13px;padding:9px 22px}
@@ -1527,8 +1527,8 @@ input.codigo:focus{border-color:var(--madera-viva)}
 
 /* Pegado debajo de "jugar online", sin el hueco que separa los bloques. */
 /* ═══ QUE QUEPA TAMBIÉN EN MÓVILES CORTOS ═════════════════════════════
-   La configuración más cargada —cuatro luchadores, todos contra todos y
-   responde cualquiera— cabía holgada en una pantalla de 844 pero se salía en
+   La configuración más cargada —cuatro luchadores y máquina en la mesa—
+   cabía holgada en una pantalla de 844 pero se salía en
    una de 667, que es un móvil de los pequeños. Aquí se aprieta lo que no se
    toca con el dedo: el aire entre grupos y el que hay antes de los asientos.
    Los botones se quedan igual de grandes, que es lo que importa. */
@@ -1540,13 +1540,38 @@ input.codigo:focus{border-color:var(--madera-viva)}
    sigue donde lo dejaste al cambiar de modo. Las preguntas se quedan
    pegadas arriba y el hueco que sobra cae por debajo, como un desplegable
    que va llenándose. */
+/* ═══ POR QUÉ SOBRA TANTO ═══════════════════════════════════════════
+   Estos números NO son el alto exacto del contenido: llevan 26 píxeles de
+   holgura a propósito, y esa holgura es la razón de ser de la caja.
+
+   Antes iban clavados al contenido medido, con un píxel de margen. En este
+   ordenador cuadraba, pero en un móvil de verdad la letra se dibuja un pelo
+   distinta, el contenido se pasaba de la reserva por dos o tres píxeles, la
+   caja crecía para tragarlos y la mesa de asientos bajaba de golpe justo al
+   pasar a cuatro luchadores, que es cuando entra la pregunta de más.
+
+   Con 26 de colchón no hay tipografía ni móvil que se salga. La mesa queda
+   un poco más abajo de lo estrictamente necesario, y a cambio no se mueve
+   nunca: cambias de 2 a 3 a 4 y el primer retrato sigue donde estaba.
+
+   Los números salen de MEDIR la configuración más cargada de cada pantalla,
+   no a ojo: en preparar son cuatro luchadores con máquina en la mesa (tres
+   preguntas: cuántos, modo de juego y dificultad) y en la sala, cuatro
+   plazas con alguna de la máquina. Al quitarse la pregunta de "¿quién puede
+   responder?" sobraba justo un bloque entero: preparar guardaba 328 para un
+   contenido de 230, y esos 98 de aire muerto empujaban los asientos hacia
+   abajo y sacaban barra de desplazamiento en pantallas de 800. */
 .ajustes{display:flex;flex-direction:column;align-items:center;
-  width:100%;min-height:270px;justify-content:flex-start}
-/* La caja de la SALA reserva menos: allí no hay pregunta de dificultad de la
-   máquina (los asientos vacíos los llena la máquina sin preguntar), así que
-   guardar el mismo alto que en preparar era regalar un bloque entero de aire
-   —y es justo lo que dejaba a la sala sin colchón en móviles cortos. */
-.ajustes.sala{min-height:206px}
+  width:100%;min-height:257px;justify-content:flex-start}
+/* La caja de la SALA reserva un poco menos: sus preguntas son más cortas de
+   escribir y, sobre todo, encima lleva el código enmarcado y su frase, que
+   en preparar no están. */
+.ajustes.sala{min-height:234px}
+/* "Salir de la sala" se quedaba en su sitio con dos y con tres y bajaba
+   trece píxeles con cuatro. No hacía falta reservarle el alto de los cuatro
+   asientos: bastaba con que la mesa de cuatro quepa. Cuando cabe, el
+   separador de abajo tiene siempre hueco que comerse y ancla el botón al
+   fondo él solo, con dos luchadores igual que con cuatro. */
 .ajustes > *{width:100%}
 /* ═══ EL APRETÓN, POR TRAMOS ══════════════════════════════════════════
    Antes esto entraba de golpe por debajo de 700 y hasta ahí no hacía nada.
@@ -1555,21 +1580,32 @@ input.codigo:focus{border-color:var(--madera-viva)}
    suave para los móviles medianos y otro más firme para los cortos, con
    holgura de sobra en los dos para que no vuelva a rozar. */
 @media (max-height:780px){
-  .ajustes{min-height:290px}
-  .portada:not(.titulo) .cuerpo{gap:7px}
-  .prep h2{margin:15px 0 8px}
-  .opciones button{padding:10px 4px}
-  .opciones.aire button{padding:11px 4px}
-  .portada .sitios{margin-top:12px !important}
+  /* Aquí se usaban medidas intermedias y con el colchón nuevo de la caja ya
+     no cabían: entre 710 y 750 salía barra de desplazamiento. Este tramo
+     pasa a usar las mismas medidas apretadas que los móviles cortos. Se
+     pierde algo de aire entre preguntas y a cambio cabe entero. */
+  .ajustes{min-height:200px}
+  .portada:not(.titulo) .cuerpo{gap:5px}
+  .prep h2{margin:6px 0 4px}
+  .opciones button{padding:9px 4px}
+  .opciones.aire button{padding:10px 4px}
+  .portada .sitios{margin-top:4px !important}
   .clave{font-size:21px;padding:8px 8px 6px;margin-bottom:3px}
+  /* Aquí había un recorte del aire de antes de los asientos para la sala.
+     Lo lleva ahora una sola regla fluida, más abajo, que vale para todos
+     los altos y no a saltos. */
   .clave .copia{font-size:9.5px;margin-top:3px}
   .prep > .clave + .pista{font-size:9.5px;margin-bottom:4px}
 }
 @media (max-height:700px){
   .portada:not(.titulo) .cuerpo{gap:4px;padding-top:2px}
-  .portada .sitios{margin-top:8px !important}
+  .portada .sitios{margin-top:4px !important}
   .portada .cabecera{padding-top:10px;padding-bottom:2px}
-  .ajustes{min-height:246px}
+  .ajustes{min-height:200px}
+  /* La sala también encoge aquí. Sin esta línea se quedaba con los 211 del
+     tramo de arriba (gana por llevar dos clases) para un contenido de 171:
+     cuarenta de aire de más justo donde menos sobra. */
+  .ajustes.sala{min-height:198px}
   /* El aire completo no cabe en un móvil corto: aquí se da la mitad. Sigue
      habiendo más distancia fuera que dentro, que es lo que separa los
      grupos; solo que en menos sitio. */
@@ -1579,7 +1615,7 @@ input.codigo:focus{border-color:var(--madera-viva)}
   /* La sala lleva además el código enmarcado y su frase, que en preparar no
      están: en un móvil corto eso es lo que la sacaba de la pantalla. */
   .clave{font-size:19px;padding:7px 8px 5px;margin-bottom:2px}
-  .clave .copia{font-size:9px;margin-top:2px}
+  .clave .copia{font-size:9px;margin-top:0}
   .prep > .clave + .pista{font-size:9px;margin-bottom:0}
   .salir-sala{margin-bottom:0;padding:5px 14px}
 }
@@ -1598,10 +1634,71 @@ input.codigo:focus{border-color:var(--madera-viva)}
   .portada:not(.titulo) .cuerpo{gap:18px}
   .opciones button{padding:11px 4px}
   .opciones.aire button{padding:13px 4px}
-  .ajustes{min-height:328px}
-  .ajustes.sala{min-height:252px}
-  .portada .sitios{margin-top:26px !important}
+  .ajustes{min-height:257px}
+  .ajustes.sala{min-height:253px}
+  .portada .sitios{margin-top:22px !important}
+  /* La sala, un poco más abajo. Al quitar la pregunta de "¿quién puede
+     responder?" subió veinticinco píxeles de golpe y se quedaba pegada a la
+     cabecera, con todo el hueco sobrante al fondo. Aquí se le devuelven
+     catorce empujando el bloque del código, que es lo primero que hay
+     debajo del título y arrastra consigo las preguntas y los asientos.
+
+     Solo en este tramo: es el único con colchón de sobra. De 780 para abajo
+     la sala va justa y bajarla la sacaría de la pantalla. */
+  .clave{margin-top:9px}
 }
+
+/* ═══ LA SALA, CON SU PROPIO APRETÓN ══════════════════════════════════
+   Esto es lo que hacía que la sala se desplazara al pasar a cuatro: con dos
+   y con tres cabía justa, y al aparecer la pregunta de cómo se reparten se
+   pasaba de largo, el panel se volvía desplazable y todo bailaba un poco.
+
+   La sala tiene más cosas dentro que preparar —el código enmarcado, su
+   línea de aviso y el botón de salir— así que los tramos que le valen a
+   preparar le quedan grandes. Aquí se le adelanta el apretón: usa las
+   medidas de móvil corto ya desde 780, no desde 700. Ese escalón entre 701
+   y 780 era el que la reventaba.
+
+   Y los dos espacios gordos que le quedan —el de entre bloques y el de
+   antes de los asientos— dejan de ir a saltos y pasan a medirse en
+   proporción al alto de la pantalla. Así no hay ningún alto intermedio en
+   el que se salga por poco: crece y encoge con el hueco que haya. */
+@media (max-height:795px){
+  .portada.en-sala .prep h2{margin:4px 0 3px}
+  .portada.en-sala .opciones button{padding:9px 4px}
+  .portada.en-sala .opciones.aire button{padding:10px 4px}
+  .portada.en-sala .ajustes.sala{min-height:191px}
+  .portada.en-sala .clave{font-size:19px;padding:7px 8px 5px;margin-bottom:2px}
+  .portada.en-sala .clave .copia{font-size:9px;margin-top:0}
+  .portada.en-sala .prep > .clave + .pista{font-size:9px;margin-bottom:0}
+  .portada.en-sala .salir-sala{margin-bottom:0;padding:5px 14px}
+}
+/* Y el mismo adelanto para el recorte de la cabecera: a preparar le entra
+   en 700 y a la sala le hace falta ya en 725, que es donde empieza a ir
+   justa. Sin esto, entre 701 y 720 el botón de salir bailaba cuatro
+   píxeles al pasar a cuatro luchadores. */
+@media (max-height:725px){
+  .portada.en-sala .cabecera{padding-top:10px;padding-bottom:2px}
+  .portada.en-sala .cuerpo{padding-top:2px}
+}
+/* Y en los muy cortos, el código enmarcado en pequeño. Es lo único que
+   quedaba por apretar sin tocar los asientos, y son los ocho píxeles que
+   faltaban para que también ahí quepa la mesa de cuatro. */
+@media (max-height:695px){
+  .portada.en-sala .clave{font-size:17px;padding:5px 8px 4px}
+  .portada.en-sala .clave .copia{font-size:8.5px}
+}
+/* La mesa de la sala reserva el alto de cuatro asientos (47 cada uno) para
+   que "Salir de la sala" no baje al pasar a cuatro luchadores: con el hueco
+   ya reservado, el separador de arriba tiene siempre el mismo sobrante que
+   comerse y el botón queda clavado. */
+.portada.en-sala .sitios{min-height:189px}
+.portada.en-sala .cuerpo{gap:clamp(2px, 0.3vh, 8px)}
+.portada.en-sala .sitios{margin-top:clamp(2px, 0.5vh, 10px) !important}
+/* Lo que baja la sala dentro de su hueco. También en proporción: en una
+   pantalla grande se despega de la cabecera, y en una corta se pega a ella
+   porque es la única forma de que quepa entera. */
+.portada.en-sala .clave{margin-top:-4px}
 
 /* Al moverlo debajo de "jugar online" quedó DENTRO del bloque de opciones, y
    se llevó de rebote el aspecto de botón grande de sus vecinos. Aquí se le
@@ -1656,7 +1753,10 @@ input.codigo:focus{border-color:var(--madera-viva)}
    Del tamaño de los otros botones acaparaba la vista y parecía la acción
    principal. Ahora va estrecha y centrada: se ve, y no compite. */
 .empuja{flex:1 1 auto;min-height:0}
-.salir-sala{display:block;width:auto;margin:0 auto 2px;
+/* El margen de abajo es lo que lo despega del fondo del recuadro: como el
+   separador de arriba se come el hueco sobrante, subir este número sube el
+   botón. */
+.salir-sala{display:block;width:auto;margin:0 auto 12px;
   background:none;border:1px solid rgba(226,99,90,.4);border-radius:6px;
   color:rgba(226,99,90,.85);font-family:inherit;font-size:12px;
   letter-spacing:.04em;padding:6px 16px;cursor:pointer}
@@ -2691,16 +2791,16 @@ const MAZOS = [
 
 const REGLAS = { pvIniciales:22, manoInicial:5, topeMano:13, asaltosParaGanar:2,
   /* ¿Puede responder a un golpe CUALQUIERA de la mesa, aunque no sea de su
-     bando? El reglamento de cartón lo permite en el Combate Múltiple.
+     bando? El reglamento de cartón lo dice claro en el Combate Múltiple:
+     "cualquier jugador puede utilizar una respuesta, aunque el ataque no
+     fuera dirigido a él". Así que en libre de tres o cuatro es SIEMPRE que
+     sí, y en bandos responde cualquiera del bando, que es la otra regla del
+     manual. No hay nada que elegir: antes había una pregunta en la pantalla
+     de preparar y otra en la sala, y se han quitado.
 
-     ESTO NO SE TOCA A MANO: lo pone la pregunta "¿Quién puede responder?"
-     de la pantalla de preparación (y la misma pregunta en la sala, si se
-     juega en red). Sale a partir de tres luchadores y sin bandos, que es la
-     única mesa donde la regla cambia algo: en el duelo no hay terceros, y
-     en bandos el manual ya dice que responde el bando.
-
-     El valor de aquí abajo es solo el que trae puesto el menú al abrirlo.
-     iniciarCombate lo vuelve a escribir con lo que hayas elegido.        */
+     ESTO NO SE TOCA A MANO: lo escribe iniciarCombate a partir del modo y
+     del número de luchadores. El valor de aquí abajo es solo el de arranque
+     (duelo, donde no hay terceros y da igual).                           */
   respondenTodos:false,
 
   /* ¿El que se queda solo de su bando hereda el turno de su compañero?
@@ -7610,7 +7710,7 @@ function vigilarLupa(){
    aqui, se pinta en la portada y se manda por la red al entrar en una sala.
    Al sacar version nueva se cambia esta linea y ya esta: el titulo de la
    pestana se pone solo. */
-const VERSION = "2.0.2";
+const VERSION = "2.0.11";
 /* El número vive AQUÍ y en ningún sitio más. Escribirlo también en el título
    a mano ya se quedó descolgado una vez: la página decía 1.4 con el juego en
    la 1.5, que es justo la confusión que el sello viene a evitar. */
@@ -7630,6 +7730,10 @@ function panelPortada(html, pie, bajoTitulo){
      desplazamiento. Misma trampa que el toque del título, que ya se limpia
      una línea más arriba. */
   p.classList.remove("cruce");
+  /* Misma limpieza que la del cruce, por lo mismo: la sala se marca para
+     poder apretarle los espacios sin tocar las demás pantallas, y si esa
+     marca se quedara pegada, preparar heredaría un apretón que no es suyo. */
+  p.classList.remove("en-sala");
   p.innerHTML =
     '<div class="cabecera"><h1>Sombras sobre Isla Negra</h1>' +
       (bajoTitulo || "") + '</div>' +
@@ -7682,7 +7786,7 @@ function pasoTitulo(){
 
    Un toque en el retrato cambia de luchador; uno en humano/IA, el mando. */
 const PARTIDA = {
-  n:2, bandos:false, dif:1, todosResponden:false,
+  n:2, bandos:false, dif:1,
   /* Los cuatro asientos empiezan VACÍOS: nadie sentado. Se toca el asiento y
      se elige luchador. Hasta que no estén todos ocupados no se empieza. */
   asientos:[ { mazo:null, humano:true  },
@@ -8176,7 +8280,7 @@ function pasoCamino(){
        plantar delante. Al entrar por "jugar solo" se empieza como el primer
        día: dos luchadores y los asientos vacíos. */
     if(c === "solo"){
-      PARTIDA.n = 2; PARTIDA.bandos = false; PARTIDA.todosResponden = false;
+      PARTIDA.n = 2; PARTIDA.bandos = false;
       PARTIDA.asientos.forEach((a, i) => { a.mazo = null; a.humano = (i === 0); });
       pasoPreparar();
       return;
@@ -8210,11 +8314,11 @@ function pasoPreparar(){
           ' puntos de vida, al mejor de 3 asaltos.</p>';
   let h = '<div class="prep">';
   /* ═══ LA MESA SIEMPRE A LA MISMA ALTURA ════════════════════════════
-     Las preguntas de arriba no salen siempre todas: "modo de juego" y "quién
-     puede responder" solo aparecen a partir de tres luchadores. Al ir y venir
-     entre dos y cuatro, los asientos subían y bajaban y el retrato que ibas a
-     tocar ya no estaba donde lo habías dejado. Esta caja reserva el alto de
-     cuando están todas, así que la mesa no se mueve. */
+     Las preguntas de arriba no salen siempre todas: "modo de juego" solo
+     aparece a cuatro, y la dificultad solo si hay máquina en la mesa. Al ir y
+     venir entre dos y cuatro, los asientos subían y bajaban y el retrato que
+     ibas a tocar ya no estaba donde lo habías dejado. Esta caja reserva el
+     alto de cuando están todas, así que la mesa no se mueve. */
   h += '<div class="ajustes">';
 
   h += '<h2>¿Cuántos luchadores?</h2><div class="opciones">' +
@@ -8230,15 +8334,6 @@ function pasoPreparar(){
            '>Por equipos</button>' +
          '<button data-bandos="0"' + (!PARTIDA.bandos ? ' class="on"' : '') +
            '>Todos contra todos</button></div>';
-
-  // Solo tiene sentido con tres o más y sin bandos: en un duelo no hay
-  // terceros, y en bandos el reglamento ya dice que responde el bando.
-  if(PARTIDA.n >= 3 && !equipos)
-    h += '<h2>¿Quién puede responder?</h2><div class="opciones">' +
-         '<button data-resp="0"' + (!PARTIDA.todosResponden ? ' class="on"' : '') +
-           '>Solo el atacado</button>' +
-         '<button data-resp="1"' + (PARTIDA.todosResponden ? ' class="on"' : '') +
-           '>Cualquiera de la mesa</button></div>';
 
   if(hayIA)
     /* El color va SOLO en el elegido, igual que en la sala. Con los tres
@@ -8327,9 +8422,6 @@ function pasoPreparar(){
   });
   p.querySelectorAll("[data-bandos]").forEach(b => b.onclick = () => {
     PARTIDA.bandos = b.dataset.bandos === "1"; refresca();
-  });
-  p.querySelectorAll("[data-resp]").forEach(b => b.onclick = () => {
-    PARTIDA.todosResponden = b.dataset.resp === "1"; refresca();
   });
   p.querySelectorAll("[data-dif]").forEach(b => b.onclick = () => {
     PARTIDA.dif = parseInt(b.dataset.dif, 10);
@@ -8636,7 +8728,7 @@ function abrirTutorial(){
   REGLAS.pvIniciales = 10;
   REGLAS.asaltosParaGanar = 1;
   document.body.classList.add("enPrueba");
-  PARTIDA.n = 2; PARTIDA.bandos = false; PARTIDA.todosResponden = false;
+  PARTIDA.n = 2; PARTIDA.bandos = false;
   PARTIDA.asientos[0] = { mazo:"roku", humano:true };
   PARTIDA.asientos[1] = { mazo:"nori", humano:false };
   const p = document.getElementById("portada");
@@ -8684,7 +8776,7 @@ function tutoPrepararAsalto(a){
    contra Nori y Mai-lo, sentados alternos como manda el reglamento. */
 function tutoMontarBandos(){
   TUTO.mesa = "bandos";
-  PARTIDA.n = 4; PARTIDA.bandos = true; PARTIDA.todosResponden = false;
+  PARTIDA.n = 4; PARTIDA.bandos = true;
   PARTIDA.asientos[0] = { mazo:"roku",   humano:true  };
   PARTIDA.asientos[1] = { mazo:"nori",   humano:false };
   PARTIDA.asientos[2] = { mazo:"nestor", humano:false };
@@ -9162,7 +9254,6 @@ const RED = {
   n:2,               // cuántas plazas tiene la mesa
   modo:"libre",      // "libre" o "equipos" (a cuatro)
   dif:1,             // maña de la máquina, si hay plazas suyas
-  todos:false,       // en libre, ¿puede responder cualquiera?
   plazas:[],         // quién ocupa cada plaza y con qué luchador
   descartes:null,    // elección de descartes pendiente de otro asiento
   aviso:"",          // lo que se enseña en la sala
@@ -9873,7 +9964,7 @@ function tomarElMando(){
 function difundirSala(){
   if(RED.papel !== "anfitrion" || !RED.tubo) return;
   RED.tubo.enviar({ t:"sala", n:RED.n, modo:RED.modo, dif:RED.dif,
-                    todos:RED.todos, plazas:RED.plazas });
+                    plazas:RED.plazas });
 }
 
 /* ═══ LOS MENSAJES ════════════════════════════════════════════════════════ */
@@ -9920,7 +10011,7 @@ function alLlegarMensaje(m){
       const k = plazaDe(m.de);
       if(k < 0) return;                       // no jugaba esta partida
       RED.tubo.enviar({ t:"retomar", para:m.de, n:RED.n, modo:RED.modo,
-                        dif:RED.dif, todos:RED.todos, plazas:RED.plazas,
+                        dif:RED.dif, plazas:RED.plazas,
                         jefe:RED.jefe, foto:sacarFoto() });
       if(ESTADO.asientos[k] && ESTADO.asientos[k].controlador === "ia")
         repartirOrden("vuelve", k, null);
@@ -9935,7 +10026,7 @@ function alLlegarMensaje(m){
   if(m.t === "retomar"){
     if(m.para !== RED.yo || RED.activa) return;
     RED.n = m.n; RED.modo = m.modo; RED.dif = m.dif;
-    RED.todos = m.todos; RED.plazas = m.plazas; RED.jefe = m.jefe;
+    RED.plazas = m.plazas; RED.jefe = m.jefe;
     const k = plazaDe(RED.yo);
     if(k < 0) return;
     RED.mio = k;
@@ -9958,7 +10049,7 @@ function alLlegarMensaje(m){
   }
   if(m.t === "sala"){
     RED.n = m.n; RED.modo = m.modo; RED.dif = m.dif;
-    RED.todos = m.todos; RED.plazas = m.plazas;
+    RED.plazas = m.plazas;
     const k = plazaDe(RED.yo);
     if(k >= 0){ RED.mio = k; RED.aviso = ""; }
     else RED.aviso = "La mesa está llena. Espera a que quede sitio.";
@@ -9976,7 +10067,7 @@ function alLlegarMensaje(m){
   }
   if(m.t === "empezar"){
     RED.n = m.n; RED.modo = m.modo; RED.dif = m.dif;
-    RED.todos = m.todos; RED.plazas = m.plazas;
+    RED.plazas = m.plazas;
     RED.jefe = m.jefe || (RED.plazas[0] && RED.plazas[0].quien);
     const k = plazaDe(RED.yo);
     if(k < 0) return;                      // no me tocaba jugar esta mesa
@@ -10044,7 +10135,7 @@ function abrirRed(via, papel, sala){
   RED.mio = 0;
   RED.cola = []; RED.orden = 0; RED.siguiente = 1;
   RED.aplicando = false; RED.descartes = null;
-  RED.n = 2; RED.modo = "libre"; RED.dif = PARTIDA.dif; RED.todos = false;
+  RED.n = 2; RED.modo = "libre"; RED.dif = PARTIDA.dif;
   RED.jefe = papel === "anfitrion" ? RED.yo : null;
   RED.plazas = [];
   ajustarPlazas(2);
@@ -10117,7 +10208,6 @@ function cerrarRed(){
 function arrancarEnRed(foto){
   PARTIDA.n = RED.n;
   PARTIDA.bandos = RED.modo === "equipos";
-  PARTIDA.todosResponden = !!RED.todos;
   PARTIDA.dif = RED.dif;
   IA_NIVEL = DIFICULTADES[RED.dif];
   for(let i = 0; i < RED.n; i++)
@@ -10275,7 +10365,14 @@ function salaDentro(){
   let h = '<div class="prep">' +
     '<button class="mono clave" data-copiar="1">' + SALA.codigo +
     '<span class="copia">copiar</span></button>';
-  if(RED.aviso) h += '<p class="pista">' + RED.aviso + '</p>';
+  /* ═══ LA LÍNEA DEL AVISO VA SIEMPRE ══════════════════════════════
+     Antes solo se escribía cuando había algo que decir, y la sala entera
+     daba un salto de dieciséis píxeles cada vez que un aviso aparecía o se
+     iba. En una sala online eso pasa continuamente: "Conectando…",
+     "Pásales el código para que entren", y en cuanto entra alguien el
+     aviso se borra. Ese era el desplazamiento que se veía al montar una
+     mesa de cuatro. Vacía, la línea ocupa lo mismo y no se ve. */
+  h += '<p class="pista hueco-aviso">' + (RED.aviso || "") + '</p>';
 
   /* Las reglas de la mesa las pone el anfitrión. Los demás las ven puestas:
      mismo sitio, mismo aspecto, pero sin poder tocarlas. */
@@ -10293,12 +10390,6 @@ function salaDentro(){
           '>Por equipos</button>' +
         '<button data-rb="0"' + (RED.modo !== "equipos" ? ' class="on"' : '') +
           '>Todos contra todos</button></div>';
-    if(RED.n >= 3 && RED.modo !== "equipos")
-      h += '<h2>¿Quién puede responder a un golpe?</h2><div class="opciones">' +
-        '<button data-rt="0"' + (!RED.todos ? ' class="on"' : '') +
-          '>Solo el atacado</button>' +
-        '<button data-rt="1"' + (RED.todos ? ' class="on"' : '') +
-          '>Cualquiera</button></div>';
     if(hayMaquina())
       h += '<h2>Dificultad IA</h2><div class="opciones">' +
         DIFICULTADES.map((d, k) => '<button data-rd="' + k + '"' +
@@ -10369,6 +10460,7 @@ function salaDentro(){
         ? "Listo · empieza quien creó la sala" : "Elige tu luchador") + '</button>';
 
   const p = panelPortada(h, pie);
+  p.classList.add("en-sala");
 
   p.querySelectorAll("[data-rn]").forEach(b => b.onclick = () => {
     ajustarPlazas(parseInt(b.dataset.rn, 10));
@@ -10377,9 +10469,6 @@ function salaDentro(){
   });
   p.querySelectorAll("[data-rb]").forEach(b => b.onclick = () => {
     RED.modo = b.dataset.rb === "1" ? "equipos" : "libre"; refresca();
-  });
-  p.querySelectorAll("[data-rt]").forEach(b => b.onclick = () => {
-    RED.todos = b.dataset.rt === "1"; refresca();
   });
   p.querySelectorAll("[data-rd]").forEach(b => b.onclick = () => {
     RED.dif = parseInt(b.dataset.rd, 10); refresca();
@@ -10419,7 +10508,7 @@ function salaDentro(){
   if(anfitrion && listos) p.querySelector(".empezar").onclick = () => {
     const semilla = (Date.now() ^ Math.floor(performance.now() * 1000)) >>> 0;
     RED.tubo.enviar({ t:"empezar", semilla, n:RED.n, modo:RED.modo, jefe:RED.yo,
-                      dif:RED.dif, todos:RED.todos, plazas:RED.plazas });
+                      dif:RED.dif, plazas:RED.plazas });
     SEMILLA.v = semilla;
     arrancarEnRed();
   };
@@ -10439,8 +10528,10 @@ function iniciarCombate(){
   /* Se montan tantos asientos como diga la pantalla de preparar. Con dos y
      una máquina, sale exactamente el duelo de siempre. */
   ESTADO.modo = (PARTIDA.n === 4 && PARTIDA.bandos) ? "equipos" : "libre";
-  // En bandos manda el reglamento: responde el atacado o los suyos.
-  REGLAS.respondenTodos = ESTADO.modo === "libre" && PARTIDA.n >= 3 && PARTIDA.todosResponden;
+  /* Sale del modo y del número de luchadores, sin preguntar nada: en libre
+     de tres o cuatro responde cualquiera de la mesa (Combate Múltiple), y en
+     bandos manda el reglamento, que deja responder a los del bando. */
+  REGLAS.respondenTodos = ESTADO.modo === "libre" && PARTIDA.n >= 3;
   IA_NIVEL = DIFICULTADES[PARTIDA.dif];
   ESTADO.asientos = [];
   for(let i = 0; i < PARTIDA.n; i++){
