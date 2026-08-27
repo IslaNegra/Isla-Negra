@@ -10110,37 +10110,69 @@ function buzonSobre(p){
 /* La marca se pone releyendo la lista, no sobre la copia que tuviera el que
    envía. Entre que sale una partida y llega la respuesta puede acabar otro
    combate y apuntarse una nueva: guardar la lista vieja encima la borraría. */
-function buzonMarcar(semilla){
+function buzonMarcar(semilla, marca){
   const lista = cuadernoLeer();
   const i = lista.findIndex(x => x.semilla === semilla);
-  if(i >= 0){ lista[i].env = 1; cuadernoGuardar(lista); }
+  if(i >= 0){ lista[i].env = marca || 1; cuadernoGuardar(lista); }
 }
 
-function buzonMandar(p){
-  return fetch(BUZON.donde, {
-    method: "POST",
-    headers: {
-      "apikey":       BUZON.llave,
-      "Content-Type": "application/json",
-      "Prefer":       "return=minimal"
-    },
-    body: JSON.stringify(buzonSobre(p))
-  }).then(r => r.ok);
+/* Devuelve una de tres palabras, y la diferencia entre ellas es la que evita
+   que el buzón se atasque para siempre:
+
+     "bien"   → entró. Se marca y a por la siguiente.
+     "espera" → no se pudo, pero puede que sí más tarde: sin cobertura, el
+                servidor caído, o la clave rotada. Se para la cola y se
+                reintenta al abrir el juego.
+     "tirar"  → el servidor la ha mirado y la rechaza. Reintentarla mil veces
+                daría mil veces lo mismo.
+
+   Sin "tirar", UNA partida rechazada se queda la primera de la cola
+   reintentándose eternamente y bloquea a todas las que vengan detrás. El
+   móvil seguiría apuntando partidas y no llegaría ninguna más, sin que nadie
+   se entere de nada.
+
+   El rechazo se reconoce por el código 42501 de Postgres, que es "esta fila
+   no pasa la política", no por el 403 pelado: un 403 también sale cuando la
+   clave deja de valer, y ahí tirar el cuaderno entero sería el peor error
+   posible. Ante la duda, siempre "espera": repetir una partida es molesto,
+   perderla no tiene arreglo. */
+async function buzonMandar(p){
+  let r;
+  try{
+    r = await fetch(BUZON.donde, {
+      method: "POST",
+      headers: {
+        "apikey":       BUZON.llave,
+        "Content-Type": "application/json",
+        "Prefer":       "return=minimal"
+      },
+      body: JSON.stringify(buzonSobre(p))
+    });
+  }catch(e){
+    return "espera";                       // ni salió del móvil
+  }
+  if(r.ok) return "bien";
+
+  let codigo = "";
+  try{ codigo = ((await r.json()) || {}).code || ""; }catch(e){}
+  if(codigo === "42501" || r.status === 413) return "tirar";
+  return "espera";
 }
 
-/* De una en una y parando al primer fallo: si no hay línea, la segunda
-   tampoco va a salir, y machacar el servidor con veinte intentos seguidos
-   solo sirve para que nos corte el grifo. */
+/* De una en una y parando en cuanto haya que esperar: si no hay línea, la
+   segunda tampoco va a salir, y machacar el servidor con veinte intentos
+   seguidos solo sirve para que nos corte el grifo. */
 async function buzonVaciar(){
   if(BUZON.yendo) return;
   BUZON.yendo = true;
   try{
     const pendientes = cuadernoLeer().filter(x => !x.env);
     for(const p of pendientes){
-      let bien = false;
-      try{ bien = await buzonMandar(p); }catch(e){ bien = false; }
-      if(!bien) break;
-      buzonMarcar(p.semilla);
+      const q = await buzonMandar(p);
+      if(q === "espera") break;
+      // Enviada (1) o descartada (2): las dos dejan de estorbar en la cola,
+      // pero se distinguen por si algún día hay que averiguar qué pasó.
+      buzonMarcar(p.semilla, q === "bien" ? 1 : 2);
     }
   }finally{ BUZON.yendo = false; }
 }
