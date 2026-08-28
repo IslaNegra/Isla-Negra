@@ -4757,7 +4757,25 @@ const DIFICULTADES = [
     pie:"El combate de verdad. Mejora en cuanto puede, no falla un remate y aprovecha cada respuesta. Ataca de frente: no mide lo que le puedes devolver, y ahí es donde se le gana.",
     despiste:.04, veLetal:1, respondeFlojo:.70, respondeFuerte:1,
     usaMaestras:true, prudente:false, ahorra:true,
-    subeNivel:1, buscaCartas:7, banco:1, impaciencia:3, umbralGolpe:0,
+    /* ═══ "buscaCartas" DEPENDE DEL MAZO, Y EL MAZO CAMBIÓ ═════════════
+       Estaba en 7. Ese 7 se eligió cuando los cuatro mazos llevaban unas
+       cantidades de cartas que no eran las del juego de cartón; al corregir
+       las cantidades, el número bueno se movió y nadie lo movió con él.
+
+       Medido en el banco, la misma IA contra sí misma, 3.200 combates por
+       valor, cada semilla jugada en los dos asientos:
+
+         con los mazos VIEJOS   7 → 9  daba  +1,0 puntos  (dentro del ruido)
+         con los mazos NUEVOS   7 → 9  daba  +4,8 puntos
+
+       O sea: con los mazos de antes, 7 era una elección razonable. Con los
+       de ahora, no. De 9 en adelante la curva se aplana (10 y 11 dan lo
+       mismo), así que se queda en 9, que es donde deja de mejorar.
+
+       La escalera de dificultades no se resiente: sigue ganando a
+       Entrenamiento (99,1% → 99,7%) y sigue perdiendo con Isla Negra
+       (74,2% → 72,4%).                                                  */
+    subeNivel:1, buscaCartas:9, banco:1, impaciencia:3, umbralGolpe:0,
     /* En mesa de tres o cuatro mira a medias quién manda: bastante para no
        cebarse siempre con el herido, poco para que Isla Negra se note. */
     amenaza:.3,
@@ -8257,7 +8275,7 @@ function vigilarLupa(){
    aqui, se pinta en la portada y se manda por la red al entrar en una sala.
    Al sacar version nueva se cambia esta linea y ya esta: el titulo de la
    pestana se pone solo. */
-const VERSION = "2.1.1";
+const VERSION = "2.1.2";
 /* El número vive AQUÍ y en ningún sitio más. Escribirlo también en el título
    a mano ya se quedó descolgado una vez: la página decía 1.4 con el juego en
    la 1.5, que es justo la confusión que el sello viene a evitar. */
