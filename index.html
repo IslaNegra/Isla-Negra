@@ -2806,11 +2806,11 @@ const CARTAS = [
 
   /* --- Básicas ( — ) --- */
   { id:"roku_golpe_puno", mazo:"roku", nombre:"Golpe de puño", tipo:"ataque",
-    nivel:1, copias:3, texto:"1 Daño.", cita:"", arte:"golpe_puno",
+    nivel:1, copias:4, texto:"1 Daño.", cita:"", arte:"golpe_puno",
     efecto:{ dano:1 } },
 
   { id:"roku_buscar_posicion", mazo:"roku", nombre:"Buscar posición", tipo:"tactica",
-    nivel:1, copias:1, texto:"Coge las tres cartas superiores de tu mazo de combate.", cita:"",
+    nivel:1, copias:2, texto:"Coge las tres cartas superiores de tu mazo de combate.", cita:"",
     arte:"buscar_posicion", efecto:{ roba:3 } },
 
   { id:"roku_esquiva", mazo:"roku", nombre:"Esquiva", tipo:"respuesta",
@@ -2819,7 +2819,7 @@ const CARTAS = [
 
   /* --- Avanzadas ( = ) --- */
   { id:"roku_patada", mazo:"roku", nombre:"Patada", tipo:"ataque",
-    nivel:2, copias:4, texto:"2 Daños.", cita:"", arte:"patada",
+    nivel:2, copias:3, texto:"2 Daños.", cita:"", arte:"patada",
     efecto:{ dano:2 } },
 
   { id:"roku_parada", mazo:"roku", nombre:"Parada", tipo:"respuesta",
@@ -2832,16 +2832,16 @@ const CARTAS = [
 
   /* --- Expertas ( ≡ ) --- */
   { id:"roku_palma_loto", mazo:"roku", nombre:"Palma de Loto negro", tipo:"ataque",
-    nivel:3, copias:1, texto:"3 Daños.", cita:"Tan hermoso como siniestro.",
+    nivel:3, copias:2, texto:"3 Daños.", cita:"Tan hermoso como siniestro.",
     arte:"palma_loto", efecto:{ dano:3 } },
 
   { id:"roku_rayo_agua", mazo:"roku", nombre:"Rayo sobre el agua", tipo:"respuesta",
-    nivel:3, copias:2, texto:"Evita técnicas hasta expertas. Devuelve el daño que ibas a recibir +2.",
+    nivel:3, copias:1, texto:"Evita técnicas hasta expertas. Devuelve el daño que ibas a recibir +2.",
     cita:"El agua es su propio enemigo cuando el rayo la golpea.",
     arte:"rayo_agua", efecto:{ evitaHasta:3, devuelve:2 } },
 
   { id:"roku_tortuga_ciega", mazo:"roku", nombre:"La tortuga ciega", tipo:"respuesta",
-    nivel:3, copias:2, texto:"Evita técnicas hasta expertas. Puedes jugar una carta.",
+    nivel:3, copias:1, texto:"Evita técnicas hasta expertas. Puedes jugar una carta.",
     cita:"La tortuga ciega no puede más que protegerse bajo su caparazón.",
     arte:"tortuga", efecto:{ evitaHasta:3, dejaJugarCarta:true } },
 
@@ -2899,7 +2899,7 @@ const CARTAS = [
 
   /* --- Avanzadas ( = ) --- */
   { id:"nori_patada", mazo:"nori", nombre:"Patada", tipo:"ataque",
-    nivel:2, copias:2, texto:"2 Daños.", cita:"", arte:"patada",
+    nivel:2, copias:3, texto:"2 Daños.", cita:"", arte:"patada",
     efecto:{ dano:2 } },
 
   { id:"nori_parada", mazo:"nori", nombre:"Parada", tipo:"respuesta",
@@ -2912,7 +2912,7 @@ const CARTAS = [
 
   /* --- Expertas ( ≡ ) --- */
   { id:"nori_puno_loto", mazo:"nori", nombre:"Puño de Loto negro", tipo:"ataque",
-    nivel:3, copias:3, texto:"3 Daños.", cita:"Tan hermoso como siniestro.",
+    nivel:3, copias:2, texto:"3 Daños.", cita:"Tan hermoso como siniestro.",
     arte:"palma_loto", efecto:{ dano:3 } },
 
   { id:"nori_rayo_agua", mazo:"nori", nombre:"Rayo sobre el agua", tipo:"respuesta",
@@ -2972,17 +2972,17 @@ const CARTAS = [
     efecto:{ dano:2 } },
 
   { id:"nestor_tantear_terreno", mazo:"nestor", nombre:"Tantear el terreno", tipo:"tactica",
-    nivel:1, copias:1,
+    nivel:1, copias:2,
     texto:"Coge las tres cartas superiores de tu mazo de combate. Descarta una de ellas.",
     cita:"", arte:"buscar_posicion", efecto:{ roba:3, descarta:1 } },
 
   { id:"nestor_esquiva", mazo:"nestor", nombre:"Esquiva", tipo:"respuesta",
-    nivel:1, copias:3, texto:"Evita técnicas básicas. Puedes jugar una carta.", cita:"",
+    nivel:1, copias:2, texto:"Evita técnicas básicas. Puedes jugar una carta.", cita:"",
     arte:"esquiva", efecto:{ evitaHasta:1, dejaJugarCarta:true } },
 
   /* --- Avanzadas ( = ) --- */
   { id:"nestor_patada", mazo:"nestor", nombre:"Patada", tipo:"ataque",
-    nivel:2, copias:2, texto:"3 Daños.", cita:"", arte:"patada",
+    nivel:2, copias:3, texto:"3 Daños.", cita:"", arte:"patada",
     efecto:{ dano:3 } },
 
   { id:"nestor_aguantar_dolor", mazo:"nestor", nombre:"Aguantar el dolor", tipo:"respuesta",
@@ -2997,7 +2997,7 @@ const CARTAS = [
 
   /* --- Expertas ( ≡ ) --- */
   { id:"nestor_aplastar", mazo:"nestor", nombre:"Aplastar", tipo:"ataque",
-    nivel:3, copias:3, texto:"4 Daños.", cita:"…oír el crujir de sus huesos.",
+    nivel:3, copias:2, texto:"4 Daños.", cita:"…oír el crujir de sus huesos.",
     arte:"aplastar", efecto:{ dano:4 } },
 
   { id:"nestor_engano", mazo:"nestor", nombre:"Engaño", tipo:"respuesta",
@@ -3071,20 +3071,20 @@ const CARTAS = [
     cita:"", arte:"buscar_posicion", efecto:{ roba:3 } },
 
   { id:"mailo_esquiva", mazo:"mailo", nombre:"Esquiva", tipo:"respuesta",
-    nivel:1, copias:1, texto:"Evita técnicas básicas. Puedes jugar una carta.", cita:"",
+    nivel:1, copias:2, texto:"Evita técnicas básicas. Puedes jugar una carta.", cita:"",
     arte:"esquiva", efecto:{ evitaHasta:1, dejaJugarCarta:true } },
 
   /* --- Avanzadas ( = ) --- */
   { id:"mailo_patada", mazo:"mailo", nombre:"Patada", tipo:"ataque",
-    nivel:2, copias:3, texto:"2 Daños.", cita:"", arte:"patada",
+    nivel:2, copias:2, texto:"2 Daños.", cita:"", arte:"patada",
     efecto:{ dano:2 } },
 
   { id:"mailo_cubrirse", mazo:"mailo", nombre:"Cubrirse", tipo:"respuesta",
-    nivel:2, copias:1, texto:"Evita técnicas hasta avanzadas. Puedes jugar una carta.",
+    nivel:2, copias:2, texto:"Evita técnicas hasta avanzadas. Puedes jugar una carta.",
     cita:"", arte:"parada", efecto:{ evitaHasta:2, dejaJugarCarta:true } },
 
   { id:"mailo_golpe_rodilla", mazo:"mailo", nombre:"Golpe de rodilla", tipo:"ataque",
-    nivel:2, copias:3, texto:"1 Daño. Aturdir (pierde su próximo turno).", cita:"",
+    nivel:2, copias:2, texto:"1 Daño. Aturdir (pierde su próximo turno).", cita:"",
     arte:"aturdir", efecto:{ dano:1, aturde:true } },
 
   /* --- Expertas ( ≡ ) --- */
@@ -8257,7 +8257,7 @@ function vigilarLupa(){
    aqui, se pinta en la portada y se manda por la red al entrar en una sala.
    Al sacar version nueva se cambia esta linea y ya esta: el titulo de la
    pestana se pone solo. */
-const VERSION = "2.1";
+const VERSION = "2.1.1";
 /* El número vive AQUÍ y en ningún sitio más. Escribirlo también en el título
    a mano ya se quedó descolgado una vez: la página decía 1.4 con el juego en
    la 1.5, que es justo la confusión que el sello viene a evitar. */
