@@ -4382,7 +4382,12 @@ function finAsalto(ganador){
     anotar("═ " + nombres + " " + verbo + " el combate ═", "hito");
     cuadernoCerrar();          // la partida ya tiene final: se archiva
     buzonVaciar();             // y sale sola hacia el buzón, sin esperarla
-  }else ESTADO.fase = "finAsalto";
+  }else{
+    ESTADO.fase = "finAsalto";
+    /* Punto de control: el combate sigue, pero si se van ahora al menos queda
+       guardado lo jugado hasta aquí. Dos escrituras por combate como mucho. */
+    cuadernoAparcar();
+  }
   pintar();
   // Las cartas del intercambio tardan en barrerse (1200 ms de margen + 640 de
   // animación). El rótulo tiene que seguir ahí un buen rato DESPUÉS de que la
@@ -8999,8 +9004,9 @@ function pasoCamino(){
        Un aviso que no dice la verdad es peor que no tenerlo: quien lo lee se
        queda tranquilo por el motivo equivocado. Si algún día se toca el
        buzón, esta frase se toca en el mismo cambio. */
-    '<p class="aviso-cuaderno">Al acabar cada combate, la partida se envía ' +
-    'para mejorar a la IA. No se envía tu nombre ni ningún dato personal.</p>';
+    '<p class="aviso-cuaderno">Al terminar o dejar una partida se envían datos ' +
+    'de ella para mejorar a la IA. No se envía tu nombre ni ningún dato ' +
+    'personal.</p>';
   const p = panelPortada(h, null,
     '<p class="sub lema-cruce">un juego de lucha con cartas</p>' +
     '<p class="sub sello">v' + VERSION + '</p>');
@@ -9853,7 +9859,8 @@ function tutoColocar(){
    más precisión que el día. No hace falta para entrenar y no se guarda. Los
    asientos son números y los mazos son los cuatro luchadores de siempre.   */
 
-const CUADERNO = { llave:"islanegra-cuaderno", partida:null, tope:40 };
+const CUADERNO = { llave:"islanegra-cuaderno", enCurso:"islanegra-encurso",
+                   partida:null, tope:40 };
 
 function cuadernoLeer(){
   try{ return JSON.parse(localStorage.getItem(CUADERNO.llave)) || []; }
@@ -9903,6 +9910,17 @@ function cuadernoApuntar(tipo, quien, dato){
 }
 
 function cuadernoEmpezar(){
+  /* ═══ LA PARTIDA DE PRUEBA NO SE APUNTA ══════════════════════════════
+     El tutorial pasa por iniciarCombate como cualquier otro combate, así que
+     hasta aquí se apuntaba y se enviaba igual que una partida de verdad. Y no
+     lo es: se juega a 10 puntos en vez de 22, a un solo asalto en vez de al
+     mejor de tres, y enfrente no está la IA sino un guion de jugadas fijas.
+
+     Lo grave era que llegaba a la tabla DISFRAZADA de partida normal, con su
+     "libre-2" y su dificultad, sin nada que la delatara. Como todo el mundo
+     hace el tutorial una vez, habría sido una parte gorda de los primeros
+     datos, enseñándole a la IA a imitar un guion. */
+  if(TUTO.activo){ CUADERNO.partida = null; return; }
   CUADERNO.partida = {
     version: VERSION,
     /* La huella de la partida. La misma semilla en dos móviles es la MISMA
@@ -9937,7 +9955,70 @@ function cuadernoCerrar(){
   }else lista.push(CUADERNO.partida);
   cuadernoGuardar(lista);
   CUADERNO.partida = null;
+  cuadernoTirarAparcada();   // llegó al final: no hay nada que rescatar
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   EL RESCATE  ·  las partidas que se dejan a medias
+   -----------------------------------------------------------------------
+   Un combate solo se archivaba al ganar el segundo asalto. Quien cerraba la
+   pestaña antes, o se iba porque iba perdiendo, no dejaba rastro: el cuaderno
+   vivía en memoria y moría con la página.
+
+   ═══ POR QUÉ ESO ERA PEOR QUE PERDER DATOS ══════════════════════════
+   Porque los que abandonan NO son una muestra al azar. Se abandona más cuando
+   se va perdiendo, así que lo que faltaba no era un trozo cualquiera: era
+   sistemáticamente el lado que va por detrás. Entrenar con eso enseña que
+   remontar no existe, porque las remontadas fallidas nunca llegaban.
+
+   ═══ CUÁNDO SE GUARDA ═══════════════════════════════════════════════
+   Cuando el móvil esconde la página: cerrar la pestaña, cambiar de aplicación,
+   bloquear la pantalla. Y de propina al acabar cada asalto que no cierra el
+   combate, como punto de control barato. NO en cada decisión: serían
+   doscientas escrituras por combate y el juego daría tirones.
+
+   Si el navegador muere de golpe sin avisar, esa partida se pierde igual. No
+   hay forma de evitarlo sin pagar los tirones.                           */
+function cuadernoAparcar(){
+  const p = CUADERNO.partida;
+  if(!p || !p.pasos.length) return;      // nada jugado: nada que guardar
+  try{
+    localStorage.setItem(CUADERNO.enCurso, JSON.stringify(Object.assign({}, p, {
+      /* El marcador tal y como iba al abandonar. No es un final, pero sitúa
+         cada decisión: no juega igual quien va 1-0 que quien va 0-1. */
+      fin: { asaltos: ESTADO.asientos.map(a => a.asaltos || 0),
+             pv:      ESTADO.asientos.map(a => a.pv) },
+      parcial: 1
+    })));
+  }catch(e){}   // sin sitio en el móvil: se pierde esta, no se rompe la partida
+}
+
+function cuadernoTirarAparcada(){
+  try{ localStorage.removeItem(CUADERNO.enCurso); }catch(e){}
+}
+
+/* Al abrir el juego. La aparcada se mete en la fila de las que esperan y sale
+   por el buzón como cualquier otra, marcada como incompleta.
+
+   Se archiva ANTES de borrar la llave, nunca al revés: si el móvil no tuviera
+   sitio para guardarla, borrarla primero sería tirarla a la basura. */
+function cuadernoRescatar(){
+  let p = null;
+  try{ p = JSON.parse(localStorage.getItem(CUADERNO.enCurso)); }catch(e){}
+  if(!p || !p.pasos || !p.pasos.length){ cuadernoTirarAparcada(); return; }
+  const lista = cuadernoLeer();
+  /* Si esa misma partida ya está archivada, es que acabó bien y el punto de
+     control se quedó atrás. Manda la entera. */
+  if(lista.some(x => x.semilla === p.semilla)){ cuadernoTirarAparcada(); return; }
+  lista.push(p);
+  cuadernoGuardar(lista);
+  cuadernoTirarAparcada();
+}
+
+document.addEventListener("visibilitychange", () => {
+  if(document.visibilityState === "hidden") cuadernoAparcar();
+});
+window.addEventListener("pagehide", cuadernoAparcar);
 
 function cuadernoCuantas(){ return cuadernoLeer().length; }
 
@@ -10120,7 +10201,11 @@ function buzonSobre(p){
     modo:       (p.modo || "libre") + "-" + (p.mesa ? p.mesa.length : 0) +
                 (p.enRed ? "-red" : ""),
     dificultad: difs.length ? [...new Set(difs)].join("/") : "sin-ia",
-    resultado:  p.fin && p.fin.asaltos ? p.fin.asaltos.join("-") : "sin-final",
+    /* Las incompletas se marcan aquí, en la columna suelta, para poder
+       apartarlas de un vistazo sin abrir el informe de cada una. */
+    resultado:  p.parcial                     ? "incompleta"
+              : p.fin && p.fin.asaltos        ? p.fin.asaltos.join("-")
+              :                                 "sin-final",
     informe:    p
   };
 }
@@ -12210,6 +12295,7 @@ mostrarPortada();
 /* Lo que se quedara sin enviar (sin línea, o el móvil cerrado a media
    partida) sale ahora. Va detrás de la portada a propósito: primero se ve el
    juego, y el envío ocurre por debajo sin que nadie lo espere. */
+cuadernoRescatar();   // la que quedó a medias entra en la fila
 buzonVaciar();
 </script>
 </body>
