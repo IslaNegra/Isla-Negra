@@ -2101,6 +2101,21 @@ body.enReglas .lupa{z-index:340}
   transform:translateY(-50%);font-size:17px;color:var(--madera-viva);opacity:.8}
 .reglas .ir-visita:active{background:rgba(255,255,255,.02)}
 
+
+.reglas .texto .quien{margin:var(--cr-hueco) 0 0;line-height:1.3;
+  text-align:var(--cr-alin); transform:translateX(var(--cr-x))}
+
+.reglas .texto{--cr-alin:right; --cr-y:9px; --cr-x:7px;
+               --cr-hueco:31px; --cr-firma:7px}
+.reglas .texto .quien b{display:block;font-weight:400;font-size:11px;
+  line-height:1.05;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--madera-viva);opacity:.85;margin:0}
+
+.reglas .texto .quien .nn{display:block; margin-top:var(--cr-y)}
+
+
+.reglas .texto .quien .firma{font-style:italic;margin-top:var(--cr-firma)}
+
 .reglas .ir-visita.apagada{color:var(--pergamino-2);opacity:.5}
 .reglas .ir-visita.apagada .flecha{opacity:.35}
 .reglas .ir-visita.apagada:active{background:transparent}
@@ -6584,7 +6599,7 @@ function reglasPuertas(){
       '<button class="dato-que" data-datoque="1" aria-label="qué datos se ' +
       'envían">?</button></p>' +
 '<p class="dato-texto" hidden>Lo que se manda es la partida en números: ' +
-      'la versión del juego, la semilla, el día (no la hora), el modo, qué ' +
+      'la versión del juego, la semilla, el día, el modo, qué ' +
       'luchador llevaba cada asiento y si lo jugaba una persona o la máquina. ' +
       'De cada decisión: quién movía, qué carta usó y cómo estaba la mesa en ' +
       'ese momento (puntos de vida, nivel, mejoras puestas, cuántas cartas ' +
@@ -6661,19 +6676,6 @@ function reglasCartas(){
       '<p class="cuenta mono">' + (copias + 1) + ' cartas en el mazo · ' +
       tecnicas.length + ' técnicas distintas y la de personaje</p>' +
     '</div>' +
-    '<p class="aviso-cuaderno">Informes de partida enviados automáticamente. ' +
-    'No se recopilan datos personales.' +
-      '<button class="dato-que" data-datoque="1" aria-label="qué datos se ' +
-      'envían">?</button></p>' +
-'<p class="dato-texto" hidden>Lo que se manda es la partida en números: ' +
-      'la versión del juego, la semilla, el día (no la hora), el modo, qué ' +
-      'luchador llevaba cada asiento y si lo jugaba una persona o la máquina. ' +
-      'De cada decisión: quién movía, qué carta usó y cómo estaba la mesa en ' +
-      'ese momento (puntos de vida, nivel, mejoras puestas, cuántas cartas ' +
-      'tenía cada uno). Y el resultado final, o el marcador tal como iba si ' +
-      'dejaste la partida a medias.<br>No se manda tu nick, ni el ' +
-      'chat, ni el código de la sala, ni nada que diga quién eres o dónde ' +
-      'estás. Tu nick se queda en tu móvil y no entra nunca aquí.</p>' +
     '</div>' +
     '<div class="pie"><button class="cerrar-hoja" id="cerrarReglas">Volver</button></div>';
   r.classList.add("abierta");
@@ -6699,20 +6701,23 @@ function reglasInstrucciones(){
           '<div class="texto">' + h.cuerpo + '</div>' +
         '</details>').join("") +
       '<button class="ir-visita" id="verCartas">Las cartas</button>' +
+      '<details>' +
+        '<summary>Quién lo hizo</summary>' +
+        '<div class="texto">' +
+          '<p><i>Sombras sobre Isla Negra</i> fue creado originalmente por ' +
+          'Cub de Jocs. Salió a la venta en 2005, actualmente descatalogado. ' +
+          'Esta versión para móviles pretende darle una segunda vida.</p>' +
+          '<p class="quien"><b>Creadores</b>' +
+          '<span class="nn">Pablo García Gómez<br>Diego de la Torre</span></p>' +
+          '<p class="quien"><b>Diseño</b>' +
+          '<span class="nn">Juan Antonio Caballero<br>Juan Ramón Rustarazo</span></p>' +
+          '<p class="quien"><b>Ilustraciones</b>' +
+          '<span class="nn">José Manuel Cardona<br>Pablo García Gómez</span></p>' +
+          '<p class="quien"><b>Versión para móvil desarrollada por</b>' +
+          '<span class="nn firma">una ilusión, una nostalgia</span></p>' +
+        '</div>' +
+      '</details>' +
     '</div>' +
-    '<p class="aviso-cuaderno">Informes de partida enviados automáticamente. ' +
-    'No se recopilan datos personales.' +
-      '<button class="dato-que" data-datoque="1" aria-label="qué datos se ' +
-      'envían">?</button></p>' +
-'<p class="dato-texto" hidden>Lo que se manda es la partida en números: ' +
-      'la versión del juego, la semilla, el día (no la hora), el modo, qué ' +
-      'luchador llevaba cada asiento y si lo jugaba una persona o la máquina. ' +
-      'De cada decisión: quién movía, qué carta usó y cómo estaba la mesa en ' +
-      'ese momento (puntos de vida, nivel, mejoras puestas, cuántas cartas ' +
-      'tenía cada uno). Y el resultado final, o el marcador tal como iba si ' +
-      'dejaste la partida a medias.<br>No se manda tu nick, ni el ' +
-      'chat, ni el código de la sala, ni nada que diga quién eres o dónde ' +
-      'estás. Tu nick se queda en tu móvil y no entra nunca aquí.</p>' +
     '</div>' +
     '<div class="pie"><button class="cerrar-hoja" id="cerrarReglas">Volver</button></div>';
   r.classList.add("abierta");
