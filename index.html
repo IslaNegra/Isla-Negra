@@ -3268,15 +3268,18 @@ function prepararAsalto(a){
   a.mazo = construirMazo(a.mazoId);
   do { barajar(a.mazo); }
   while(defCarta(a.mazo[a.mazo.length - 1]).tipo === "mejora");
+  cuadernoBaraja(a, construirMazo(a.mazoId));
   robar(a, REGLAS.manoInicial);
   if(TUTO.activo) tutoPrepararAsalto(a);
 }
 function reciclarMazo(a){
   if(a.descartes.length <= 1) return false;
   const visible = a.descartes.pop();
+  const antesDeRehacer = a.descartes.slice();
   a.mazo = a.descartes; a.descartes = [visible];
   do { barajar(a.mazo); }
   while(a.mazo.length > 1 && defCarta(a.mazo[a.mazo.length - 1]).tipo === "mejora");
+  cuadernoBaraja(a, antesDeRehacer, 1);
   anotar(a.nombre + " rehace su mazo de combate.");
   return true;
 }
@@ -3406,7 +3409,7 @@ function pedirRespuesta(){
       const elegida = esDeLosSuyos(i, p)
         ? iaElegirRespuesta(a, p, opciones)
         : iaRespuestaAjena(a, p, opciones, nivelIA(a));
-      if(elegida === null){ p.cola.shift(); continue; }
+      if(elegida === null){ cuadernoApuntar("pasa", i, 0); p.cola.shift(); continue; }
       p.sinRespuesta = false; p.responde = i;
       ESTADO.fase = "resolviendo";        
       tarde(RITMO.respuesta, () => usarRespuesta(i, elegida));
@@ -3535,6 +3538,7 @@ function descartarAlAzar(victima, cuantas, nombreCarta){
     sitios.push(libres.splice(Math.floor(azar() * libres.length), 1)[0]);
   const n = sitios.length;
   if(!n){ anotar(a.nombre + " no tiene cartas que soltar."); return 0; }
+  cuadernoApuntar("azar", victima, sitios.slice());   
   volarDeLaMano(victima, sitios);          
   sitios.slice().sort((x, y) => y - x).forEach(i => {   
     a.descartes.push(a.mano.splice(i, 1)[0]);           
@@ -3620,14 +3624,18 @@ function elegirDescartes(a, recien, cuantas, seguir){
     pintar();
     seguir();
   };
-  if(a.controlador === "ia") rematar(iaElegirDescartes(a, idx, cuantas));
+  const apuntaYremata = elegidas => {
+    cuadernoApuntar("soltar", ESTADO.asientos.indexOf(a), elegidas);
+    rematar(elegidas);
+  };
+  if(a.controlador === "ia") apuntaYremata(iaElegirDescartes(a, idx, cuantas));
   else if(RED.activa){
     const quien = ESTADO.asientos.indexOf(a);
     RED.descartes = { asiento:quien, rematar };
     if(quien === RED.mio)
       pedirDescartes(a, idx, cuantas, elegidas => soltarLoElegido(quien, elegidas));
   }
-  else pedirDescartes(a, idx, cuantas, rematar);
+  else pedirDescartes(a, idx, cuantas, apuntaYremata);
 }
 function soltarLoElegido(quien, elegidas){
   if(pasaPorLaRed("soltar", quien, elegidas)) return;
@@ -3831,7 +3839,7 @@ function finAsalto(ganador){
     buzonVaciar();             
   }else{
     ESTADO.fase = "finAsalto";
-    cuadernoAparcar();
+    cuadernoAparcar("asalto");
   }
   pintar();
   let esperaMesa = 0;
@@ -3862,8 +3870,10 @@ function finAsalto(ganador){
 }
 function siguienteAsalto(){
   if(pasaPorLaRed("asalto", asientoLocal(), 0)) return;
+  ESTADO.asalto++;
   ESTADO.asientos.forEach(prepararAsalto);
   ESTADO.iniciativa = Math.floor(azar() * nAsientos());
+  cuadernoIniciativa();                    
   ESTADO.primeraAccion = true;
   ESTADO.pendiente = null; ESTADO.quienJuegaTras = null; ESTADO.apuntando = null;
   ESTADO.pausa = null; ESTADO.secuencia = []; ESTADO.nuevaSecuencia = true; ESTADO.recogiendo = false;
@@ -3871,7 +3881,6 @@ function siguienteAsalto(){
   ESTADO.puntero = ESTADO.iniciativa;
   descongelarMesa();        
   vaciarRodillo();          
-  ESTADO.asalto++;
   if(TUTO.activo){ ESTADO.iniciativa = 0; ESTADO.puntero = 0; }
   olvidarMano();
   ESTADO.fase = "anuncio";
@@ -3900,6 +3909,7 @@ function accionJugarCarta(indiceAsiento, indiceMano){
       if(a.controlador === "ia"){
         const k = mejorObjetivo(indiceAsiento, c, nivelIA(a));
         if(k === null){ terminarResolucion(); return; }
+        cuadernoApuntar("apuntar", indiceAsiento, k);   
         rematarConObjetivo(indiceAsiento, indiceMano, k, false);
         return;
       }
@@ -4016,6 +4026,7 @@ function accionJugarTrasRespuesta(indiceAsiento, indiceMano){
       if(a.controlador === "ia"){
         const k = mejorObjetivo(indiceAsiento, c, nivelIA(a));
         if(k === null){ terminarResolucion(); return; }
+        cuadernoApuntar("apuntar", indiceAsiento, k);   
         rematarConObjetivo(indiceAsiento, indiceMano, k, false);
         return;
       }
@@ -6207,7 +6218,7 @@ function vigilarLupa(){
   const l = document.getElementById("lupa");
   if(l.classList.contains("abierta") && l.dataset.pulsando && !toque && !arrastre) cerrarLupa();
 }
-const VERSION = "1.0";
+const VERSION = "1.0.1";
 document.title = "Sombras sobre Isla Negra · " + VERSION;
 function panelPortada(html, pie, bajoTitulo){
   const p = document.getElementById("portada");
@@ -7435,7 +7446,7 @@ function tutoColocar(){
   globo.style.top = Math.max(52, Math.min(y, window.innerHeight - alto - 16)) + "px";
 }
 const CUADERNO = { llave:"islanegra-cuaderno", enCurso:"islanegra-encurso",
-                   partida:null, tope:40 };
+                   partida:null, t0:0, tope:40 };
 function cuadernoLeer(){
   try{ return JSON.parse(localStorage.getItem(CUADERNO.llave)) || []; }
   catch(e){ return []; }
@@ -7467,31 +7478,80 @@ function cuadernoApuntar(tipo, quien, dato){
   if(!CUADERNO.partida) return;
   const a = ESTADO.asientos[quien];
   if(!a) return;
-  const paso = { q: quien, h: tipo, m: cuadernoMesa(quien) };
-  if(tipo === "jugar" || tipo === "responder") paso.c = cortaCarta(a.mano[dato]);
-  if(tipo === "apuntar" || tipo === "soltar") paso.d = dato;
+  const paso = { q: quien, h: tipo, t: Date.now() - (CUADERNO.t0 || Date.now()),
+                 m: cuadernoMesa(quien) };
+  if(tipo === "jugar" || tipo === "responder" || tipo === "trasResp")
+    paso.c = cortaCarta(a.mano[dato]);
+  if(tipo === "jugar" || tipo === "responder" || tipo === "trasResp" ||
+     tipo === "apuntar" || tipo === "soltar" || tipo === "azar") paso.d = dato;
   CUADERNO.partida.pasos.push(paso);
+}
+let HUELLA_CARTAS = "";
+function huellaCartas(){
+  if(HUELLA_CARTAS) return HUELLA_CARTAS;
+  let s = "";
+  CARTAS.forEach(c => { s += c.id + ":" + c.tipo + ":" + c.nivel + ":" + c.copias + ";"; });
+  let h = 2166136261 >>> 0;
+  for(let i = 0; i < s.length; i++){
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619) >>> 0;
+  }
+  HUELLA_CARTAS = h.toString(36);
+  return HUELLA_CARTAS;
+}
+function cuadernoBaraja(a, antes, recicla){
+  if(!CUADERNO.partida || !CUADERNO.partida.barajas) return;
+  const q = ESTADO.asientos.indexOf(a);
+  if(q < 0) return;
+  const usadas = new Array(antes.length).fill(false);
+  const orden = [];
+  for(const id of a.mazo){
+    let k = -1;
+    for(let i = 0; i < antes.length; i++)
+      if(!usadas[i] && antes[i] === id){ k = i; break; }
+    if(k < 0) return;                       
+    usadas[k] = true; orden.push(k);
+  }
+  const cabe = orden.every(i => i < 36);
+  const paso = { a: ESTADO.asalto, q,
+                 o: cabe ? orden.map(i => i.toString(36)).join("") : orden.join(",") };
+  if(!cabe) paso.ancho = 1;
+  if(recicla) paso.r = 1;
+  CUADERNO.partida.barajas.push(paso);
 }
 function cuadernoEmpezar(){
   if(TUTO.activo){ CUADERNO.partida = null; return; }
+  CUADERNO.t0 = Date.now();
   CUADERNO.partida = {
+    fi: 2,                                       
     version: VERSION,
+    huella: huellaCartas(),                      
     semilla: AZAR.s,
     dia: new Date().toISOString().slice(0, 10),   
     modo: ESTADO.modo,
+    asaltos: REGLAS.asaltosParaGanar,            
     enRed: !!RED.activa,
+    yo:   RED.activa ? RED.mio : null,           
+    jefe: RED.activa ? (RED.papel === "anfitrion" ? 1 : 0) : 1,
     mesa: ESTADO.asientos.map(a => ({
       mazo: a.mazoId, quienEs: a.controlador,
       dif: a.controlador === "ia" && a.dif ? a.dif.id : null
     })),
+    barajas: [],                                 
+    inis: [],                                    
     pasos: [], fin: null
   };
+}
+function cuadernoIniciativa(){
+  if(CUADERNO.partida && CUADERNO.partida.inis)
+    CUADERNO.partida.inis.push(ESTADO.iniciativa);
 }
 function cuadernoCerrar(){
   if(!CUADERNO.partida || !CUADERNO.partida.pasos.length){ CUADERNO.partida = null; return; }
   CUADERNO.partida.fin = {
     asaltos: ESTADO.asientos.map(a => a.asaltos || 0),
-    pv: ESTADO.asientos.map(a => a.pv)
+    pv: ESTADO.asientos.map(a => a.pv),
+    dur: Date.now() - (CUADERNO.t0 || Date.now())
   };
   const lista = cuadernoLeer();
   const igual = lista.findIndex(x => x.semilla === CUADERNO.partida.semilla);
@@ -7503,14 +7563,16 @@ function cuadernoCerrar(){
   CUADERNO.partida = null;
   cuadernoTirarAparcada();   
 }
-function cuadernoAparcar(){
+function cuadernoAparcar(motivo){
   const p = CUADERNO.partida;
   if(!p || !p.pasos.length) return;      
   try{
     localStorage.setItem(CUADERNO.enCurso, JSON.stringify(Object.assign({}, p, {
       fin: { asaltos: ESTADO.asientos.map(a => a.asaltos || 0),
-             pv:      ESTADO.asientos.map(a => a.pv) },
-      parcial: 1
+             pv:      ESTADO.asientos.map(a => a.pv),
+             dur:     Date.now() - (CUADERNO.t0 || Date.now()) },
+      parcial: 1,
+      motivo: typeof motivo === "string" ? motivo : "corte"
     })));
   }catch(e){}   
 }
@@ -7528,9 +7590,47 @@ function cuadernoRescatar(){
   cuadernoTirarAparcada();
 }
 document.addEventListener("visibilitychange", () => {
-  if(document.visibilityState === "hidden") cuadernoAparcar();
+  if(document.visibilityState === "hidden") cuadernoAparcar("oculto");
 });
-window.addEventListener("pagehide", cuadernoAparcar);
+window.addEventListener("pagehide", () => cuadernoAparcar("cierra"));
+const FALLOS = { vistos: [], tope: 3 };
+function sinMote(t){
+  let s = String(t || "");
+  const nombres = [miMote()];
+  if(RED.plazas) RED.plazas.forEach(p => { if(p && p.mote) nombres.push(p.mote); });
+  nombres.filter(m => m && m.length > 1)
+         .sort((a, b) => b.length - a.length)
+         .forEach(m => { s = s.split(m).join("***"); });
+  return s;
+}
+function apuntarFallo(msg, pila){
+  try{
+    const texto = sinMote(msg).slice(0, 200);
+    if(!texto) return;
+    if(FALLOS.vistos.indexOf(texto) >= 0 || FALLOS.vistos.length >= FALLOS.tope) return;
+    FALLOS.vistos.push(texto);
+    const lista = cuadernoLeer();
+    lista.push({
+      fi: 2, fallo: 1,
+      version: VERSION,
+      huella: huellaCartas(),
+      semilla: (Math.random() * 4294967296) >>> 0,   
+      dia: new Date().toISOString().slice(0, 10),
+      msg: texto,
+      pila: sinMote(pila).slice(0, 300),
+      fase: (ESTADO && ESTADO.fase) || "",
+      asalto: (ESTADO && ESTADO.asalto) || 0,
+      enRed: !!RED.activa,
+      mesa: ((ESTADO && ESTADO.asientos) || []).map(a => a.mazoId)
+    });
+    cuadernoGuardar(lista);
+  }catch(e){}   
+}
+window.addEventListener("error", e => apuntarFallo(
+  (e && e.message) || "error", e && e.error && e.error.stack));
+window.addEventListener("unhandledrejection", e => apuntarFallo(
+  "promesa: " + ((e && e.reason && e.reason.message) || (e && e.reason) || ""),
+  e && e.reason && e.reason.stack));
 function cuadernoCuantas(){ return cuadernoLeer().length; }
 function cuadernoArchivo(){
   const lista = cuadernoLeer();
@@ -7538,11 +7638,21 @@ function cuadernoArchivo(){
   const texto = JSON.stringify({
     que: "cuaderno de Sombras sobre Isla Negra",
     comoLeerlo: {
-      partida: { version:"version del juego", dia:"dia", modo:"libre o equipos",
-                 enRed:"si fue online", mesa:"quien ocupa cada asiento", pasos:"las decisiones",
-                 fin:"asaltos ganados y vida al acabar" },
-      paso: { q:"asiento que decide", h:"que hizo", c:"carta jugada", d:"objetivo o descartes",
+      partida: { fi:"formato de informe", version:"version del juego",
+                 huella:"huella de la tabla de cartas", dia:"dia",
+                 modo:"libre o equipos", asaltos:"asaltos para ganar",
+                 enRed:"si fue online", yo:"plaza que informa", jefe:"1 si es el anfitrion",
+                 mesa:"quien ocupa cada asiento",
+                 barajas:"orden del mazo al barajar: {a:asalto, q:asiento, o:permutacion, r:1 si rehizo}",
+                 pasos:"las decisiones",
+                 fin:"asaltos ganados, vida al acabar y duracion en ms",
+                 parcial:"1 si se corto", motivo:"por que se corto" },
+      paso: { q:"asiento que decide", h:"que hizo (pasa = renuncia a responder)",
+              t:"ms desde el inicio",
+              c:"carta jugada", d:"indice de mano, objetivo o descartes",
               m:"la mesa EN EL MOMENTO de decidir" },
+      fallo: { fallo:"1 si es un aviso de error, no una partida",
+               msg:"mensaje", pila:"pila de llamadas", fase:"fase del juego" },
       mesa: { a:"asalto", f:"fase", t:"de quien es el turno",
               mano:"la mano entera de quien decide",
               s:"por asiento: [vida, nivel, mejoras, estado, cartas en mano, cartas en mazo]",
@@ -7623,6 +7733,14 @@ function buzonQuien(){
   return q;
 }
 function buzonSobre(p){
+  if(p.fallo) return {
+    version:    p.version || VERSION,
+    jugador:    buzonQuien(),
+    modo:       "fallo",
+    dificultad: "sin-ia",
+    resultado:  "fallo",
+    informe:    p
+  };
   const difs = (p.mesa || []).map(m => m.dif).filter(Boolean);
   return {
     version:    p.version || VERSION,
@@ -9146,16 +9264,16 @@ function pintarOpciones(mando){
     [2,3,4].map(k => '<button data-rn="' + k + '"' +
       (v.n === k ? ' class="on"' : '') + '>' + k + '</button>').join("") +
     '</div>';
-  h += '<h2>Asaltos</h2><div class="opciones">' +
-    '<button data-ra="1"' + (v.asaltos === 1 ? ' class="on"' : '') + '>1</button>' +
-    '<button data-ra="2"' + (v.asaltos !== 1 ? ' class="on"' : '') + '>3</button>' +
-    '</div>';
   if(v.n === 4)
     h += '<h2>¿Cómo se reparten?</h2><div class="opciones">' +
       '<button data-rb="1"' + (v.equipos ? ' class="on"' : '') +
         '>Por equipos</button>' +
       '<button data-rb="0"' + (!v.equipos ? ' class="on"' : '') +
         '>Todos contra todos</button></div>';
+  h += '<h2>Asaltos</h2><div class="opciones">' +
+    '<button data-ra="1"' + (v.asaltos === 1 ? ' class="on"' : '') + '>1</button>' +
+    '<button data-ra="2"' + (v.asaltos !== 1 ? ' class="on"' : '') + '>3</button>' +
+    '</div>';
   h += '<h2>Dificultad IA</h2><div class="opciones aire">' +
     DIFICULTADES.map((d, k) => '<button data-rd="' + k + '"' +
       (v.dif === k ? ' class="on ' + d.clase + '"' : '') + '>' +
@@ -9603,12 +9721,13 @@ function iniciarCombate(){
   for(let i = 0; i < 4; i++){ SELLOS[i] = 0; VUELO["mej" + i] = 0; }
   TURNO.ultimo = -1; TURNO.asiento = -1; TURNO.hasta = 0;
   DORSOS_VISTOS.n = -1;             
+  ESTADO.asalto = 1;
   ESTADO.asientos.forEach(prepararAsalto);
   ESTADO.iniciativa = Math.floor(azar() * nAsientos());
+  cuadernoIniciativa();                    
   ESTADO.puntero = ESTADO.iniciativa;      
   descongelarMesa();
   ESTADO.primeraAccion = true;
-  ESTADO.asalto = 1;
   olvidarMano();
   ESTADO.fase = "anuncio";
   vaciarRodillo();
