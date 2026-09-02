@@ -9146,16 +9146,16 @@ function pintarOpciones(mando){
     [2,3,4].map(k => '<button data-rn="' + k + '"' +
       (v.n === k ? ' class="on"' : '') + '>' + k + '</button>').join("") +
     '</div>';
+  h += '<h2>Asaltos</h2><div class="opciones">' +
+    '<button data-ra="1"' + (v.asaltos === 1 ? ' class="on"' : '') + '>1</button>' +
+    '<button data-ra="2"' + (v.asaltos !== 1 ? ' class="on"' : '') + '>3</button>' +
+    '</div>';
   if(v.n === 4)
     h += '<h2>¿Cómo se reparten?</h2><div class="opciones">' +
       '<button data-rb="1"' + (v.equipos ? ' class="on"' : '') +
         '>Por equipos</button>' +
       '<button data-rb="0"' + (!v.equipos ? ' class="on"' : '') +
         '>Todos contra todos</button></div>';
-  h += '<h2>Asaltos</h2><div class="opciones">' +
-    '<button data-ra="1"' + (v.asaltos === 1 ? ' class="on"' : '') + '>1</button>' +
-    '<button data-ra="2"' + (v.asaltos !== 1 ? ' class="on"' : '') + '>3</button>' +
-    '</div>';
   h += '<h2>Dificultad IA</h2><div class="opciones aire">' +
     DIFICULTADES.map((d, k) => '<button data-rd="' + k + '"' +
       (v.dif === k ? ' class="on ' + d.clase + '"' : '') + '>' +
