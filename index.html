@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 
-<style>body{background:#070605;margin:0}</style>
+<meta name="color-scheme" content="dark">
+<style>html{background:#070605;color-scheme:dark}body{background:#070605;margin:0}</style>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, interactive-widget=resizes-content">
 
@@ -99,7 +100,7 @@ body{
   
   
   width:100%;max-width:calc(393px * var(--zAncho, 1));margin:auto 0;
-  min-height:min(100dvh, var(--altoTablero, 740px));
+  min-height:min(100dvh, var(--altoTablero, 740px));   /* --altoTablero ya sigue al alto de la pantalla */
   display:flex;flex-direction:column;gap:9px;
   -webkit-text-size-adjust:100%;-webkit-user-select:none;user-select:none;
   -webkit-touch-callout:none
@@ -295,7 +296,8 @@ body.anunciando .ficha.espera:not(.blanco){animation:none}
 .ficha:not(.activo){opacity:.62}
 
 
-.ficha.caido,.col .luchador.caido{opacity:.62;filter:grayscale(1) brightness(1.18)}
+.ficha.caido,.col .luchador.caido{opacity:.62;
+  filter:grayscale(1) sepia(.8) hue-rotate(-30deg) saturate(1.5) brightness(1.0);transition:filter 2.2s ease}
 
 .col .luchador.ido{opacity:0}
 
@@ -2701,11 +2703,11 @@ body:has(#mesa:not([hidden])) .franja{margin-top:6px}
   animation:ritoCeniza 3150ms linear both;
   animation-delay:var(--rito, 0ms)}
 @keyframes ritoCeniza{
-  0%{opacity:.62;filter:grayscale(1) brightness(1.18) blur(0)}
-  19%{opacity:.62;filter:grayscale(1) brightness(1.14) blur(.2px)}  
-  48%{opacity:.40;filter:grayscale(1) brightness(1.05) blur(1.1px)} 
-  76%{opacity:.19;filter:grayscale(1) brightness(.95) blur(2.4px)}  
-  100%{opacity:0;filter:grayscale(1) brightness(.88) blur(4px)}}    
+  0%{opacity:.62;filter:grayscale(1) sepia(0) brightness(1.18) blur(0)}
+  19%{opacity:.62;filter:grayscale(1) sepia(.2) hue-rotate(-30deg) saturate(1.2) brightness(1.12) blur(.2px)}  
+  48%{opacity:.40;filter:grayscale(1) sepia(.5) hue-rotate(-30deg) saturate(1.4) brightness(1.0) blur(1.1px)} 
+  76%{opacity:.19;filter:grayscale(1) sepia(.8) hue-rotate(-30deg) saturate(1.5) brightness(.9) blur(2.4px)}  
+  100%{opacity:0;filter:grayscale(1) sepia(1) hue-rotate(-30deg) saturate(1.5) brightness(.85) blur(4px)}}    
 
 
 .ficha.caido.rito::before,.col .luchador.caido.rito::before{
@@ -2728,15 +2730,15 @@ body:has(#mesa:not([hidden])) .franja{margin-top:6px}
 
 @keyframes ritoLosa{
   
-  0%{opacity:.056;filter:grayscale(1) brightness(1.18)}
-  49.6%{opacity:.056;filter:grayscale(1) brightness(1.18);
+  0%{opacity:.056;filter:grayscale(1) sepia(0) brightness(1.18)}
+  49.6%{opacity:.10;filter:grayscale(1) sepia(.6) hue-rotate(-32deg) saturate(1.3) brightness(.95);
       animation-timing-function:cubic-bezier(.33,0,.67,1)}
                            
-  64.9%{opacity:.20;filter:grayscale(1) brightness(.75)}
+  64.9%{opacity:.22;filter:grayscale(1) sepia(1) hue-rotate(-32deg) saturate(1.5) brightness(.72)}
                            
-  92.1%{opacity:.20;filter:grayscale(1) brightness(.75)}
+  92.1%{opacity:.22;filter:grayscale(1) sepia(1) hue-rotate(-32deg) saturate(1.5) brightness(.72)}
                            
-  100%{opacity:0;filter:grayscale(1) brightness(.75)}}   
+  100%{opacity:0;filter:grayscale(1) sepia(1) hue-rotate(-32deg) saturate(1.5) brightness(.72)}}   
 
 
 
@@ -5849,7 +5851,10 @@ const APERTURA = {
 function anunciarAsalto(seguir){
   if(TUTO.activo){ seguir(); return; }
   const n = ESTADO.asalto;
-  const ultimo = n >= REGLAS.asaltosParaGanar * 2 - 1;
+  /* "Final round" solo cuando a todos les falta un asalto para ganar; con
+     empates (nadie en pie) el número de asalto sigue creciendo: Round 4, 5… */
+  const falta = REGLAS.asaltosParaGanar - 1;
+  const ultimo = ESTADO.asientos.every(a => a.asaltos === falta);
   const rotulo = (ultimo && !mesaLibre()) ? "Final round" : "Round " + n;
   const sello = ++ESTADO.selloAnuncio;
   cartel(rotulo, "", APERTURA.round, () => {
@@ -6532,7 +6537,7 @@ function reajustarTitulos(){
   }).observe(document.body, {childList:true, subtree:true});
   window.addEventListener('resize', reajustarTitulos);
 })();
-const VERSION = "1.1";
+const VERSION = "1.1.1";
 document.title = "Sombras sobre Isla Negra · " + VERSION;
 function panelPortada(html, pie, bajoTitulo){
   const p = document.getElementById("portada");
@@ -7283,11 +7288,11 @@ const MESAS_TUTO = {
     nestor: { pv:2, nivel:1,
               mano:["nestor_rabia","nestor_esquiva","nestor_golpe_puno",
                     "nestor_rabia","nestor_golpe_puno"],
-              mazo:["nestor_golpe_puno","nestor_esquiva","nestor_rabia"] },
+              mazo:["nestor_golpe_puno","nestor_rabia","nestor_esquiva"] },
     mailo:  { pv:8, nivel:2,
               mano:["mailo_golpe_codo","mailo_esquiva","mailo_motivacion",
                     "mailo_patada","mailo_golpe_codo"],
-              mazo:["mailo_patada","mailo_esquiva","mailo_motivacion"] }
+              mazo:["mailo_patada","mailo_motivacion","mailo_esquiva"] }
   }
 };
 const ESCENAS = [
@@ -7911,12 +7916,10 @@ function cuadernoRescatar(){
 }
 document.addEventListener("visibilitychange", () => {
   if(document.visibilityState === "hidden"){
-    buzonAsalto("oculto");
     if(soloYo()) cuadernoAparcar("oculto");
   }
 });
 window.addEventListener("pagehide", () => {
-  buzonAsalto("cierra");
   if(soloYo()) cuadernoAparcar("cierra");
 });
 const FALLOS = { vistos: [], tope: 3 };
@@ -8111,7 +8114,7 @@ function buzonSobre(p, asalto){
     dificultad: difs.length ? [...new Set(difs)].join("/") : "sin-ia",
     resultado:  p.acabado ? (p.fin && p.fin.asaltos ? p.fin.asaltos.join("-")
                                                     : "sin-final")
-                          : "asalto-" + (asalto || 0),
+                          : "sin acabar",
     informe:    p
   };
 }
@@ -8303,14 +8306,13 @@ function buzonFoto(motivo){
   return copia;
 }
 
-/* Se llama al acabar cada asalto, al salir y al esconder la app. */
+/* Se acaba un asalto, se envía. */
 function buzonAsalto(motivo){
   if(typeof TUTO !== "undefined" && TUTO.activo) return;
   const p = buzonFoto(motivo);
   if(!p) return;
   const asalto = (ESTADO && ESTADO.asalto) || 0;
   const sobre  = buzonSobre(p, asalto);
-  /* si no ha cambiado nada desde el último envío, no repetimos */
   if(BUZON.ultimoHito === buzonClave(sobre)) return;
   BUZON.ultimoHito = buzonClave(sobre);
   buzonEnviar(sobre);
@@ -9363,7 +9365,6 @@ const SALA = { paso:"via", codigo:"",
   copiado:0,
   opcionesDesdeChat:false };
 function volverALaSala(){
-  buzonAsalto("salir");
   RED.activa = false;
   RED.vistaMesa = true;
   RED.papel = (RED.jefe === RED.yo) ? "anfitrion" : "invitado";
@@ -10444,9 +10445,12 @@ function aperturaDelCombate(mideEscala){
 }
 function ajustarEscala(){
   const raiz = document.documentElement;
-  raiz.style.setProperty("--z", 1);
+  /* Con pantalla de sobra el tablero crece (hasta un 12 %) en vez de dejar
+     la mesa vacía; si no cabe, el bucle de abajo lo encoge como siempre. */
+  const altoReal = Math.min(960, window.innerHeight || ALTO_LIENZO);
+  raiz.style.setProperty("--z", Math.min(1.12, Math.max(1, altoReal / ALTO_LIENZO)).toFixed(3));
   for(let i = 0; i < 3; i++){
-    const alto = Math.min(ALTO_LIENZO, window.innerHeight || ALTO_LIENZO);
+    const alto = altoReal;
     const sobra = document.body.scrollHeight - alto;
     if(sobra <= 2) break;
     const z = parseFloat(getComputedStyle(raiz).getPropertyValue("--z")) || 1;
@@ -10460,12 +10464,14 @@ function ajustarCruce(){
   const pantalla   = Math.round(window.innerWidth);
   const pantallaAl = Math.round(window.innerHeight);
   const formaDeMovil = pantalla / pantallaAl <= 0.65;
-  document.documentElement.style.setProperty("--altoTablero", ALTO_LIENZO + "px");
   document.documentElement.style.setProperty("--zAncho",
     Math.max(1, Math.min(pantalla / ANCHO_LIENZO, formaDeMovil ? 1.35 : 1)).toFixed(6));
   const tope = formaDeMovil ? 1.35 : 1;
   let k = Math.min(pantalla / ANCHO_LIENZO, pantallaAl / ALTO_LIENZO, tope);
-  let alto = ALTO_LIENZO;
+  /* Sin bandas negras: la escena mide lo que la pantalla (en píxeles de escena),
+     entre 740 y 960. Lo que sobra respecto a 740 lo absorbe la mesa. */
+  let alto = Math.max(ALTO_LIENZO, Math.min(960, Math.round(pantallaAl / k)));
+  document.documentElement.style.setProperty("--altoTablero", Math.min(960, pantallaAl) + "px");
   let ancho = Math.round(393 * k);
   const llena = ancho >= pantalla;
   if(!llena){
@@ -10538,7 +10544,6 @@ document.getElementById("salir").onclick = () => {
             "a la mesa con los mismos luchadores.", volverAPreparar, "Salir");
 };
 function volverAPreparar(){
-  buzonAsalto("salir");
   cerrarLupa();
   cerrarHistorial();
   vaciarRodillo();               
