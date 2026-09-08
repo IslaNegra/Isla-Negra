@@ -6574,6 +6574,7 @@ function armarSacaCuaderno(p){
 }
 let TITULO_VISTO = false;
 const INTRO = {
+  activa: false,   /* apagada de momento: pasa directo a la portada */
   versos: ["un vasto océano",
            "en medio del océano, Isla Negra",
            "en Isla Negra, Árbol"],
@@ -6583,6 +6584,7 @@ const INTRO = {
   negro:    500    
 };
 function introIsla(alAcabar){
+  if(!INTRO.activa){ alAcabar(); return; }
   let acabada = false;
   const relojes = [];
   const luego = (fn, ms) => relojes.push(setTimeout(fn, ms));
