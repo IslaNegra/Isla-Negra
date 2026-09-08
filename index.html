@@ -8152,24 +8152,23 @@ function buzonAligerar(sobre){
 
 /* --- la petición --------------------------------------------------------- */
 
-async function buzonPost(sobre, cuerpo, sinConflicto){
-  if(!cuerpo) cuerpo = buzonAligerar(
+async function buzonPost(sobre){
+  const cuerpo = buzonAligerar(
     Object.assign({}, sobre, { enviado: new Date().toISOString() }));
   const corta = new AbortController();
   const reloj = setTimeout(() => corta.abort(), BUZON.corte);
   let r;
   try{
-    /* Primero con "ignora repetidos" (necesita un índice único en la tabla
-       sobre jugador, semilla, hito). Si la tabla no lo tiene, el servidor
-       contesta 42P10 y se manda a secas. */
-    r = await fetch(BUZON.donde + (sinConflicto ? "" : "?on_conflict=jugador,semilla,hito"), {
+    /* Envío liso, exactamente como el que funcionó desde el principio.
+       Los repetidos los para el índice único de la tabla: el servidor
+       contesta 409 y aquí se cuenta como entregado. */
+    r = await fetch(BUZON.donde, {
       method:    "POST",
       signal:    corta.signal,
       headers: {
         "apikey":        BUZON.llave,
         "Content-Type":  "application/json",
-        "Prefer":        sinConflicto ? "return=minimal"
-                                      : "return=minimal,resolution=ignore-duplicates"
+        "Prefer":        "return=minimal"
       },
       body: cuerpo
     });
@@ -8183,8 +8182,6 @@ async function buzonPost(sobre, cuerpo, sinConflicto){
   if(r.status === 409) return { ok:true };        // ya estaba: cuenta como entregado
   let codigo = "";
   try{ codigo = ((await r.json()) || {}).code || ""; }catch(e){}
-  if(!sinConflicto && r.status === 400 && codigo === "42P10")
-    return buzonPost(sobre, cuerpo, true);
   return { ok:false, por: "error " + r.status + (codigo ? " (" + codigo + ")" : "") };
 }
 
