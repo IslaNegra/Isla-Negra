@@ -766,6 +766,28 @@ html.apretado .chat-cerrar:active{color:var(--pergamino)}
 
 
 
+/* ---- animaciones de cartas: particulas, carga al arrastrar y remates en la mesa ---- */
+#vfx{position:fixed;inset:0;pointer-events:none;z-index:65}
+.carta.borde{box-shadow:0 12px 26px rgba(0,0,0,.7),0 0 0 1px rgba(186,166,244,.85),0 0 16px 3px rgba(110,80,210,.45)!important;transition:box-shadow 220ms ease-out}
+.carta.bordeC{box-shadow:0 12px 26px rgba(0,0,0,.7),0 0 0 1px rgba(255,196,120,.9),0 0 18px 3px rgba(240,130,50,.5)!important;transition:box-shadow 200ms ease-out}
+.carta.bordeR{box-shadow:0 12px 26px rgba(0,0,0,.7),0 0 0 1px rgba(150,186,230,.85),0 0 16px 3px rgba(70,120,190,.45)!important;transition:box-shadow 220ms ease-out}
+.carta.bordeT{box-shadow:0 12px 26px rgba(0,0,0,.7),0 0 0 1px rgba(186,226,158,.9),0 0 16px 3px rgba(84,162,72,.48)!important;transition:box-shadow 220ms ease-out}
+.carta.calor .marco,.carta.calor .entera2{filter:brightness(1.5) saturate(1.15);transition:filter 260ms ease-out}
+.carta.calorC .marco,.carta.calorC .entera2{filter:brightness(1.45) saturate(1.3) hue-rotate(-6deg);transition:filter 240ms ease-out}
+.carta.calorR .marco,.carta.calorR .entera2{filter:brightness(1.16) saturate(.55) hue-rotate(8deg);transition:filter 240ms ease-out}
+.carta.calorT .marco,.carta.calorT .entera2{filter:brightness(1.14) saturate(1.1) hue-rotate(-14deg);transition:filter 240ms ease-out}
+.polvoMesa{position:fixed;width:120px;height:20px;border-radius:50%;opacity:0;z-index:64;
+  mix-blend-mode:screen;pointer-events:none;
+  background:radial-gradient(ellipse,rgba(240,180,110,.32) 0%,transparent 70%)}
+.polvoMesa.on{animation:polv 520ms ease-out}
+@keyframes polv{0%{opacity:0;transform:scaleX(.4)}28%{opacity:.85}100%{opacity:0;transform:scaleX(1.5)}}
+@keyframes sac2{20%{transform:translate(-4px,2px)}55%{transform:translate(3px,-2px)}100%{transform:none}}
+@keyframes sac3{12%{transform:translate(-7px,4px)}34%{transform:translate(6px,-4px)}
+  58%{transform:translate(-4px,2px)}78%{transform:translate(3px,-1px)}100%{transform:none}}
+@keyframes sac4{8%{transform:translate(-12px,7px) scale(1.012)}
+  26%{transform:translate(11px,-6px) scale(1.008)}44%{transform:translate(-8px,4px)}
+  62%{transform:translate(6px,-3px)}80%{transform:translate(-3px,1px)}100%{transform:none}}
+
 /* ---- naipe v2: marco escaneado, papel con capas y aro recortado ---- */
 .marco.v2{background:none;padding:0;border-radius:calc(5px * var(--z));
   border:calc(var(--bw,4px) * var(--z)) solid transparent;
@@ -3822,6 +3844,7 @@ function danoDirecto(indice, dano, motivo){
   anotar(a.nombre + " encaja " + dano + " PV (" + motivo + "). Le quedan "
          + Math.max(0, a.pv) + ".", "dano");
   avisar(() => {
+    sonar("golpe", dano);   /* mismo aviso que el golpe que entra: sonido y cuchillas (una por dano) */
     avisoVisual(indice, dano);
     evento(indice, "−" + dano + " PV", motivo);
     subeMarca("−" + dano, "a" + indice);
@@ -4493,10 +4516,22 @@ function valorAtaque(a, r, x, D, ap){
   const espejo = D.prudente ? riesgoRespuesta(a, r, c.nivel, true,  D) : 0;
   const tapo = respuestasValidas(a, Math.max(2, c.nivel)).length ? 0.8 : 0;
   const miedo = 1 + 1.4 * (D.instinto || 0) * (ap || 0);
-  let v = (1 - evita) * valor - espejo * (dano + 1.5) * (1 - tapo) * miedo;
+  let v = (1 - evita) * valor - espejo * (dano + devuelveMedio(r, c.nivel)) * (1 - tapo) * miedo;
   v -= evita * (D.penalTempo || 0);
   if(c.efecto.gastaMejora) v -= costeMejora(a);
   return v;
+}
+/* Devolución media de los espejos del rival que podrían parar un golpe de este
+   nivel (por su nivel y sus mejoras en mesa). Si no tiene, 1.5 como antes. */
+function devuelveMedio(r, nivelGolpe){
+  let n = 0, s = 0;
+  for(const c of CARTAS){
+    if(c.mazo !== r.mazoId || c.tipo !== "respuesta" || !c.efecto.devuelve) continue;
+    if(c.nivel > r.nivel || (c.efecto.evitaHasta || 0) < nivelGolpe) continue;
+    if(c.efecto.gastaMejora && r.mejorasEnMesa < 1) continue;
+    n += c.copias; s += c.copias * c.efecto.devuelve;
+  }
+  return n ? s / n : 1.5;
 }
 function seguridadGolpe(a, r, x, D){
   if(x.c.efecto.inevitable) return 1;
@@ -4589,6 +4624,19 @@ function iaDecidir(a, r, D, jugables, extra){
     .sort((p, q) => seguridadGolpe(a, r, q, D) - seguridadGolpe(a, r, p, D)
                  || (p.c.efecto.gastaMejora ? 1 : 0) - (q.c.efecto.gastaMejora ? 1 : 0));
   if(letales.length) return { carta: letales[0].i };
+  if(a.invitado && ataques.length){
+    /* Invitado: no atacar cuesta PV seguros. Se ataca con el golpe de mejor
+       valor esperado si sale más barato que pagar la invitación, nunca con
+       uno cuya devolución (daño + mejor espejo que el rival pueda tener) mate. */
+    const devMax = nivelGolpe => CARTAS.filter(c => c.mazo === r.mazoId && c.tipo === "respuesta"
+        && c.efecto.devuelve && c.nivel <= r.nivel && (c.efecto.evitaHasta || 0) >= nivelGolpe
+        && (!c.efecto.gastaMejora || r.mejorasEnMesa > 0))
+      .reduce((m, c) => Math.max(m, c.efecto.devuelve), 0);
+    const seguros = ataques.filter(x => x.c.efecto.inevitable || x.c.nivel > r.nivel
+        || (x.c.efecto.dano || 0) + devMax(x.c.nivel) < a.pv);
+    const p = seguros.map(x => ({ x, v: valorAtaque(a, r, x, D, ap) })).sort((m, n) => n.v - m.v)[0];
+    if(p && p.v > -a.invitado.pv + 0.3){ a.encajo = false; return { carta: p.x.i }; }
+  }
   const pesadosPrevios = (ataques.length && !soloAturden)
     ? ataques.map(x => ({ x, v: valorAtaque(a, r, x, D, ap) })).sort((m, n) => n.v - m.v)
     : [];
@@ -4660,7 +4708,7 @@ function iaDecidir(a, r, D, jugables, extra){
     if(D.carrera && !extra && !impaciente && tieneMejora && a.nivel === 4 &&
        a.mejorasEnMesa >= 2 && mejorGolpe.v <= liston)
       return { carta: tieneMejora.i };
-    if(!D.prudente || impaciente || mejorGolpe.v > liston)
+    if(!D.prudente || (impaciente && mejorGolpe.v > -1) || mejorGolpe.v > liston)
       return { carta: mejorGolpe.x.i };
   }
   if(mejora) return { carta: mejora.i };
@@ -4673,7 +4721,7 @@ function iaDecidir(a, r, D, jugables, extra){
     /* Antes de tirar la mano: si hay un golpe que merezca la pena (2+ de daño
        o valor esperado positivo) se lanza; si hay una mejora, se juega.
        Solo se descarta cuando de verdad no hay nada que hacer. */
-    const digno = mejorGolpe &&
+    const digno = mejorGolpe && mejorGolpe.v > -1 &&
       (((mejorGolpe.x.c.efecto.dano || 0) >= 2 && !(D.acorralada && ap > 0.5)) || mejorGolpe.v > 0);
     if(digno) return { carta: mejorGolpe.x.i };
     if(tieneMejora) return { carta: tieneMejora.i };
@@ -4685,6 +4733,7 @@ function iaDecidir(a, r, D, jugables, extra){
     /* Mano defensiva sin golpe: se guarda y se cede, no se tira. */
     if(D.espera && !mejorGolpe && utiles >= 2 && valorCeder(a, r, D) > -1) return { ceder: true };
   }
+  if(mejorGolpe && D.prudente && mejorGolpe.v < -1 && !extra && !a.invitado) return { ceder: true };
   if(mejorGolpe) return { carta: mejorGolpe.x.i };
   if(!a.acabaDeTirar) return { descartar: true };
   return { ceder: true };
@@ -6818,7 +6867,7 @@ function reajustarTitulos(){
   }).observe(document.body, {childList:true, subtree:true});
   window.addEventListener('resize', reajustarTitulos);
 })();
-const VERSION = "1.1.1";
+const VERSION = "1.1.2";
 document.title = "Sombras sobre Isla Negra · " + VERSION;
 function panelPortada(html, pie, bajoTitulo){
   const p = document.getElementById("portada");
@@ -10800,6 +10849,341 @@ ajustarEscala();
 mostrarPortada();
 cuadernoRescatar();   
 buzonVaciar();
+</script>
+<script>
+/* ===================== animaciones de cartas: muelle, vuelo, bordes y cuchillas ===================== */
+(function(){
+"use strict";
+if(window.matchMedia && window.matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+const $=id=>document.getElementById(id);
+const zonaEl=()=>$("combate");
+
+/* ---------- lienzo ---------- */
+const cv=document.createElement("canvas"); cv.id="vfx"; document.body.appendChild(cv);
+const cx2=cv.getContext("2d",{alpha:true});
+let DPR=Math.min(2,devicePixelRatio||1);
+function tam(){cv.width=innerWidth*DPR;cv.height=innerHeight*DPR;
+  cv.style.width=innerWidth+"px";cv.style.height=innerHeight+"px";}
+tam(); addEventListener("resize",tam);
+
+function sprite(c1,c2,d){
+  const s=document.createElement("canvas"); s.width=s.height=d;
+  const g=s.getContext("2d"), r=d/2;
+  const grd=g.createRadialGradient(r,r,0,r,r,r);
+  grd.addColorStop(0,c1); grd.addColorStop(.28,c2); grd.addColorStop(1,"rgba(0,0,0,0)");
+  g.fillStyle=grd; g.beginPath(); g.arc(r,r,r,0,7); g.fill();
+  return s;
+}
+/* Concentracion: violeta indigo */
+/* solo quedan las chispas de las cuchillas */
+const SP_CALOR=sprite("rgba(255,252,238,1)","rgba(255,214,150,.5)",96);
+const SP_AMBAR=sprite("rgba(255,246,224,.95)","rgba(255,186,96,.55)",64);
+
+const PART=[], LINEAS=[];
+function P(o){PART.push(Object.assign({
+  x:0,y:0,vx:0,vy:0,vida:1,max:1,r:14,sp:SP_AMBAR,gir:0,vg:0,estela:0,px:0,py:0},o));}
+
+let vfxVivo=false, tVfx=0;
+function bucleVfx(t){
+  if(!PART.length && !LINEAS.length){ vfxVivo=false;
+    cx2.setTransform(DPR,0,0,DPR,0,0); cx2.clearRect(0,0,innerWidth,innerHeight); return; }
+  /* k = 1 a 60 fps: si el movil va mas lento, las particulas avanzan mas por fotograma */
+  const k=tVfx?Math.max(.5,Math.min(2.5,(t-tVfx)/16.667)):1; tVfx=t;
+  cx2.setTransform(DPR,0,0,DPR,0,0);
+  cx2.clearRect(0,0,innerWidth,innerHeight);
+  cx2.globalCompositeOperation="lighter";
+  for(let i=PART.length-1;i>=0;i--){
+    const p=PART[i];
+    p.px=p.x; p.py=p.y;
+    if(p.att){
+      const dx=p.att.x-p.x, dy=p.att.y-p.y, d=Math.hypot(dx,dy)||1;
+      const f=p.fuerza*(1+ (140-Math.min(140,d))/140*1.6)*k;
+      p.vx+=dx/d*f; p.vy+=dy/d*f;
+      p.vx+=-dy/d*p.orbita*k; p.vy+=dx/d*p.orbita*k;
+      if(p.decae) p.orbita*=Math.pow(p.decae,k);
+      p.vx*=Math.pow(.965,k); p.vy*=Math.pow(.965,k);
+      if(d<10){p.vida=Math.min(p.vida,.10);}
+    }
+    if(p.g) p.vy+=p.g*k;
+    if(p.roza){p.vx*=Math.pow(p.roza,k);p.vy*=Math.pow(p.roza,k);}
+    p.x+=p.vx*k; p.y+=p.vy*k;
+    p.vida-=k/p.max;
+    if(p.vida<=0){PART.splice(i,1);continue;}
+    const a=Math.max(0,Math.min(1,p.vida))*(p.op||1);
+    const r=p.r*(p.crece?(1+(1-p.vida)*p.crece):1);
+    if(p.estela){
+      for(let k=1;k<=3;k++){
+        const t=k/3;
+        cx2.globalAlpha=a*p.estela*(1-t)*.55;
+        const rr=r*(1-t*.45);
+        cx2.drawImage(p.sp,p.x-(p.x-p.px)*t*3-rr,p.y-(p.y-p.py)*t*3-rr,rr*2,rr*2);
+      }
+    }
+    cx2.globalAlpha=a;
+    cx2.drawImage(p.sp,p.x-r,p.y-r,r*2,r*2);
+  }
+  for(let i=LINEAS.length-1;i>=0;i--){
+    const L=LINEAS[i]; L.t+=k/L.max;
+    if(L.t>=1){LINEAS.splice(i,1);continue;}
+    const p=Math.min(1,L.t*L.vel);
+    const a=L.t<.42?1:1-(L.t-.42)/.58;
+    const x1=L.x0+(L.x1-L.x0)*Math.max(0,p-.34), y1=L.y0+(L.y1-L.y0)*Math.max(0,p-.34);
+    const x2=L.x0+(L.x1-L.x0)*p,               y2=L.y0+(L.y1-L.y0)*p;
+    const g=cx2.createLinearGradient(x1,y1,x2,y2);
+    g.addColorStop(0,"rgba(255,240,210,0)");
+    g.addColorStop(.5,"rgba(255,250,236,"+(a*.95)+")");
+    g.addColorStop(1,"rgba(255,214,150,0)");
+    cx2.globalAlpha=1; cx2.strokeStyle=g;
+    cx2.lineCap="round"; cx2.lineWidth=L.gr*(1-L.t*.5);
+    cx2.beginPath(); cx2.moveTo(x1,y1); cx2.lineTo(x2,y2); cx2.stroke();
+    cx2.lineWidth=L.gr*3.2*(1-L.t*.7); cx2.globalAlpha=a*.22;
+    cx2.beginPath(); cx2.moveTo(x1,y1); cx2.lineTo(x2,y2); cx2.stroke();
+  }
+  cx2.globalAlpha=1; cx2.globalCompositeOperation="source-over";
+  requestAnimationFrame(bucleVfx);
+}
+function despierta(){ if(!vfxVivo){ vfxVivo=true; tVfx=0; requestAnimationFrame(bucleVfx); } }
+const P0=P; function PP(o){ P0(o); despierta(); }
+
+/* ---------- tipo y nivel de una carta del juego ---------- */
+const TIPO={ataque:"atq",respuesta:"rsp",tactica:"tac",mejora:"aura"};
+function ficha(id){ const c=defCarta(id); if(!c) return null;
+  return {t:TIPO[c.tipo]||null, nv:c.nivel||0, dano:(c.efecto && c.efecto.dano)||0}; }
+
+/* ============ la carga al arrastrar ============ */
+const CARGA={c:null,nivel:0};
+const CLASES=["borde","calor","bordeC","calorC","bordeR","calorR","bordeT","calorT"];
+function nivelDe(el){
+  const z=zonaEl().getBoundingClientRect(), b=el.getBoundingClientRect();
+  const cy=b.top+b.height/2;
+  const d=cy-z.bottom;
+  return Math.max(0,Math.min(1,(300-d)/300));
+}
+function pintaCarga(c,n){
+  if(!c)return;
+  const atq=c.t==="atq", rsp=c.t==="rsp", tac=c.t==="tac";
+  const cB = atq?"bordeC" : rsp?"bordeR" : tac?"bordeT" : "borde";
+  const cC = atq?"calorC" : rsp?"calorR" : tac?"calorT" : "calor";
+  c.el.classList.toggle(cB, n>.42);
+  c.el.classList.toggle(cC, n>.5);
+}
+function apagaCarga(){
+  if(CARGA.c && CARGA.c.el) CARGA.c.el.classList.remove(...CLASES);
+  CARGA.c=null; CARGA.nivel=0;
+}
+function empiezaCarga(el, id){
+  const f=ficha(id); if(!f || !f.t) return;
+  apagaCarga();
+  CARGA.c={el, t:f.t, nv:f.nv}; CARGA.nivel=0;   /* solo para el borde de color al arrastrar */
+}
+
+/* ============ el clon: muelle e inclinacion al moverlo ============ */
+const RIG=350, AMO=.74, INC=1, ESC=1.48;   /* como en la muestra: la carta crece al arrastrarla */
+const VEL_ATQ=1.6;
+const ALZA=40;                                /* la carta va 40 px por encima del dedo, como en la muestra */                            /* chispa y energia de los ataques avanzados: mas rapidas */
+const MOV={on:false,x:0,y:0,vx:0,vy:0,rx:0,ry:0,rz:0,tx:0,ty:0,t0:0,e:1.1};
+function pintaClon(){
+  if(!arrastre || !arrastre.clon) return;
+  arrastre.clon.style.transform =
+    "perspective(900px) translate3d("+MOV.x.toFixed(1)+"px,"+MOV.y.toFixed(1)+"px,0)"+
+    " rotateX("+MOV.rx.toFixed(2)+"deg) rotateY("+MOV.ry.toFixed(2)+"deg)"+
+    " rotate("+MOV.rz.toFixed(2)+"deg) scale("+MOV.e.toFixed(3)+")";
+}
+function muelle(t){
+  if(!MOV.on){ return; }
+  if(!arrastre || !arrastre.clon){ MOV.on=false; return; }
+  const dt=Math.min(.032,(t-MOV.t0)/1000); MOV.t0=t;
+  const amo=Math.pow(AMO,dt*60);
+  MOV.vx+=(MOV.tx-MOV.x)*RIG*dt; MOV.vy+=(MOV.ty-MOV.y)*RIG*dt;
+  MOV.vx*=amo; MOV.vy*=amo; MOV.x+=MOV.vx*dt; MOV.y+=MOV.vy*dt;
+  const oy=Math.max(-26,Math.min(26,MOV.vx*.042*INC));
+  const ox=Math.max(-22,Math.min(22,-MOV.vy*.030*INC));
+  const oz=Math.max(-9,Math.min(9,MOV.vx*.012*INC))-3;
+  MOV.ry+=(oy-MOV.ry)*Math.min(1,12*dt);
+  MOV.rx+=(ox-MOV.rx)*Math.min(1,12*dt);
+  MOV.rz+=(oz-MOV.rz)*Math.min(1,10*dt);
+  MOV.e+=(ESC-MOV.e)*Math.min(1,14*dt);
+  pintaClon();
+  if(CARGA.c && CARGA.c.el===arrastre.clon){ CARGA.nivel=nivelDe(arrastre.clon); pintaCarga(CARGA.c,CARGA.nivel); }
+  requestAnimationFrame(muelle);
+}
+
+const _levantar=levantarCarta;
+levantarCarta=function(el){
+  _levantar(el);
+  el.style.transition="none";
+  const L={k:0,v:0,t0:performance.now()};
+  el.__alza=L;
+  (function sube(t){
+    if(el.__alza!==L || !el.classList.contains("alzada")) return;
+    const dt=Math.min(.032,(t-L.t0)/1000); L.t0=t;
+    L.v+=(1-L.k)*RIG*dt; L.v*=Math.pow(AMO,dt*60); L.k+=L.v*dt;
+    el.style.transform="rotate(0deg) translateY("+(-30*L.k).toFixed(1)+"px) scale("+(1+.1*L.k).toFixed(3)+")";
+    if(Math.abs(1-L.k)<.002 && Math.abs(L.v)<.02){ el.style.transform="rotate(0deg) translateY(-30px) scale(1.1)"; return; }
+    requestAnimationFrame(sube);
+  })(performance.now());
+};
+const _devolver=devolverCarta;
+devolverCarta=function(el){ if(el){ el.__alza=null; el.style.transition=""; } _devolver(el); };
+const _empezar=empezarArrastre;
+empezarArrastre=function(el,x,y){
+  _empezar(el,x,y);
+  if(!arrastre || !arrastre.clon) return;
+  MOV.x=x-arrastre.dx; MOV.y=y-arrastre.dy; MOV.tx=MOV.x; MOV.ty=MOV.y-ALZA;
+  MOV.vx=MOV.vy=0; MOV.rx=MOV.ry=0; MOV.rz=-3; MOV.e=1.1; MOV.t0=performance.now();
+  pintaClon();
+  if(!MOV.on){ MOV.on=true; requestAnimationFrame(muelle); }
+  empiezaCarga(arrastre.clon, arrastre.carta);
+};
+const _mover=moverArrastre;
+moverArrastre=function(x,y){
+  _mover(x,y);
+  if(!arrastre || !arrastre.clon) return;
+  MOV.tx=x-arrastre.dx; MOV.ty=y-arrastre.dy-ALZA;
+  pintaClon();
+};
+const _cancelar=cancelarArrastre;
+cancelarArrastre=function(){
+  MOV.on=false; apagaCarga();
+  _cancelar();
+};
+/* al soltar dentro: el clon no se sustituye por un vuelo, sigue con su muelle
+   hasta el sitio de la mesa, conservando la velocidad que llevaba (como en la muestra) */
+const _soltar=soltarArrastre;
+soltarArrastre=function(x,y){
+  MOV.on=false;
+  const jugada = arrastre && enZona(x,y);
+  if(!jugada){ apagaCarga(); _soltar(x,y); return; }
+  const indice=arrastre.indice, carta=arrastre.carta, clon=arrastre.clon;
+  if(CARGA.c && CARGA.c.el) CARGA.c.el.classList.remove(...CLASES);
+  CARGA.c=null; CARGA.nivel=0;
+  arrastre.clon=null;
+  cancelarArrastre();
+  clon.id="clonVuelo";
+  jugarIndice(indice);
+  requestAnimationFrame(()=>{
+    const destino=document.querySelector("#combate .paso.ult .carta");
+    if(!destino || !carta){ clon.remove(); return; }
+    const rd=destino.getBoundingClientRect(), an=clon.offsetWidth, al=clon.offsetHeight;
+    const esc=rd.width/an;
+    /* el clon escala desde su centro: el destino se expresa como centro */
+    const tx=rd.left+rd.width/2-an/2, ty=rd.top+rd.height/2-al/2;
+    destino.style.visibility="hidden";
+    const dura=lento(700);
+    VUELO.volando=Date.now()+dura+40;
+    const S={x:MOV.x,y:MOV.y,vx:MOV.vx*.55,vy:MOV.vy*.55,rx:MOV.rx,ry:MOV.ry,rz:MOV.rz,e:MOV.e,t0:performance.now(),ini:performance.now()};
+    let acabado=false;
+    const fin=()=>{ if(acabado) return; acabado=true; clon.remove();
+      const d=destino.isConnected?destino:document.querySelector("#combate .paso.ult .carta");
+      if(d) d.style.visibility=""; VUELO.volando=0;
+      setTimeout(()=>remateEnMesa(carta, d), 30); };
+    (function cae(t){
+      if(acabado) return;
+      const dt=Math.min(.032,(t-S.t0)/1000); S.t0=t;
+      const amo=Math.pow(AMO,dt*60);
+      S.vx+=(tx-S.x)*RIG*dt; S.vy+=(ty-S.y)*RIG*dt;
+      S.vx*=amo; S.vy*=amo; S.x+=S.vx*dt; S.y+=S.vy*dt;
+      const oy=Math.max(-26,Math.min(26,S.vx*.042*INC));
+      const ox=Math.max(-22,Math.min(22,-S.vy*.030*INC));
+      S.ry+=(oy-S.ry)*Math.min(1,12*dt);
+      S.rx+=(ox-S.rx)*Math.min(1,12*dt);
+      S.rz+=(0-S.rz)*Math.min(1,10*dt);
+      S.e+=(esc-S.e)*Math.min(1,14*dt);
+      clon.style.transform="perspective(900px) translate3d("+S.x.toFixed(1)+"px,"+S.y.toFixed(1)+"px,0)"+
+        " rotateX("+S.rx.toFixed(2)+"deg) rotateY("+S.ry.toFixed(2)+"deg) rotate("+S.rz.toFixed(2)+"deg) scale("+S.e.toFixed(3)+")";
+      const quieto=Math.hypot(tx-S.x,ty-S.y)<.6 && Math.hypot(S.vx,S.vy)<6 && Math.abs(S.rx)+Math.abs(S.ry)<.6;
+      if(quieto || t-S.ini>dura+400){ fin(); return; }
+      requestAnimationFrame(cae);
+    })(performance.now());
+  });
+};
+
+/* ============ al caer en la mesa ============ */
+function centroDe(el){ const b=el.getBoundingClientRect(); return {X:b.left+b.width/2, Y:b.top+b.height/2, b}; }
+function polvo(el){
+  const {b}=centroDe(el);
+  const d=document.createElement("div"); d.className="polvoMesa";
+  d.style.left=(b.left+b.width/2-60)+"px"; d.style.top=(b.bottom-14)+"px";
+  document.body.appendChild(d); requestAnimationFrame(()=>d.classList.add("on"));
+  setTimeout(()=>d.remove(),560);
+}
+function tajo(X,Y,ang,L,gr,vel){
+  const nx=-Math.sin(ang), ny=Math.cos(ang);
+  PART.forEach(p=>{
+    const d=(p.x-X)*nx+(p.y-Y)*ny;
+    const l=Math.abs((p.x-X)*Math.cos(ang)+(p.y-Y)*Math.sin(ang));
+    if(Math.abs(d)<64 && l<L*.7){
+      const s=d>=0?1:-1, f=(1-Math.abs(d)/64);
+      p.vx+=nx*s*4.6*f; p.vy+=ny*s*4.6*f;
+      p.att=null; p.vida=Math.min(p.vida,.55);
+    }
+  });
+  PP({x:X,y:Y,r:13,max:14,sp:SP_CALOR,crece:3.2,op:1});
+  LINEAS.push({x0:X-Math.cos(ang)*L/2,y0:Y-Math.sin(ang)*L/2,
+               x1:X+Math.cos(ang)*L/2,y1:Y+Math.sin(ang)*L/2,
+               t:0,max:22,vel:(vel||2.3)*1.15,gr:gr||3});
+  for(let k=0;k<5;k++){
+    const t=Math.random(), v=1.3+Math.random()*1.8, a2=ang+(Math.random()-.5)*2.6;
+    PP({x:X-Math.cos(ang)*L/2+Math.cos(ang)*L*t, y:Y-Math.sin(ang)*L/2+Math.sin(ang)*L*t,
+       vx:Math.cos(a2)*v, vy:Math.sin(a2)*v, r:2+Math.random()*1.6, max:18,
+       sp:SP_AMBAR, op:.9, estela:.4});
+  }
+}
+/* las cuchillas: una por punto de dano, en el momento del texto flotante */
+function cuchillas(el,dano){
+  if(!el || !el.isConnected) return;
+  const {X,Y}=centroDe(el);
+  const ANG=[-0.47, 0.37, -0.26, 0.51, -0.41, 0.29];
+  const n=Math.max(1,Math.min(6,dano||1));
+  for(let k=0;k<n;k++){
+    setTimeout(()=>{
+      const yk = Y+(k-(n-1)/2)*(n>4?18:24);
+      tajo(X, yk, ANG[k], 206+k*10, 4.2-k*.2, 2.3+k*.2);
+      for(let q=0;q<6;q++){
+        const a=ANG[k]+(Math.random()<.5?1.57:-1.57)+(Math.random()-.5)*.8;
+        const v=2+Math.random()*3;
+        PP({x:X+(Math.random()-.5)*130*Math.cos(ANG[k]),
+           y:yk+(Math.random()-.5)*130*Math.sin(ANG[k]),
+           vx:Math.cos(a)*v, vy:Math.sin(a)*v, roza:.93,
+           r:1.5+Math.random()*1.8, max:16+Math.random()*10,
+           sp:SP_AMBAR, estela:.6, op:.9});
+      }
+      if(k===0 && el.isConnected){
+        el.style.transition="transform .12s ease-out"; el.style.transform="translateY(5px)";
+        setTimeout(()=>{ el.style.transition="transform .38s cubic-bezier(.25,1.4,.4,1)"; el.style.transform=""; },120);
+        setTimeout(()=>{ el.style.transition=""; },520);
+      }
+    }, k*130);
+  }
+}
+function remateEnMesa(cartaId, destino){
+  const f=ficha(cartaId); if(!f || !f.t) return;
+  const el=(destino && destino.isConnected) ? destino
+         : document.querySelector("#combate .paso.ult .carta");
+  if(!el || !el.isConnected) return;
+  polvo(el);
+}
+const _volar=volarCarta;
+volarCarta=function(cartaId, destino, opciones){
+  _volar(cartaId, destino, opciones);
+  if(!destino || !destino.closest || !destino.closest("#combate")) return;
+  const o=opciones||{};
+  const dura=(o.dura||780)+40;
+  setTimeout(()=>remateEnMesa(cartaId, destino), lento(dura)+30);
+};
+/* el dano que de verdad se hace sale como texto flotante: las cuchillas van con el */
+/* solo cuando el golpe entra de verdad (no al devolver dano, no si hay respuesta) */
+const _sonar=sonar;
+sonar=function(que, dato){
+  _sonar(que, dato);
+  if(que!=="golpe" || !(dato>0)) return;
+  setTimeout(()=>{
+    const el=document.querySelector("#combate .paso.ult .carta");
+    if(el) cuchillas(el, dato);
+  }, 60);
+};
+window.VFX={PART,LINEAS,CARGA,remateEnMesa,cuchillas};
+})();
 </script>
 </body>
 </html>
