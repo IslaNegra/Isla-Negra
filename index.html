@@ -2824,9 +2824,15 @@ body.enPrueba .lupa{z-index:330}
   --arbol-an:calc(var(--arbol-h) * 210 / 230);  /* ancho, por la forma del PNG */
   --arbol-x:calc((393px - var(--arbol-an)) / 2 + var(--arbol-dx));
   --arbol-y:calc((740px - var(--arbol-h)) * var(--arbol-py));
-  /* donde nace el fruto DENTRO del dibujo: 45,65% del ancho y 21,18% del alto */
-  --fruto-x:.4565;
-  --fruto-y:.2118}
+  /* puntos del dibujo, en tanto por uno de su ancho y de su alto */
+  --fruto-x:.4565;   /* el fruto, en la punta de la rama baja */
+  --fruto-y:.2118;
+  /* tamano de la baya: 5px cuando el arbol mide 340, y de ahi en proporcion */
+  --fruto-d:calc(var(--arbol-h) * 5 / 340);
+  --brasa-x:.5918;   /* la brasa, sobre el tronco */
+  --brasa-y:.2353;
+  /* diametro del halo: 230px cuando el arbol mide 340, y de ahi en proporcion */
+  --brasa-d:calc(var(--arbol-h) * 230 / 340)}
 
 
 #arbolFondo .niebla{position:absolute;left:-400px;right:-400px;
@@ -3012,8 +3018,11 @@ body:has(#mesa:not([hidden])) .franja{margin-top:6px}
 #arbolFondo.recibe i{animation:ritoArbol 2050ms ease-in-out both 1500ms}
 @keyframes ritoArbol{0%{opacity:.14}73%{opacity:.42}100%{opacity:.14}}
 
-#arbolFondo .brasa{position:absolute;left:225px;top:352px;
-  width:230px;height:230px;margin:-115px 0 0 -115px;
+#arbolFondo .brasa{position:absolute;
+  left:calc(var(--arbol-x) + var(--arbol-an) * var(--brasa-x));
+  top:calc(var(--arbol-y) + var(--arbol-h) * var(--brasa-y));
+  width:var(--brasa-d);height:var(--brasa-d);
+  margin:calc(var(--brasa-d) * -.5) 0 0 calc(var(--brasa-d) * -.5);
   border-radius:50%;opacity:0;mix-blend-mode:screen;
   background:radial-gradient(circle,
     rgba(240,233,219,.46) 0%, rgba(226,215,193,.24) 26%,
@@ -3025,10 +3034,11 @@ body:has(#mesa:not([hidden])) .franja{margin-top:6px}
 #arbolFondo .fruto{position:absolute;
   left:calc(var(--arbol-x) + var(--arbol-an) * var(--fruto-x));
   top:calc(var(--arbol-y) + var(--arbol-h) * var(--fruto-y));
-  width:5px;height:5px;
-  margin:-2.5px 0 0 -2.5px;border-radius:50%;background:#9BA2FF;opacity:0;
-  box-shadow:0 0 12px 4px rgba(120,128,255,.80),
-             0 0 52px 20px rgba(70,78,220,.34)}
+  width:var(--fruto-d);height:var(--fruto-d);
+  margin:calc(var(--fruto-d) * -.5) 0 0 calc(var(--fruto-d) * -.5);
+  border-radius:50%;background:#9BA2FF;opacity:0;
+  box-shadow:0 0 calc(var(--fruto-d) * 2.4) calc(var(--fruto-d) * .8) rgba(120,128,255,.80),
+             0 0 calc(var(--fruto-d) * 10.4) calc(var(--fruto-d) * 4) rgba(70,78,220,.34)}
 
 #arbolFondo.recibe .fruto{animation:ritoFruto 2200ms ease-in-out both 3600ms}
 @keyframes ritoFruto{
