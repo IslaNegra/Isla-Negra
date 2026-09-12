@@ -6328,16 +6328,17 @@ function saltoBerserker(el, dx){
   el.style.zIndex = "6";                       
   el.classList.add("volando");                 
   el.style.transformOrigin = "50% 100%";       
+  const K = PC.z || 1, DX = dx * K, AL = ALTO * K;   /* mismo motivo que en volarCeniza */
   el.animate([
-    { offset:0,   transform:"translate(" + dx + "px,0) scale(1)",
+    { offset:0,   transform:"translate(" + DX + "px,0) scale(1)",
                   easing:"cubic-bezier(.4,0,.7,.4)" },
-    { offset:.12, transform:"translate(" + dx + "px,3px) scaleX(1.08) scaleY(.9)",
+    { offset:.12, transform:"translate(" + DX + "px," + (3*K) + "px) scaleX(1.08) scaleY(.9)",
                   easing:"cubic-bezier(.15,.6,.35,1)" },          
-    { offset:.5,  transform:"translate(" + (dx*0.45) + "px," + (-ALTO) + "px) scale(1.13)",
+    { offset:.5,  transform:"translate(" + (DX*0.45) + "px," + (-AL) + "px) scale(1.13)",
                   easing:"cubic-bezier(.55,0,.85,.45)" },         
     { offset:.8,  transform:"translate(0,0) scale(1.02)",
                   easing:"cubic-bezier(.2,.8,.3,1)" },            
-    { offset:.88, transform:"translate(0,5px) scaleX(1.14) scaleY(.84)" },  
+    { offset:.88, transform:"translate(0," + (5*K) + "px) scaleX(1.14) scaleY(.84)" },  
     { offset:1,   transform:"translate(0,0) scale(1)" }
   ], { duration: SALTO, fill: "none" });
   setTimeout(() => {
@@ -6393,8 +6394,9 @@ function volarCeniza(capa, desde, retraso){
   const alza  = 14 + Math.random() * 24;     
   const lado  = (Math.random() - .5) * 40;   
   const vuelo = 1000 + Math.random() * 450;
+  const K = PC.z || 1;   /* los px de un keyframe de animate() no llevan el zoom del <html> */
   const en = (t, mx, my) => "translate(" +
-        (desde.x + dx * t + mx) + "px," + (desde.y + dy * t + my) + "px)";
+        ((desde.x + dx * t + mx) * K) + "px," + ((desde.y + dy * t + my) * K) + "px)";
   const an = c.animate([
     { transform: en(0,    0,          0),           opacity: 0 },
     { transform: en(.14,  lado * .35, -alza),       opacity: 1,   offset:.16 },
