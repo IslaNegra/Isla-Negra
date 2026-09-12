@@ -6900,7 +6900,7 @@ function reajustarTitulos(){
   }).observe(document.body, {childList:true, subtree:true});
   window.addEventListener('resize', reajustarTitulos);
 })();
-const VERSION = "1.1.3";
+const VERSION = "1.1.4";
 document.title = "Sombras sobre Isla Negra · " + VERSION;
 function panelPortada(html, pie, bajoTitulo){
   const p = document.getElementById("portada");
@@ -11241,6 +11241,1333 @@ sonar=function(que, dato){
   }, 60);
 };
 window.VFX={PART,LINEAS,CARGA,remateEnMesa,cuchillas};
+})();
+</script>
+<script>
+/* ══════════════════════════════════════════════════════════════════════
+   IA DE BÚSQUEDA · añadida al final, sin tocar ni una línea del juego.
+   1. motor.js  · las mismas reglas, sin DOM ni temporizadores, para simular
+   2. busqueda.js · ISMCTS sobre el motor
+   3. el enganche y el traductor ESTADO → estado del motor
+   4. el espejo (comprobación) y el cronómetro (#ms)
+   ══════════════════════════════════════════════════════════════════════ */
+(function(){
+"use strict";
+
+/* ── 1. motor.js ─────────────────────────────────────────────────────── */
+const MOTOR = (function(){
+"use strict";
+/* ═══════════════════════════════════════════════════════════════════════
+   motor.js · Motor "solo reglas" de Sombras sobre Isla Negra (paso 1).
+
+   Sin temporizadores ni DOM. Reproduce el flujo del index (v1.1.2 con los
+   ocho luchadores) para duelos de dos asientos: mano, mazo, reciclado,
+   robar, Mejoras y subida de nivel (valeMejoras), ataques, respuestas
+   (evitar, devolver, "juegas otra", mitad, descartar al rival), inevitable,
+   aturdir, invitar, ceder, cambiar la mano, fin de asalto y de combate, y
+   las reglas de Riko, Okuma y Vesna tal como están en el index.
+
+   Las cartas NO se copian a mano: cargar(rutaIndex) recorta del propio
+   index el bloque de las cartas (desde su const hasta el de VELOCIDAD) (CARTAS,
+   Riko, Okuma, Vesna, aplicarCambios, MAZOS, REGLAS) y lo evalúa en un
+   entorno cerrado. Las funciones de la IA heurística también se recortan
+   del index (ver ia_heuristica.js).
+
+   API:
+     cargar(rutaIndex)                          → carga cartas y reglas (una vez)
+     crearPartida(mazoA, mazoB, semilla, asaltos, {dif, registrar}) → estado
+        dif: 0|1|2 (nivel de la IA heurística que se guarda en los asientos; 2 = Isla Negra)
+        registrar: false → no se guarda la historia (más rápido; para la búsqueda)
+     jugadasLegales(estado)                     → [jugada, ...]
+     jugar(estado, jugada)                      → estado nuevo (copia)
+     aplicar(estado, jugada)                    → el mismo estado, mutado
+     copiar(estado)                             → copia profunda
+     terminada(estado)                          → true si fase === "finCombate"
+     ganador(estado)                            → 0 | 1 | null
+     quienDecide(estado)                        → índice del asiento que decide
+   Fases con decisión: "turno" (asiento con la iniciativa), "respuesta"
+   (estado.pendiente.responde), "trasRespuesta" (estado.quienJuegaTras),
+   "descartar" (estado.descartando.asiento). "finCombate" es terminal.
+   Jugadas: {carta:i} {ceder:true} {descartar:true} {responder:i}
+   {encajar:true} {nada:true} {soltar:[i,...]}.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const CTX = { estado: null };                 /* estado "actual" para los getters de Riko */
+const GOLPE_TECHO = {}, DEVUELVE_MAZO = {};   /* cachés de la IA (se vacían al remontar cartas) */
+let DATOS = null;                             /* { CARTAS, MAZOS, REGLAS, ... } */
+let FUENTE_IA = "";                           /* texto de la IA heurística recortado del index */
+const NOMBRE_NIVEL = ["Sin nivel","Básico","Avanzado","Experto","Maestro"];
+
+/* ── 1. Carga de cartas desde el index ─────────────────────────────────── */
+function recortar(texto, desde, hasta){
+  const i = texto.indexOf(desde);
+  if(i < 0) throw new Error("no encuentro «" + desde + "» en el index");
+  const j = texto.indexOf(hasta, i);
+  if(j < 0) throw new Error("no encuentro «" + hasta + "» en el index");
+  return texto.slice(i, j);
+}
+/* Las marcas se arman a trozos a propósito: así este bloque no contiene
+   literalmente el texto que busca y nunca se recorta a sí mismo. */
+const MARCA = { cartas: "const CAR" + "TAS = [", velocidad: "\nconst VELO" + "CIDAD",
+                ia: "function iaElegir" + "Descartes(", mueve: "\nfunction asiento" + "QueMueve(" };
+function cargar(){
+  const todos = [].map.call(document.querySelectorAll("script"), e => e.textContent || "");
+  const conCartas = todos.filter(s => s.indexOf(MARCA.cartas) >= 0 && s.indexOf(MARCA.velocidad) >= 0);
+  const js = (conCartas.length ? conCartas : todos).reduce((m, s) => s.length > m.length ? s : m, "");
+  if(!js) throw new Error("no encuentro el guion del juego en el documento");
+  const cartasSrc = recortar(js, MARCA.cartas, MARCA.velocidad);
+  try{ FUENTE_IA = recortar(js, MARCA.ia, MARCA.mueve); }catch(e){ FUENTE_IA = ""; }
+  const ESTADO = new Proxy({}, { get: (_, k) => CTX.estado ? CTX.estado[k] : undefined,
+                                 set: (_, k, v) => { if(CTX.estado) CTX.estado[k] = v; return true; } });
+  const vivoP = i => { const a = CTX.estado && CTX.estado.asientos[i]; return !!a && !a.fuera && a.pv > 0; };
+  /* Los personajes de laboratorio pueden no existir (el index publicado solo
+     trae los cuatro originales): se devuelve null en vez de reventar. */
+  const cuerpo = cartasSrc +
+    "\nreturn { CARTAS, MAZOS, REGLAS," +
+    " aplicarRiko: typeof aplicarRiko === 'function' ? aplicarRiko : null," +
+    " aplicarOkuma: typeof aplicarOkuma === 'function' ? aplicarOkuma : null," +
+    " aplicarVesna: typeof aplicarVesna === 'function' ? aplicarVesna : null," +
+    " aplicarCambios: typeof aplicarCambios === 'function' ? aplicarCambios : null," +
+    " get RIKO_CFG(){ return typeof RIKO_CFG === 'undefined' ? null : RIKO_CFG; }," +
+    " get OKUMA_CFG(){ return typeof OKUMA_CFG === 'undefined' ? null : OKUMA_CFG; }," +
+    " get VESNA_CFG(){ return typeof VESNA_CFG === 'undefined' ? null : VESNA_CFG; } };";
+  const defCartaP = id => DATOS.CARTAS.find(c => c.id === id);
+  const f = new Function("IMAGENES", "window", "ESTADO", "vivo", "defCarta", "GOLPE_TECHO", "DEVUELVE_MAZO", cuerpo);
+  DATOS = f({}, {}, ESTADO, vivoP, defCartaP, GOLPE_TECHO, DEVUELVE_MAZO);
+  indexarCartas();
+  return DATOS;
+}
+function datos(){ if(!DATOS) throw new Error("llama antes a cargar(rutaIndex)"); return DATOS; }
+const CACHES = [GOLPE_TECHO, DEVUELVE_MAZO];
+function registrarCaches(...objs){ objs.forEach(o => CACHES.push(o)); }
+function vaciarCaches(){ CACHES.forEach(o => Object.keys(o).forEach(k => delete o[k])); }
+/* Aplica una configuración a un mazo de prueba (aplicarVesna/aplicarOkuma/aplicarRiko). */
+function aplicarCfg(mazoId, cfg){
+  const D = datos();
+  const fn = { vesna: D.aplicarVesna, okuma: D.aplicarOkuma, riko: D.aplicarRiko }[mazoId];
+  if(!fn) throw new Error("no hay configuración para " + mazoId);
+  const n = fn(cfg || null); vaciarCaches(); indexarCartas(); return n;
+}
+let MAPA = null;                              /* id → carta (se rehace al remontar cartas) */
+function indexarCartas(){ MAPA = new Map(); datos().CARTAS.forEach(c => MAPA.set(c.id, c)); }
+function defCarta(id){ return MAPA.get(id); }
+
+/* ── 2. Azar (mulberry32, igual que el index) ───────────────────────────── */
+function siguienteAzar(g){
+  g.s = (g.s + 0x6D2B79F5) >>> 0;
+  let t = g.s;
+  t = Math.imul(t ^ (t >>> 15), t | 1);
+  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
+function azar(E){ return siguienteAzar(E.azar); }
+function barajar(E, a){
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(azar(E) * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ── 3. Registro (la historia que se compara con el index) ─────────────── */
+function huella(E){
+  return E.asientos.map(a => [a.pv, a.nivel, a.mejorasEnMesa, a.aturdido ? 1 : 0, a.fuera ? 1 : 0,
+                              a.mano.join(","), a.mazo.length, a.descartes.length].join("|")).join("#");
+}
+function anotar(E, texto){ if(E.registrar) E.historia.push([texto, huella(E)]); }
+function cronicar(E, hecho){
+  hecho.n = ++E.nCron;
+  E.cronica.push(hecho);
+  if(E.cronica.length > 80) E.cronica.shift();
+  return hecho;
+}
+function golpeActual(E){
+  if(E.ultimoGolpe === null) return null;
+  for(let i = E.cronica.length - 1; i >= 0; i--) if(E.cronica[i].n === E.ultimoGolpe) return E.cronica[i];
+  return null;
+}
+
+/* ── 4. Consultas ──────────────────────────────────────────────────────── */
+function nAsientos(E){ return E.asientos.length; }
+function vivo(E, i){ const a = E.asientos[i]; return !!a && !a.fuera && a.pv > 0; }
+function sonAliados(E, i, j){ return i === j; }
+function rivalesDe(E, i){ return E.asientos.map((_, k) => k).filter(k => k !== i && vivo(E, k)); }
+function primerRival(E, i){ const r = rivalesDe(E, i); return r.length ? r[0] : null; }
+function siguienteVivo(E, i){
+  const n = nAsientos(E);
+  const desde = (E.puntero === undefined || E.puntero === null || E.puntero < 0 || E.puntero >= n) ? i : E.puntero;
+  for(let k = 1; k <= n; k++){
+    const j = (desde + k) % n;
+    if(vivo(E, j)){ E.puntero = j; return j; }
+  }
+  E.puntero = i;
+  return i;
+}
+function construirMazo(mazoId){
+  const salida = [];
+  datos().CARTAS.filter(c => c.mazo === mazoId && c.tipo !== "personaje")
+        .forEach(c => { for(let i = 0; i < c.copias; i++) salida.push(c.id); });
+  return salida;
+}
+function idMejora(mazoId){ const c = datos().CARTAS.find(x => x.mazo === mazoId && x.tipo === "mejora"); return c ? c.id : null; }
+function nombreMejora(mazoId){ const c = datos().CARTAS.find(x => x.mazo === mazoId && x.tipo === "mejora"); return c ? c.nombre : "Mejora"; }
+function puedeUsar(a, c){
+  if((c.nivelBase || c.nivel) > a.nivel) return false;
+  if(c.efecto.gastaMejora && a.mejorasEnMesa < 1) return false;
+  return true;
+}
+function jugableEnTurno(a, c){ return c.tipo !== "respuesta" && puedeUsar(a, c); }
+function respuestasValidas(a, nivelTecnica){
+  return a.mano.map((id, i) => ({ i, c: defCarta(id) }))
+               .filter(x => x.c.tipo === "respuesta" && puedeUsar(a, x.c) && x.c.efecto.evitaHasta >= nivelTecnica);
+}
+function necesitaObjetivo(c){
+  return c.tipo === "ataque" || (c.tipo !== "respuesta" && (!!c.efecto.descartaRival || !!c.efecto.invita));
+}
+
+/* ── 5. Asientos y asaltos ─────────────────────────────────────────────── */
+function nombreDeAsiento(mazos, i){
+  const M = datos().MAZOS;
+  const m = M.find(x => x.id === mazos[i]) || M[0];
+  const repes = mazos.filter(x => x === m.id).length;
+  const cual = mazos.slice(0, i + 1).filter(x => x === m.id).length;
+  return repes > 1 ? m.corto + " " + cual : m.nombre;
+}
+function crearAsiento(nombre, mazoId){
+  return { nombre, mazoId, fuera:false, pv:0, nivel:1, mejorasEnMesa:0, aturdido:false,
+           mano:[], mazo:[], descartes:[], asaltos:0, ultimaJugada:null, ultimaMejora:null,
+           paciencia:0, berserker:false, invitado:null, ultimoGolpe:null, mejorGolpe:null,
+           sedPV:0, sedDano:false, sedCobrada:false, sedJugo:false, sedAtaco:false,
+           /* estado que la IA heurística guarda en el asiento */
+           cedio:undefined, encajo:undefined, acabaDeTirar:undefined, dif:null, controlador:"ia" };
+}
+function prepararAsalto(E, a){
+  const D = datos(), R = D.REGLAS;
+  a.pv = R.pvIniciales; a.nivel = 1; a.mejorasEnMesa = 0; a.aturdido = false;
+  a.fuera = false;
+  if(a.mazoId === "okuma"){ a.nivel = D.OKUMA_CFG.nivel; a.mejorasEnMesa = D.OKUMA_CFG.mejoras; }
+  a.sedPV = 0;
+  if(a.mazoId === "vesna"){ a.sedPV = D.VESNA_CFG.sed; a.sedDano = false; a.sedCobrada = false;
+                            a.sedJugo = false; a.sedAtaco = false; }
+  a.mano = []; a.descartes = []; a.ultimaJugada = null;
+  a.ultimaMejora = null; a.paciencia = 0;
+  a.berserker = false; a.invitado = null;
+  a.ultimoGolpe = null; a.mejorGolpe = null;
+  E.cronica = []; E.ultimoGolpe = null;
+  a.mazo = construirMazo(a.mazoId);
+  do { barajar(E, a.mazo); }
+  while(defCarta(a.mazo[a.mazo.length - 1]).tipo === "mejora");
+  robar(E, a, R.manoInicial);
+}
+function reciclarMazo(E, a){
+  if(a.descartes.length <= 1) return false;
+  const visible = a.descartes.pop();
+  a.mazo = a.descartes; a.descartes = [visible];
+  do { barajar(E, a.mazo); }
+  while(a.mazo.length > 1 && defCarta(a.mazo[a.mazo.length - 1]).tipo === "mejora");
+  anotar(E, a.nombre + " rehace su mazo de combate.");
+  return true;
+}
+function robar(E, a, cuantas){
+  let n = 0;
+  for(let i = 0; i < cuantas; i++){
+    if(a.mazo.length === 0 && !reciclarMazo(E, a)) break;
+    a.mano.push(a.mazo.shift()); n++;
+  }
+  return n;
+}
+
+/* ── 6. Cartas: mejora, ataque, respuesta ─────────────────────────────── */
+function marcarJugada(E, a, id){ a.ultimaJugada = id; a.cedio = false; }
+function gastarCarta(E, a, indiceMano){
+  const id = a.mano.splice(indiceMano, 1)[0];
+  const c = defCarta(id);
+  if(a.mazoId === "vesna" && E.asientos[E.iniciativa] === a){   /* solo en su propio turno */
+    a.sedJugo = true; if(c.tipo === "ataque") a.sedAtaco = true;
+  }
+  if(c.efecto.gastaMejora && a.mejorasEnMesa > 0){
+    a.mejorasEnMesa--;
+    const im = idMejora(a.mazoId);
+    if(im && !defCarta(im).efecto.noVuelve) a.descartes.push(im);
+  }
+  a.descartes.push(id);
+  marcarJugada(E, a, id);
+  return c;
+}
+function jugarMejora(E, a, indiceMano){
+  const D = datos(), RIKO_CFG = D.RIKO_CFG;
+  const id = a.mano.splice(indiceMano, 1)[0];
+  if(a.mazoId === "vesna" && E.asientos[E.iniciativa] === a) a.sedJugo = true;
+  const valor = (a.nivel < 4 && a.nivel < ((RIKO_CFG && RIKO_CFG.descaro.hasta) || 4)) ? (defCarta(id).efecto.valeMejoras || 1) : 1;
+  a.mejorasEnMesa += valor;
+  a.ultimaMejora = id;
+  if(a.nivel < 4 && a.mejorasEnMesa >= 2){
+    a.nivel++;
+    anotar(E, a.nombre + " sube a " + NOMBRE_NIVEL[a.nivel] + ".");
+    if(a.mazoId === "riko" && RIKO_CFG.confiado && a.nivel <= (RIKO_CFG.confiadoHasta || 4)){
+      for(let k = 0; k < RIKO_CFG.confiado; k++){
+        const idx = a.mano.map((x, i) => defCarta(x).tipo === "respuesta" ? i : -1).filter(i => i >= 0);
+        if(!idx.length) break;
+        const i = idx[Math.floor(azar(E) * idx.length)];
+        const c = defCarta(a.mano[i]); a.mano.splice(i, 1); a.descartes.push(c.id);
+        anotar(E, a.nombre + " se confía y tira " + c.nombre + ".");
+      }
+    }
+    if(a.nivel === 4){
+      if(valor > 1){ a.mejorasEnMesa = RIKO_CFG.descaroMaestro;
+        anotar(E, a.mejorasEnMesa === 1 ? "Una Mejora se queda en la mesa para las técnicas Maestras."
+                                        : "Las dos Mejoras se quedan en la mesa para las técnicas Maestras."); }
+      else anotar(E, "Las dos Mejoras se quedan en la mesa para las técnicas Maestras."); }
+    else { a.mejorasEnMesa = 0; for(let k = 0; k < Math.ceil(2 / valor); k++) a.descartes.push(id); }
+  }else{
+    anotar(E, a.nombre + " pone una Mejora en la mesa (" + a.mejorasEnMesa + ").");
+  }
+}
+function lanzarTecnica(E, origen, objetivo, carta){
+  if(E.asientos[origen].invitado){
+    E.asientos[origen].invitado = null;
+    anotar(E, E.asientos[origen].nombre + " acepta la invitación.");
+  }
+  E.asientos[origen].paciencia = 0;
+  const nivelCarta = carta.nivel;                    /* Imitar (Riko): getter, se lee una vez aquí */
+  const dano = carta.efecto.dano;
+  E.ultimoGolpe = cronicar(E, { que:"golpe", de:origen, a:objetivo, niv:nivelCarta, parado:false }).n;
+  if(dano && !carta.efecto.copiaDano){
+    const q = E.asientos[origen];
+    q.ultimoGolpe = carta.id;
+    if(!q.mejorGolpe || dano > (defCarta(q.mejorGolpe).efecto.dano || 0)) q.mejorGolpe = carta.id;
+  }
+  E.pendiente = { origen, objetivo, dano: dano || 0, nivel: nivelCarta,
+                  inevitable: !!carta.efecto.inevitable, aturde: !!carta.efecto.aturde,
+                  drena: !!carta.efecto.drena, nombre: carta.nombre, cola:null, responde:null };
+  anotar(E, E.asientos[origen].nombre + " usa " + carta.nombre + " (" + NOMBRE_NIVEL[nivelCarta] + ") contra " + E.asientos[objetivo].nombre + ".");
+  if(carta.efecto.inevitable) anotar(E, "Es inevitable: no admite respuesta.");
+  pedirRespuesta(E);
+}
+function candidatosRespuesta(E, p){
+  const n = nAsientos(E), lista = [];
+  for(let k = 0; k < n; k++){
+    const i = (p.objetivo + k) % n;
+    if(i === p.origen || !vivo(E, i)) continue;
+    if(i !== p.objetivo && !E.respondenTodos && !sonAliados(E, p.objetivo, i)) continue;
+    lista.push(i);
+  }
+  return lista;
+}
+function encajar(E){
+  const p = E.pendiente;
+  p.sinRespuesta = true; p.responde = null;
+  E.fase = "resolviendo";
+  aplicarDano(E);
+}
+function pedirRespuesta(E){
+  const p = E.pendiente;
+  if(p.inevitable){ encajar(E); return; }
+  if(!p.cola) p.cola = candidatosRespuesta(E, p);
+  while(p.cola.length){
+    const i = p.cola[0];
+    const a = E.asientos[i];
+    const opciones = vivo(E, i) ? respuestasValidas(a, p.nivel) : [];
+    if(!opciones.length){ p.cola.shift(); continue; }
+    p.sinRespuesta = false; p.responde = i;
+    E.fase = "respuesta";            /* decide el asiento p.responde */
+    return;
+  }
+  encajar(E);
+}
+function rechazarRespuesta(E){
+  const p = E.pendiente;
+  if(!p) return;
+  p.decidido = true;
+  if(p.cola && p.cola.length) p.cola.shift();
+  pedirRespuesta(E);
+}
+function usarRespuesta(E, indiceAsiento, indiceMano){
+  const a = E.asientos[indiceAsiento];
+  const p = E.pendiente;
+  if(!p || !a.mano[indiceMano]) throw new Error("respuesta imposible");
+  const c = gastarCarta(E, a, indiceMano);
+  anotar(E, a.nombre + " responde con " + c.nombre + ".");
+  const g = golpeActual(E); if(g) g.parado = true;
+  cronicar(E, { que:"muestra", de:indiceAsiento, evita:c.efecto.evitaHasta || 0, devuelve:c.efecto.devuelve || 0 });
+  if(c.efecto.mitad && p.dano > 0){
+    const mitad = c.efecto.mitadAbajo ? Math.floor(p.dano / 2) : Math.ceil(p.dano / 2);
+    danoDirecto(E, indiceAsiento, mitad, "aguanta el golpe");
+    vesnaDrenar(E, p, mitad);
+  }
+  if(c.efecto.descartaRival) descartarAlAzar(E, p.origen, c.efecto.descartaRival, c.nombre);
+  if(c.efecto.devuelve){
+    const total = p.dano + c.efecto.devuelve;
+    anotar(E, "Devuelve " + p.dano + " + " + c.efecto.devuelve + " = " + total + " de daño.");
+    E.pendiente = { origen: indiceAsiento, objetivo: p.origen, dano: total,
+                    nivel: c.nivel, inevitable: !!c.efecto.devuelveInevitable, nombre: c.nombre,
+                    reflejo: true, cola:null, responde:null };
+    pedirRespuesta(E);
+    return;
+  }
+  E.pendiente = null;
+  anotar(E, "El ataque queda evitado.");
+  if(c.efecto.dejaJugarCarta){
+    if(ganadorAsalto(E) !== -1){ terminarResolucion(E); return; }
+    E.quienJuegaTras = indiceAsiento;
+    E.fase = "trasRespuesta";        /* decide E.quienJuegaTras */
+    return;
+  }
+  terminarResolucion(E);
+}
+function danoDirecto(E, indice, dano, motivo){
+  if(dano <= 0) return;
+  const a = E.asientos[indice];
+  a.pv -= dano;
+  anotar(E, a.nombre + " encaja " + dano + " PV (" + motivo + "). Le quedan " + Math.max(0, a.pv) + ".");
+}
+function descartarAlAzar(E, victima, cuantas, nombreCarta){
+  const a = E.asientos[victima];
+  const sitios = [];
+  const libres = a.mano.map((_, i) => i);
+  while(sitios.length < cuantas && libres.length)
+    sitios.push(libres.splice(Math.floor(azar(E) * libres.length), 1)[0]);
+  const n = sitios.length;
+  if(!n){ anotar(E, a.nombre + " no tiene cartas que soltar."); return 0; }
+  sitios.slice().sort((x, y) => y - x).forEach(i => { a.descartes.push(a.mano.splice(i, 1)[0]); });
+  anotar(E, a.nombre + " suelta " + n + (n === 1 ? " carta" : " cartas") + " al azar" + (nombreCarta ? " por " + nombreCarta : "") + ".");
+  return n;
+}
+function okumaPierdeMejora(E, objetivo, dano){
+  const C = datos().OKUMA_CFG;
+  if(objetivo.mazoId !== "okuma" || !C || dano < C.umbral || objetivo.mejorasEnMesa < 1) return;
+  objetivo.mejorasEnMesa--;
+  anotar(E, objetivo.nombre + " acusa el golpe y pierde una Mejora (le quedan " + objetivo.mejorasEnMesa + ").");
+}
+function vesnaDrenar(E, p, dano){
+  const C = datos().VESNA_CFG, R = datos().REGLAS;
+  const origen = E.asientos[p.origen];
+  if(!origen || origen.mazoId !== "vesna" || !C || dano <= 0) return;
+  if(p.origen === E.iniciativa) origen.sedDano = true;
+  if(p.reflejo || !p.drena) return;
+  const cura = Math.min(Math.floor(dano * C.drenar), R.pvIniciales - origen.pv);
+  if(cura <= 0) return;
+  origen.pv += cura;
+  anotar(E, origen.nombre + " drena " + cura + " PV. Tiene " + origen.pv + ".");
+}
+function vesnaSed(E){
+  const C = datos().VESNA_CFG;
+  const i = E.iniciativa, a = E.asientos[i];
+  if(!a || a.mazoId !== "vesna" || !C || !C.sed) return;
+  if(a.sedDano || a.sedCobrada || !vivo(E, i)) return;
+  const cuando = C.sedCuando || "siempre";
+  if(cuando === "cede" && a.sedJugo) return;
+  if(cuando === "noAtaca" && a.sedAtaco) return;
+  a.sedCobrada = true;
+  danoDirecto(E, i, C.sed, "Sed");
+}
+function aplicarDano(E){
+  const p = E.pendiente;
+  if(!p) return;
+  const objetivo = E.asientos[p.objetivo];
+  const dano = p.dano;
+  if(dano > 0){
+    objetivo.pv -= dano;
+    anotar(E, objetivo.nombre + " pierde " + dano + " PV. Le quedan " + Math.max(0, objetivo.pv) + ".");
+    okumaPierdeMejora(E, objetivo, dano);
+    vesnaDrenar(E, p, dano);
+  }
+  if(p.aturde && objetivo.aturdido){
+    anotar(E, objetivo.nombre + " ya estaba aturdido: no se acumula.");
+  }
+  else if(p.aturde){
+    objetivo.aturdido = true;
+    anotar(E, objetivo.nombre + " queda aturdido: pierde su próximo turno.");
+  }
+  E.pendiente = null;
+  terminarResolucion(E);
+}
+function invitar(E, origen, objetivo, c){
+  const v = E.asientos[objetivo];
+  if(v.invitado){
+    const pv = Math.max(v.invitado.pv, c.efecto.invita);
+    v.invitado = { pv, por: origen, nombre: c.nombre, enTurno: v.invitado.enTurno };
+    anotar(E, v.nombre + " ya estaba invitado: no se acumula (se queda en " + pv + " PV).");
+    return;
+  }
+  v.invitado = { pv: c.efecto.invita, por: origen, nombre: c.nombre, enTurno: false };
+  anotar(E, E.asientos[origen].nombre + " usa " + c.nombre + ": si " + v.nombre + " no ataca en su próximo turno, pierde " + c.efecto.invita + " PV.");
+}
+function cobrarInvitacion(E){
+  const i = E.iniciativa, a = E.asientos[i];
+  if(!a || !a.invitado || !a.invitado.enTurno) return;
+  const inv = a.invitado; a.invitado = null;
+  if(!vivo(E, i)) return;
+  danoDirecto(E, i, inv.pv, "no acepta la invitación");
+}
+/* Efecto de una carta que no es ataque. Si hay que elegir descartes,
+   deja la partida en fase "descartar"; si no, cierra la resolución. */
+function aplicarEfectoNoAtaque(E, a, c, objetivo){
+  const yo = E.asientos.indexOf(a);
+  if(c.efecto.invita){
+    const v = (objetivo === undefined || objetivo === null) ? primerRival(E, yo) : objetivo;
+    if(v !== null) invitar(E, yo, v, c);
+  }
+  if(c.efecto.descartaRival){
+    const v = (objetivo === undefined || objetivo === null) ? primerRival(E, yo) : objetivo;
+    if(v !== null) descartarAlAzar(E, v, c.efecto.descartaRival, c.nombre);
+  }
+  if(!c.efecto.roba){ terminarResolucion(E); return; }
+  const n = robar(E, a, c.efecto.roba);
+  anotar(E, a.nombre + " usa " + c.nombre + " y coge " + n + " cartas" + (n < c.efecto.roba ? " (no le quedaban más)" : "") + ".");
+  const sueltas = Math.min(c.efecto.descarta || 0, n);
+  if(!sueltas){ terminarResolucion(E); return; }
+  const idx = [];
+  for(let k = a.mano.length - n; k < a.mano.length; k++) idx.push(k);
+  E.descartando = { asiento: yo, idx, recien: n, cuantas: sueltas };
+  E.fase = "descartar";              /* decide E.descartando.asiento */
+}
+function soltarCartas(a, indices){
+  indices.slice().sort((x, y) => y - x).forEach(i => { a.descartes.push(a.mano.splice(i, 1)[0]); });
+}
+function rematarDescartes(E, elegidas){
+  const d = E.descartando, a = E.asientos[d.asiento];
+  soltarCartas(a, elegidas);
+  anotar(E, a.nombre + " se queda con " + (d.recien - d.cuantas) + " y suelta " + d.cuantas + ".");
+  E.descartando = null;
+  terminarResolucion(E);
+}
+
+/* ── 7. Turnos ────────────────────────────────────────────────────────── */
+function empezarTurno(E){
+  if(E.fase === "finAsalto" || E.fase === "finCombate") return;
+  const R = datos().REGLAS;
+  const a = E.asientos[E.iniciativa];
+  if(!vivo(E, E.iniciativa)){ cederIniciativa(E); return; }
+  if(a.aturdido){
+    a.aturdido = false;
+    anotar(E, a.nombre + " está aturdido: pierde el turno.");
+    E.fase = "cambio";
+    cederIniciativa(E);
+    return;
+  }
+  if(a.mazoId === "vesna"){ a.sedDano = false; a.sedCobrada = false; a.sedJugo = false; a.sedAtaco = false; }
+  if(!E.primeraAccion){
+    if(a.mano.length > R.topeMano) anotar(E, a.nombre + " no roba: más de " + R.topeMano + " cartas en la mano.");
+    else robar(E, a, 1);
+  }
+  E.primeraAccion = false;
+  if(a.invitado && !a.invitado.enTurno){
+    a.invitado.enTurno = true;
+    anotar(E, a.nombre + " está invitado: si no ataca este turno, pierde " + a.invitado.pv + " PV.");
+  }
+  E.fase = "turno";                  /* decide E.iniciativa */
+}
+function cederIniciativa(E){
+  let siguiente = E.iniciativa;
+  for(let k = 0; k < nAsientos(E); k++){
+    siguiente = siguienteVivo(E, siguiente);
+    const s = E.asientos[siguiente];
+    if(siguiente === E.iniciativa) break;
+    if(s.aturdido){
+      s.aturdido = false;
+      anotar(E, s.nombre + " está aturdido: pierde el turno.");
+      continue;
+    }
+    break;
+  }
+  if(siguiente === E.iniciativa){ empezarTurno(E); return; }
+  E.iniciativa = siguiente;
+  E.fase = "cambio";
+  empezarTurno(E);
+}
+function terminarResolucion(E){
+  E.quienJuegaTras = null;
+  E.fase = "resolviendo";
+  cobrarInvitacion(E);
+  vesnaSed(E);
+  apuntarBajas(E);
+  const fin = ganadorAsalto(E);
+  if(fin !== -1){ finAsalto(E, fin); return; }
+  cederIniciativa(E);
+}
+function apuntarBajas(E){
+  E.asientos.forEach(a => {
+    if(!a.fuera && a.pv <= 0){
+      a.fuera = true;
+      anotar(E, a.nombre + " cae derrotado.");
+    }
+  });
+}
+function ganadorAsalto(E){
+  const enPie = E.asientos.map((_, i) => i).filter(i => vivo(E, i));
+  if(!enPie.length) return -2;
+  return enPie.length === 1 ? enPie[0] : -1;
+}
+function finAsalto(E, ganador){
+  if(ganador === -2){
+    anotar(E, "— Nadie queda en pie: el asalto no lo gana nadie —");
+    E.empates = (E.empates || 0) + 1;
+    E.fase = "finAsalto";
+    siguienteAsalto(E);
+    return;
+  }
+  const g = E.asientos[ganador];
+  g.asaltos++;
+  anotar(E, "— " + g.nombre + " gana el asalto (" + g.asaltos + ") —");
+  if(g.asaltos >= E.asaltosParaGanar){
+    E.fase = "finCombate";
+    E.fin = ganador;
+    anotar(E, "═ " + g.nombre + " gana el combate ═");
+    return;
+  }
+  E.fase = "finAsalto";
+  siguienteAsalto(E);
+}
+function siguienteAsalto(E){
+  E.asalto++;
+  E.asientos.forEach(a => prepararAsalto(E, a));
+  E.iniciativa = Math.floor(azar(E) * nAsientos(E));
+  E.primeraAccion = true;
+  E.pendiente = null; E.quienJuegaTras = null; E.descartando = null;
+  E.puntero = E.iniciativa;
+  E.fase = "anuncio";
+  anotar(E, "— Nuevo asalto. Empieza " + E.asientos[E.iniciativa].nombre + " —");
+  empezarTurno(E);
+}
+
+/* ── 8. Acciones (lo que hace una jugada) ─────────────────────────────── */
+function accionJugarCarta(E, indiceAsiento, indiceMano){
+  const a = E.asientos[indiceAsiento];
+  const c = defCarta(a.mano[indiceMano]);
+  if(resolverJugada(E, indiceAsiento, indiceMano, c, false)) return;
+  accionCeder(E, indiceAsiento);
+}
+function resolverJugada(E, indiceAsiento, indiceMano, c, tras){
+  const a = E.asientos[indiceAsiento];
+  if(c.tipo === "mejora"){
+    jugarMejora(E, a, indiceMano);
+    terminarResolucion(E);
+    return true;
+  }
+  if(necesitaObjetivo(c)){
+    const objetivos = rivalesDe(E, indiceAsiento);
+    if(!objetivos.length) return false;
+    if(objetivos.length !== 1) throw new Error("el motor solo cubre duelos de dos asientos");
+    rematarConObjetivo(E, indiceAsiento, indiceMano, objetivos[0], false);
+    return true;
+  }
+  gastarCarta(E, a, indiceMano);
+  aplicarEfectoNoAtaque(E, a, c);
+  return true;
+}
+function rematarConObjetivo(E, indiceAsiento, indiceMano, objetivo, tras){
+  const a = E.asientos[indiceAsiento];
+  if(!a.mano[indiceMano]){ terminarResolucion(E); return; }
+  const c = defCarta(a.mano[indiceMano]);
+  if(tras) E.quienJuegaTras = null;
+  gastarCarta(E, a, indiceMano);
+  if(c.tipo === "ataque"){ lanzarTecnica(E, indiceAsiento, objetivo, c); return; }
+  aplicarEfectoNoAtaque(E, a, c, objetivo);
+}
+function accionDescartarMano(E, indiceAsiento){
+  const a = E.asientos[indiceAsiento];
+  a.cedio = false;
+  const n = a.mano.length;
+  while(a.mano.length){ a.descartes.push(a.mano.shift()); }
+  robar(E, a, 5);
+  anotar(E, a.nombre + " descarta " + n + " cartas y coge 5 nuevas.");
+  soltarTurnoTrasAviso(E);
+}
+function noJugarNada(E){
+  E.quienJuegaTras = null;
+  terminarResolucion(E);
+}
+function accionCeder(E, indiceAsiento){
+  E.asientos[indiceAsiento].cedio = true;
+  anotar(E, E.asientos[indiceAsiento].nombre + " cede la iniciativa.");
+  soltarTurnoTrasAviso(E);
+}
+function soltarTurnoTrasAviso(E){
+  E.fase = "resolviendo";
+  cobrarInvitacion(E);
+  vesnaSed(E);
+  if(ganadorAsalto(E) !== -1){ terminarResolucion(E); return; }
+  cederIniciativa(E);
+}
+function accionJugarTrasRespuesta(E, indiceAsiento, indiceMano){
+  const a = E.asientos[indiceAsiento];
+  if(!a.mano[indiceMano]){ E.quienJuegaTras = null; terminarResolucion(E); return; }
+  const c = defCarta(a.mano[indiceMano]);
+  E.quienJuegaTras = null;
+  if(resolverJugada(E, indiceAsiento, indiceMano, c, true)) return;
+  terminarResolucion(E);
+}
+
+/* ── 9. API pública ────────────────────────────────────────────────────── */
+function crearPartida(mazoA, mazoB, semilla, asaltos, opciones){
+  const D = datos(), R = D.REGLAS;
+  opciones = opciones || {};
+  const mazos = [mazoA, mazoB];
+  const E = {
+    azar: { s: ((semilla >>> 0) || 1) },
+    asientos: [], iniciativa: 0, fase: "anuncio", asalto: 1, empates: 0,
+    pendiente: null, quienJuegaTras: null, descartando: null, primeraAccion: true,
+    puntero: 0, cronica: [], nCron: 0, ultimoGolpe: null, historia: [],
+    modo: "libre", respondenTodos: false,
+    asaltosParaGanar: asaltos === 1 ? 1 : 2, dif: (opciones.dif === undefined ? 2 : opciones.dif), fin: null,
+    registrar: opciones.registrar !== false   /* false: sin historia (más rápido, para la búsqueda) */
+  };
+  CTX.estado = E;
+  for(let i = 0; i < 2; i++){
+    const m = D.MAZOS.find(x => x.id === mazos[i]) || D.MAZOS[0];
+    E.asientos.push(crearAsiento(nombreDeAsiento(mazos, i), m.id));
+  }
+  E.asientos.forEach(a => prepararAsalto(E, a));
+  E.iniciativa = Math.floor(azar(E) * nAsientos(E));
+  E.puntero = E.iniciativa;
+  E.primeraAccion = true;
+  E.fase = "anuncio";
+  anotar(E, "Duelo a " + R.pvIniciales + " PV, " + (E.asaltosParaGanar === 1 ? "a un solo asalto." : "al mejor de 3 asaltos."));
+  anotar(E, "Empieza " + E.asientos[E.iniciativa].nombre + ".");
+  empezarTurno(E);
+  return E;
+}
+function quienDecide(E){
+  if(E.fase === "turno") return E.iniciativa;
+  if(E.fase === "respuesta") return E.pendiente.responde;
+  if(E.fase === "trasRespuesta") return E.quienJuegaTras;
+  if(E.fase === "descartar") return E.descartando.asiento;
+  return -1;
+}
+function combinaciones(lista, k){
+  const salida = [];
+  const rec = (desde, actual) => {
+    if(actual.length === k){ salida.push(actual.slice()); return; }
+    for(let i = desde; i < lista.length; i++){ actual.push(lista[i]); rec(i + 1, actual); actual.pop(); }
+  };
+  rec(0, []);
+  return salida;
+}
+function jugadasLegales(E){
+  CTX.estado = E;
+  const j = [];
+  if(E.fase === "turno"){
+    const a = E.asientos[E.iniciativa];
+    a.mano.forEach((id, i) => { if(jugableEnTurno(a, defCarta(id))) j.push({ carta: i }); });
+    j.push({ ceder: true });
+    j.push({ descartar: true });
+  }
+  else if(E.fase === "respuesta"){
+    const p = E.pendiente, a = E.asientos[p.responde];
+    respuestasValidas(a, p.nivel).forEach(x => j.push({ responder: x.i }));
+    j.push({ encajar: true });
+  }
+  else if(E.fase === "trasRespuesta"){
+    const a = E.asientos[E.quienJuegaTras];
+    a.mano.forEach((id, i) => { if(jugableEnTurno(a, defCarta(id))) j.push({ carta: i }); });
+    j.push({ nada: true });
+  }
+  else if(E.fase === "descartar"){
+    combinaciones(E.descartando.idx, E.descartando.cuantas).forEach(s => j.push({ soltar: s }));
+  }
+  return j;
+}
+function aplicar(E, jugada){
+  CTX.estado = E;
+  const f = E.fase;
+  if(f === "turno"){
+    if(jugada.carta !== undefined) accionJugarCarta(E, E.iniciativa, jugada.carta);
+    else if(jugada.descartar) accionDescartarMano(E, E.iniciativa);
+    else if(jugada.ceder) accionCeder(E, E.iniciativa);
+    else throw new Error("jugada no válida en fase turno");
+  }
+  else if(f === "respuesta"){
+    if(jugada.responder !== undefined) usarRespuesta(E, E.pendiente.responde, jugada.responder);
+    else if(jugada.encajar) rechazarRespuesta(E);
+    else throw new Error("jugada no válida en fase respuesta");
+  }
+  else if(f === "trasRespuesta"){
+    if(jugada.carta !== undefined) accionJugarTrasRespuesta(E, E.quienJuegaTras, jugada.carta);
+    else if(jugada.nada) noJugarNada(E);
+    else throw new Error("jugada no válida en fase trasRespuesta");
+  }
+  else if(f === "descartar"){
+    if(!jugada.soltar) throw new Error("jugada no válida en fase descartar");
+    rematarDescartes(E, jugada.soltar);
+  }
+  else throw new Error("la partida no admite jugadas en fase " + f);
+  return E;
+}
+function copiar(E){
+  const c = Object.assign({}, E);
+  c.azar = { s: E.azar.s };
+  c.asientos = E.asientos.map(a => {
+    const b = Object.assign({}, a);
+    b.mano = a.mano.slice(); b.mazo = a.mazo.slice(); b.descartes = a.descartes.slice();
+    b.invitado = a.invitado ? Object.assign({}, a.invitado) : null;
+    return b;
+  });
+  c.pendiente = E.pendiente ? Object.assign({}, E.pendiente, { cola: E.pendiente.cola ? E.pendiente.cola.slice() : null }) : null;
+  c.descartando = E.descartando ? Object.assign({}, E.descartando, { idx: E.descartando.idx.slice() }) : null;
+  c.cronica = E.cronica.map(h => Object.assign({}, h));
+  c.historia = E.registrar ? E.historia.slice() : E.historia;
+  return c;
+}
+function jugar(E, jugada){ return aplicar(copiar(E), jugada); }
+function terminada(E){ return E.fase === "finCombate"; }
+function ganador(E){ return E.fase === "finCombate" ? E.fin : null; }
+
+return {
+  cargar, datos, aplicarCfg, registrarCaches, defCarta, crearPartida, jugadasLegales, jugar, aplicar, copiar, terminada, ganador, quienDecide,
+  /* para la IA heurística (mismas funciones que usa el index) */
+  CTX, GOLPE_TECHO, DEVUELVE_MAZO, vivo, rivalesDe, sonAliados, nAsientos, puedeUsar, jugableEnTurno, respuestasValidas,
+  idMejora, azar, siguienteAzar, fuenteIA: () => FUENTE_IA
+};
+
+})();
+
+/* ── 2. busqueda.js ──────────────────────────────────────────────────── */
+const BUSQ = (function(){
+"use strict";
+/* ═══════════════════════════════════════════════════════════════════════
+   busqueda.js · IA de búsqueda (paso 2) sobre motor.js.
+
+   Monte Carlo con determinización. Nada de heurísticas por personaje ni por
+   tipo de carta: la búsqueda solo usa jugadasLegales/aplicar/ganador del
+   motor y, si se corta por profundidad, los PV y asaltos de los dos asientos.
+
+   Un "mundo" (determinización) es lo que el asiento que decide podría estar
+   viendo: se baraja con un azar propio de la búsqueda la unión mano+mazo del
+   rival (lo que está en sus descartes o en la mesa no vuelve; su mano nunca
+   se lee) y el mazo propio (la mano propia sí se conoce). El azar de la
+   partida (estado.azar.s: barajados futuros, descartes al azar, quién
+   empieza el siguiente asalto) se resiembra en cada mundo: la búsqueda no
+   puede adivinar el futuro de la partida real.
+
+   Dos modos:
+     "plano"  desde cada jugada legal, en cada mundo, K simulaciones enteras;
+              se elige la jugada de mejor media.
+     "arbol"  ISMCTS (UCT sobre conjuntos de información): un árbol único
+              para la decisión; en cada iteración se sortea un mundo, se baja
+              por el árbol con UCT usando solo las jugadas legales en ese
+              mundo (identificadas por la carta, no por su posición en la
+              mano), se expande un nodo, se simula hasta el final y se
+              propaga el resultado. Se elige la jugada más visitada.
+   Política de simulación:
+     "uniforme"   todas las jugadas legales con la misma probabilidad (los dos asientos)
+     "heuristica" la IA heurística del index (ia_heuristica.js), solo si se pasa en opciones.ia
+
+   uso:
+     const B = require("./busqueda");
+     const ia = B.crear(motor, { modo:"arbol", simulaciones:1000, determinizaciones:10,
+                                 profundidad:Infinity, politica:"uniforme", semilla:1 });
+     const jugada = ia.decidir(estado);
+
+   Parámetros:
+     simulaciones      partidas simuladas por decisión
+     determinizaciones (plano) mundos por decisión; (arbol) un mundo nuevo por iteración
+     profundidad       jugadas máximas por simulación (contadas desde la decisión); si se corta,
+                       el valor es 0,5 ± (PV propios − PV del rival)/(2·PV iniciales), mezclado
+                       con los asaltos ganados al mejor de 3. Infinity = hasta el final.
+     politica          "uniforme" | "heuristica"
+     ia                la IA heurística (ia_heuristica.crear(motor)) para politica "heuristica"
+     c                 constante de exploración del UCT (por defecto 0,7)
+     semilla           semilla del azar propio de la búsqueda
+     tope              jugadas máximas por simulación por si una partida no acaba (3000)
+   ═══════════════════════════════════════════════════════════════════════ */
+function crear(motor, opciones){
+  const O = Object.assign({ modo: "arbol", simulaciones: 1000, determinizaciones: 10, profundidad: Infinity,
+                            politica: "uniforme", ia: null, c: 0.7, semilla: 1, tope: 3000 }, opciones || {});
+  if(O.politica === "heuristica" && !O.ia) throw new Error("politica heuristica: falta opciones.ia");
+  const G = { s: (O.semilla >>> 0) || 1 };
+  const az = () => motor.siguienteAzar(G);
+  const semillaNueva = () => (Math.floor(az() * 4294967296) >>> 0) || 1;
+  const D = motor.datos();
+  const esMejora = id => motor.defCarta(id).tipo === "mejora";
+
+  function barajar(a){
+    for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(az() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+    return a;
+  }
+  /* Como en el motor: el barajado nunca deja una Mejora abajo del mazo (si hay alternativa). */
+  function barajarMazo(m){
+    if(m.length <= 1 || m.every(esMejora)) return barajar(m);
+    do { barajar(m); } while(esMejora(m[m.length - 1]));
+    return m;
+  }
+  function determinizar(E, yo){
+    const F = motor.copiar(E);
+    F.registrar = false;
+    F.azar = { s: semillaNueva() };
+    F.asientos.forEach((a, i) => {
+      if(i === yo){ a.mazo = barajarMazo(a.mazo.slice()); return; }
+      const n = a.mano.length;
+      const todo = barajar(a.mano.concat(a.mazo));
+      a.mano = todo.slice(0, n);
+      a.mazo = barajarMazo(todo.slice(n));
+    });
+    return F;
+  }
+  function valorParcial(F, yo){
+    const a = F.asientos[yo], b = F.asientos[1 - yo];
+    let v = 0.5 + (Math.max(0, a.pv) - Math.max(0, b.pv)) / (2 * D.REGLAS.pvIniciales);
+    if(F.asaltosParaGanar > 1) v = 0.5 * v + 0.5 * (0.5 + (a.asaltos - b.asaltos) / (2 * F.asaltosParaGanar));
+    return Math.min(1, Math.max(0, v));
+  }
+  function elegirPolitica(F, L){
+    if(O.politica === "heuristica") return O.ia.decidir(F);
+    return L[Math.floor(az() * L.length)];
+  }
+  /* Juega F hasta el final (o hasta profundidad) con la política elegida. Devuelve el valor para yo. */
+  function simular(F, yo, hechas){
+    let n = hechas || 0;
+    while(!motor.terminada(F)){
+      if(n >= O.profundidad) return valorParcial(F, yo);
+      if(n >= O.tope) return 0.5;
+      const L = motor.jugadasLegales(F);
+      motor.aplicar(F, elegirPolitica(F, L));
+      n++;
+    }
+    return motor.ganador(F) === yo ? 1 : 0;
+  }
+  /* Clave de una jugada independiente de la posición en la mano. */
+  function clave(F, j){
+    const a = F.asientos[motor.quienDecide(F)];
+    if(j.carta !== undefined) return "c:" + a.mano[j.carta];
+    if(j.responder !== undefined) return "r:" + a.mano[j.responder];
+    if(j.soltar) return "s:" + j.soltar.map(i => a.mano[i]).sort().join(",");
+    return Object.keys(j)[0];
+  }
+
+  /* ── modo plano ── */
+  function evaluarPlano(E, yo, L){
+    const K = Math.max(1, Math.floor(O.simulaciones / (L.length * O.determinizaciones)));
+    const suma = L.map(() => 0);
+    let total = 0;
+    for(let d = 0; d < O.determinizaciones; d++){
+      const M = determinizar(E, yo);
+      for(let j = 0; j < L.length; j++) for(let k = 0; k < K; k++){
+        const F = motor.copiar(M); F.azar = { s: semillaNueva() };
+        motor.aplicar(F, L[j]);
+        suma[j] += simular(F, yo, 1);
+      }
+      total += K;
+    }
+    const medias = suma.map(s => s / total), visitas = L.map(() => total);
+    let mejor = 0;
+    for(let j = 1; j < L.length; j++) if(medias[j] > medias[mejor] || (medias[j] === medias[mejor] && az() < 0.5)) mejor = j;
+    return { jugadas: L, medias, visitas, mejor, yo, simulaciones: total * L.length };
+  }
+
+  /* ── modo árbol (ISMCTS) ── */
+  function evaluarArbol(E, yo, L){
+    const raiz = { n: 0, hijos: new Map() };
+    for(let it = 0; it < O.simulaciones; it++){
+      const F = determinizar(E, yo);
+      let nodo = raiz, hechas = 0;
+      const camino = [];
+      while(!motor.terminada(F) && hechas < O.profundidad){
+        const legales = motor.jugadasLegales(F);
+        const q = motor.quienDecide(F);
+        const claves = legales.map(j => clave(F, j));
+        const sinProbar = [];
+        for(let i = 0; i < legales.length; i++) if(!nodo.hijos.has(claves[i])) sinProbar.push(i);
+        if(sinProbar.length){
+          const elegido = sinProbar[Math.floor(az() * sinProbar.length)];
+          const h = { n: 0, w: 0, disp: 0, hijos: new Map() };
+          nodo.hijos.set(claves[elegido], h);
+          for(let i = 0; i < legales.length; i++){ const x = nodo.hijos.get(claves[i]); if(x) x.disp++; }
+          camino.push([h, q]);
+          motor.aplicar(F, legales[elegido]); hechas++;
+          break;
+        }
+        let mejor = -1, mejorV = -Infinity;
+        for(let i = 0; i < legales.length; i++){
+          const h = nodo.hijos.get(claves[i]);
+          h.disp++;
+          const v = h.w / h.n + O.c * Math.sqrt(Math.log(h.disp) / h.n);
+          if(v > mejorV){ mejorV = v; mejor = i; }
+        }
+        const h = nodo.hijos.get(claves[mejor]);
+        camino.push([h, q]);
+        motor.aplicar(F, legales[mejor]); hechas++;
+        nodo = h;
+      }
+      const r = simular(F, yo, hechas);
+      raiz.n++;
+      for(const [h, q] of camino){ h.n++; h.w += (q === yo) ? r : 1 - r; }
+    }
+    const claves = L.map(j => clave(E, j));
+    const visitas = claves.map(k => raiz.hijos.has(k) ? raiz.hijos.get(k).n : 0);
+    const medias = claves.map(k => raiz.hijos.has(k) && raiz.hijos.get(k).n ? raiz.hijos.get(k).w / raiz.hijos.get(k).n : 0);
+    let mejor = 0;
+    for(let j = 1; j < L.length; j++) if(visitas[j] > visitas[mejor] || (visitas[j] === visitas[mejor] && medias[j] > medias[mejor])) mejor = j;
+    return { jugadas: L, medias, visitas, mejor, yo, simulaciones: O.simulaciones };
+  }
+
+  function evaluar(E){
+    const yo = motor.quienDecide(E);
+    const L = motor.jugadasLegales(E);
+    if(L.length === 1) return { jugadas: L, medias: [1], visitas: [0], mejor: 0, yo, simulaciones: 0 };
+    return O.modo === "plano" ? evaluarPlano(E, yo, L) : evaluarArbol(E, yo, L);
+  }
+  return { decidir: E => { const r = evaluar(E); return r.jugadas[r.mejor]; }, evaluar, opciones: O,
+           sembrar: n => { G.s = (n >>> 0) || 1; } };
+}
+return { crear };
+
+})();
+
+/* ══════════════════════════════════════════════════════════════════════
+   3. ENGANCHE · la búsqueda como rival del modo difícil.
+
+   Todo lo de aquí abajo es añadido: no se ha tocado ni una línea del juego.
+   Los cuatro puntos donde la IA decide se sustituyen envolviendo la función
+   global (igual que hace el bloque de animaciones con `sonar`), y si la
+   búsqueda no aplica o falla se llama a la heurística de siempre.
+
+     iaTurno              turno propio      → {carta:i} {ceder} {descartar}
+     iaElegirRespuesta    responder         → {responder:i} {encajar}
+     iaJugarTrasRespuesta "juegas otra"     → {carta:i} {nada}
+     iaElegirDescartes    soltar del robo   → {soltar:[i,…]}
+
+   La búsqueda NO gasta el azar de la partida (AZAR): tiene el suyo. El
+   reparto de cartas sale igual decida quien decida.
+   ══════════════════════════════════════════════════════════════════════ */
+
+const CFG = { activa:true, simulaciones:2000, profundidad:30, determinizaciones:10,
+              modo:"arbol", politica:"uniforme",
+              crono: /(^|[#&])ms([&=]|$)/.test(location.hash) };
+const CRONO = { n:0, ultima:0, maxima:0, total:0 };
+const FALLOS = [];
+const ESPEJO = { activo:false, busqueda:0, pasos:0, fallos:[], sombra:null, sello:-1, descartes:null };
+let motorCargado = false, listo = false, buscador = null, selloIA = -1, revisado = false;
+
+function apuntarFallo(donde, e){
+  FALLOS.push({ donde, error: String((e && e.stack) || e) });
+  if(window.console) console.error("[búsqueda]", donde, e);
+}
+function crearBuscador(){
+  buscador = BUSQ.crear(MOTOR, { modo:CFG.modo, simulaciones:CFG.simulaciones,
+                                 profundidad:CFG.profundidad,
+                                 determinizaciones:CFG.determinizaciones,
+                                 politica:CFG.politica, semilla:1 });
+  selloIA = -1;
+}
+/* Carga perezosa: el motor se monta sus PROPIAS cartas releyendo del documento
+   el bloque de las cartas (desde su const hasta el de VELOCIDAD), igual que
+   hace cargar() en Node leyéndolo del archivo. Así las cartas con getters (Imitar, de Riko) leen
+   el estado SIMULADO y no la mesa de verdad. */
+function arrancar(){
+  if(motorCargado) return listo;
+  motorCargado = true;
+  try{
+    MOTOR.cargar();
+    crearBuscador();
+    listo = true;
+  }catch(e){ apuntarFallo("cargar", e); listo = false; }
+  return listo;
+}
+function usaBusqueda(a){
+  if(!CFG.activa || !a || a.controlador !== "ia") return false;
+  if(!ESTADO.asientos || ESTADO.asientos.length !== 2) return false;   /* el motor solo cubre duelos */
+  if(ESTADO.modo !== "libre") return false;
+  if(typeof TUTO !== "undefined" && TUTO.activo) return false;
+  if(typeof RED !== "undefined" && RED.activa) return false;
+  const D = nivelIA(a);
+  if(!D || D.id !== "isla_negra") return false;                        /* solo la dificultad alta */
+  if(!ESPEJO.busqueda && !ESTADO.asientos.some(q => q.controlador === "humano")) return false;
+  return arrancar();
+}
+
+/* ── Traductor ESTADO → estado del motor ──────────────────────────────
+   fase: "turno" | "respuesta" | "trasRespuesta" | "descartar"
+   quien: el asiento que decide. extra: {idx, cuantas} en "descartar".      */
+function traducir(fase, quien, extra){
+  const E = {
+    azar: { s: (AZAR.s >>> 0) || 1 },
+    asientos: ESTADO.asientos.map(a => ({
+      nombre: a.nombre, mazoId: a.mazoId, fuera: !!a.fuera,
+      pv: a.pv, nivel: a.nivel, mejorasEnMesa: a.mejorasEnMesa, aturdido: !!a.aturdido,
+      mano: a.mano.slice(), mazo: a.mazo.slice(), descartes: a.descartes.slice(),
+      asaltos: a.asaltos,
+      ultimaJugada: a.ultimaJugada === undefined ? null : a.ultimaJugada,
+      ultimaMejora: a.ultimaMejora === undefined ? null : a.ultimaMejora,
+      paciencia: 0, berserker: !!a.berserker,
+      invitado: a.invitado ? { pv:a.invitado.pv, por:a.invitado.por,
+                               nombre:a.invitado.nombre, enTurno:!!a.invitado.enTurno } : null,
+      ultimoGolpe: a.ultimoGolpe === undefined ? null : a.ultimoGolpe,
+      mejorGolpe: a.mejorGolpe === undefined ? null : a.mejorGolpe,
+      sedPV: a.sedPV || 0, sedDano: !!a.sedDano, sedCobrada: !!a.sedCobrada,
+      sedJugo: !!a.sedJugo, sedAtaco: !!a.sedAtaco,
+      /* los campos que la heurística guarda en el asiento NO se pasan:
+         no son estado de juego y la búsqueda no debe leerlos */
+      cedio: undefined, encajo: undefined, acabaDeTirar: undefined,
+      dif: null, controlador: "ia"
+    })),
+    iniciativa: ESTADO.iniciativa,
+    fase: fase,
+    asalto: ESTADO.asalto,
+    empates: ESTADO.empates || 0,
+    pendiente: null, quienJuegaTras: null, descartando: null,
+    primeraAccion: !!ESTADO.primeraAccion,
+    puntero: ESTADO.puntero,
+    cronica: [], nCron: 0, ultimoGolpe: null, historia: [],
+    modo: ESTADO.modo,
+    respondenTodos: !!REGLAS.respondenTodos,
+    asaltosParaGanar: REGLAS.asaltosParaGanar,
+    dif: 2, fin: null, registrar: false
+  };
+  if(fase === "respuesta"){
+    const p = ESTADO.pendiente;
+    E.pendiente = { origen:p.origen, objetivo:p.objetivo, dano:p.dano || 0, nivel:p.nivel,
+                    inevitable:!!p.inevitable, aturde:!!p.aturde, drena:!!p.drena,
+                    nombre:p.nombre, reflejo:!!p.reflejo,
+                    cola:[quien], responde:quien, sinRespuesta:false, decidido:!!p.decidido };
+  }
+  else if(fase === "trasRespuesta") E.quienJuegaTras = quien;
+  else if(fase === "descartar")
+    E.descartando = { asiento:quien, idx:extra.idx.slice(),
+                      recien:extra.idx.length, cuantas:extra.cuantas };
+  return E;
+}
+/* Una sola vez: que no falte ningún campo de los que el motor se crea a sí mismo. */
+function revisarCampos(E){
+  revisado = true;
+  try{
+    const ref = MOTOR.crearPartida("roku", "nori", 1, 1, { registrar:false });
+    const faltan  = Object.keys(ref).filter(k => !(k in E));
+    const faltanA = Object.keys(ref.asientos[0]).filter(k => !(k in E.asientos[0]));
+    if(faltan.length || faltanA.length)
+      apuntarFallo("campos", new Error("faltan en el estado: [" + faltan.join(", ") +
+                                       "] y en el asiento: [" + faltanA.join(", ") + "]"));
+  }catch(e){ apuntarFallo("campos", e); }
+}
+function ahora(){ return (window.performance && performance.now) ? performance.now() : Date.now(); }
+function apuntarTiempo(ms){
+  CRONO.n++; CRONO.ultima = ms; CRONO.total += ms;
+  if(ms > CRONO.maxima) CRONO.maxima = ms;
+  pintarCrono();
+}
+/* Azar propio de la búsqueda: uno nuevo por combate, sin tocar el de la partida. */
+function sembrarSiHaceFalta(){
+  if(selloIA === ESTADO.selloPartida) return;
+  selloIA = ESTADO.selloPartida;
+  buscador.sembrar((((Date.now() ^ (AZAR.s >>> 0)) >>> 0) || 1));
+}
+function decidir(fase, quien, extra){
+  try{
+    const E = traducir(fase, quien, extra);
+    if(!revisado) revisarCampos(E);
+    const q = MOTOR.quienDecide(E);
+    if(q !== quien) throw new Error("quienDecide devuelve " + q + " y decide " + quien + " (fase " + fase + ")");
+    sembrarSiHaceFalta();
+    const t0 = ahora();
+    const j = buscador.decidir(E);
+    apuntarTiempo(ahora() - t0);
+    return j || null;
+  }catch(e){
+    apuntarFallo(fase, e);
+    CFG.activa = false;        /* a partir de aquí, la heurística de siempre */
+    return null;
+  }
+}
+
+/* ── Los cuatro enganches ─────────────────────────────────────────────── */
+const _iaTurno = iaTurno;
+window.iaTurno = function(i){
+  const a = ESTADO.asientos[i];
+  if(!usaBusqueda(a)) return _iaTurno(i);
+  if(ESTADO.fase === "finAsalto" || ESTADO.fase === "finCombate") return;
+  const espera = esperaEscena();
+  if(espera > 0){ tarde(espera + 40, () => iaTurno(i)); return; }
+  if(ESTADO.recogiendo){ tarde(lento(450), () => iaTurno(i)); return; }
+  if(!rivalesDe(i).length) return accionCeder(i);
+  const j = decidir("turno", i);
+  if(!j) return _iaTurno(i);
+  if(j.carta !== undefined) return accionJugarCarta(i, j.carta);
+  if(j.descartar) return accionDescartarMano(i);
+  return accionCeder(i);
+};
+
+const _iaElegirRespuesta = iaElegirRespuesta;
+window.iaElegirRespuesta = function(a, p, opciones){
+  if(!usaBusqueda(a)) return _iaElegirRespuesta(a, p, opciones);
+  const i = ESTADO.asientos.indexOf(a);
+  const j = decidir("respuesta", i);
+  if(!j) return _iaElegirRespuesta(a, p, opciones);
+  return j.responder !== undefined ? j.responder : null;
+};
+
+const _iaJugarTrasRespuesta = iaJugarTrasRespuesta;
+window.iaJugarTrasRespuesta = function(i){
+  const a = ESTADO.asientos[i];
+  if(!usaBusqueda(a)) return _iaJugarTrasRespuesta(i);
+  const j = decidir("trasRespuesta", i);
+  if(!j) return _iaJugarTrasRespuesta(i);
+  if(j.carta !== undefined) tarde(RITMO.trasRespuesta, () => accionJugarTrasRespuesta(i, j.carta));
+  else noJugarNada(i);
+};
+
+const _iaElegirDescartes = iaElegirDescartes;
+window.iaElegirDescartes = function(a, idx, cuantas){
+  ESPEJO.descartes = { idx: idx.slice(), cuantas: cuantas };
+  if(!usaBusqueda(a)) return _iaElegirDescartes(a, idx, cuantas);
+  const i = ESTADO.asientos.indexOf(a);
+  const j = decidir("descartar", i, { idx: idx, cuantas: cuantas });
+  if(!j || !j.soltar) return _iaElegirDescartes(a, idx, cuantas);
+  return j.soltar;
+};
+
+/* ══════════════════════════════════════════════════════════════════════
+   4. ESPEJO · comprobación del traductor contra el motor, jugada a jugada.
+
+   Con el espejo encendido, en cada decisión (la tome quien la tome) se
+   traduce ESTADO al motor y se compara con el estado que el motor predijo
+   desde la decisión anterior. La sombra se reengancha al estado real en
+   cada paso, así un fallo no arrastra a los siguientes: cada línea del
+   informe es un fallo independiente.
+
+   No compara la crónica (es cosmética) ni los campos de la heurística.
+   Sí compara el ORDEN completo del mazo y de los descartes, que es más
+   estricto que igualdad.sh (allí solo se comparan los tamaños).
+   ══════════════════════════════════════════════════════════════════════ */
+const FASE_DE = { jugar:"turno", ceder:"turno", descartar:"turno",
+                  responder:"respuesta", encajar:"respuesta", pasa:"respuesta",
+                  trasResp:"trasRespuesta", nada:"trasRespuesta", soltar:"descartar" };
+function jugadaDe(tipo, dato){
+  if(tipo === "jugar" || tipo === "trasResp") return { carta: dato };
+  if(tipo === "ceder")     return { ceder:true };
+  if(tipo === "descartar") return { descartar:true };
+  if(tipo === "responder") return { responder: dato };
+  if(tipo === "encajar" || tipo === "pasa") return { encajar:true };
+  if(tipo === "nada")      return { nada:true };
+  if(tipo === "soltar")    return { soltar: dato.slice() };
+  return null;
+}
+/* conGolpes: el index publicado no lleva ultimoGolpe/mejorGolpe en el asiento
+   (esa contabilidad se añadió en el laboratorio solo para Imitar, de Riko).
+   Si el juego no los lleva, no se comparan: no los lee ninguna regla. */
+function partes(E, conGolpes){
+  const p = {
+    fase: E.fase, iniciativa: E.iniciativa, asalto: E.asalto, empates: E.empates || 0,
+    primeraAccion: !!E.primeraAccion, puntero: E.puntero,
+    asaltosParaGanar: E.asaltosParaGanar, fin: E.fin,
+    quienJuegaTras: E.quienJuegaTras === undefined ? null : E.quienJuegaTras,
+    pendiente: E.pendiente ? [E.pendiente.origen, E.pendiente.objetivo, E.pendiente.dano,
+                              E.pendiente.nivel, !!E.pendiente.inevitable, !!E.pendiente.aturde,
+                              !!E.pendiente.drena, !!E.pendiente.reflejo].join("/") : null,
+    descartando: E.descartando ? [E.descartando.asiento, E.descartando.idx.join(","),
+                                  E.descartando.cuantas].join("/") : null
+  };
+  if(ESPEJO.busqueda) p.azar = E.azar.s >>> 0;   /* con la búsqueda el azar tiene que cuadrar al bit */
+  E.asientos.forEach((a, k) => {
+    p["a" + k] = [a.pv, a.nivel, a.mejorasEnMesa, a.aturdido ? 1 : 0, a.fuera ? 1 : 0, a.asaltos,
+                  a.ultimaJugada, a.ultimaMejora,
+                  conGolpes ? a.ultimoGolpe : "-", conGolpes ? a.mejorGolpe : "-",
+                  a.sedPV, a.sedDano ? 1 : 0, a.sedCobrada ? 1 : 0, a.sedJugo ? 1 : 0, a.sedAtaco ? 1 : 0,
+                  a.invitado ? a.invitado.pv + ":" + a.invitado.por + ":" + (a.invitado.enTurno ? 1 : 0) : "-"
+                 ].join("|");
+    p["mano" + k]      = a.mano.join(",");
+    p["mazo" + k]      = a.mazo.join(",");
+    p["descartes" + k] = a.descartes.join(",");
+  });
+  return p;
+}
+function espejoPaso(tipo, quien, dato){
+  const fase = FASE_DE[tipo];
+  if(!fase) return;                               /* azar, apuntar, ayuda, asalto: no son decisiones */
+  if(!ESTADO.asientos || ESTADO.asientos.length !== 2) return;
+  if(ESPEJO.sello !== ESTADO.selloPartida){ ESPEJO.sello = ESTADO.selloPartida; ESPEJO.sombra = null; }
+  let extra = null;
+  if(fase === "descartar"){ extra = ESPEJO.descartes; if(!extra) return; }
+  const E = traducir(fase, quien, extra);
+  ESPEJO.pasos++;
+  if(ESPEJO.sombra){
+    const cg = ESTADO.asientos.some(q => "mejorGolpe" in q);
+    const a = partes(E, cg), b = partes(ESPEJO.sombra, cg), difs = [];
+    Object.keys(a).forEach(k => { if(String(a[k]) !== String(b[k]))
+                                    difs.push(k + ": juego=" + a[k] + " motor=" + b[k]); });
+    if(difs.length && ESPEJO.fallos.length < 40)
+      ESPEJO.fallos.push({ paso:ESPEJO.pasos, tipo:tipo, quien:quien, difs:difs });
+  }
+  const j = jugadaDe(tipo, dato);
+  try{ ESPEJO.sombra = j ? MOTOR.jugar(E, j) : null; }
+  catch(e){
+    ESPEJO.sombra = null;
+    if(ESPEJO.fallos.length < 40)
+      ESPEJO.fallos.push({ paso:ESPEJO.pasos, tipo:tipo, quien:quien,
+                           difs:["el motor no admite la jugada: " + String(e)] });
+  }
+}
+const _cuadernoApuntar = cuadernoApuntar;
+window.cuadernoApuntar = function(tipo, quien, dato){
+  if(ESPEJO.activo){ try{ espejoPaso(tipo, quien, dato); }
+                     catch(e){ if(ESPEJO.fallos.length < 40)
+                                 ESPEJO.fallos.push({ paso:ESPEJO.pasos, tipo:tipo, difs:["espejo: " + String(e)] }); } }
+  return _cuadernoApuntar(tipo, quien, dato);
+};
+
+/* ── Cronómetro en pantalla (para medir en el móvil): abrir con #ms ───── */
+function pintarCrono(){
+  if(!CFG.crono || !document.body) return;
+  let el = document.getElementById("busquedaMs");
+  if(!el){
+    el = document.createElement("div");
+    el.id = "busquedaMs";
+    el.style.cssText = "position:fixed;left:6px;bottom:6px;z-index:99999;" +
+      "font:11px/1.35 ui-monospace,monospace;background:rgba(0,0,0,.66);color:#ece4d4;" +
+      "padding:4px 7px;border-radius:6px;pointer-events:none;white-space:pre;letter-spacing:.02em";
+    document.body.appendChild(el);
+  }
+  el.textContent = CFG.simulaciones + " sim · n " + CRONO.n + "\n" +
+                   Math.round(CRONO.ultima) + " ms · máx " + Math.round(CRONO.maxima) + "\n" +
+                   "media " + Math.round(CRONO.total / Math.max(1, CRONO.n)) + " ms";
+}
+if(CFG.crono) pintarCrono();
+
+/* ── Mando a distancia (consola y banco de pruebas) ───────────────────── */
+window.__busqueda = {
+  cfg: CFG,
+  estado: () => ({ activa:CFG.activa, listo:listo, simulaciones:CFG.simulaciones,
+                   n:CRONO.n, ultima:CRONO.ultima, maxima:CRONO.maxima,
+                   media: CRONO.n ? CRONO.total / CRONO.n : 0, fallos:FALLOS.slice() }),
+  ajustar: n => { CFG.simulaciones = n; if(listo) crearBuscador(); },
+  apagar: () => { CFG.activa = false; },
+  encender: () => { CFG.activa = true; },
+  espejoEncender: o => { o = o || {};
+                         arrancar();
+                         ESPEJO.activo = true; ESPEJO.sombra = null; ESPEJO.sello = -1;
+                         ESPEJO.pasos = 0; ESPEJO.fallos = [];
+                         if(o.busqueda){ ESPEJO.busqueda = 1; CFG.simulaciones = o.busqueda;
+                                         if(listo) crearBuscador(); } },
+  espejoParte: () => ({ pasos:ESPEJO.pasos, nFallos:ESPEJO.fallos.length,
+                        fallos:ESPEJO.fallos.slice(0, 8),
+                        busqueda:!!ESPEJO.busqueda, decisiones:CRONO.n,
+                        msMedia: CRONO.n ? CRONO.total / CRONO.n : 0,
+                        errores:FALLOS.slice() }),
+  espejoCortar: () => { ESPEJO.sombra = null; },
+  cartas: () => { arrancar(); return MOTOR.datos().CARTAS; },
+  /* Cronómetro sin jugar: mide ms por decisión en este aparato. */
+  banco: (veces, sims) => {
+    arrancar();
+    const antes = CFG.simulaciones;
+    if(sims){ CFG.simulaciones = sims; crearBuscador(); }
+    const t = [];
+    let E = MOTOR.crearPartida("okuma", "hana", 4321, 1, { registrar:false });
+    for(let k = 0; k < (veces || 8); k++){
+      if(MOTOR.terminada(E)) E = MOTOR.crearPartida("okuma", "hana", 4321 + k, 1, { registrar:false });
+      const t0 = ahora();
+      const j = buscador.decidir(E);
+      t.push(ahora() - t0);
+      MOTOR.aplicar(E, j);
+      while(!MOTOR.terminada(E) && MOTOR.jugadasLegales(E).length === 1)
+        MOTOR.aplicar(E, MOTOR.jugadasLegales(E)[0]);
+    }
+    if(sims){ CFG.simulaciones = antes; crearBuscador(); }
+    t.sort((a, b) => a - b);
+    return { simulaciones: sims || antes, n: t.length,
+             media: Math.round(t.reduce((s, x) => s + x, 0) / t.length),
+             mediana: Math.round(t[t.length >> 1]), maxima: Math.round(t[t.length - 1]) };
+  }
+};
+
 })();
 </script>
 </body>
