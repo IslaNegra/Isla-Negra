@@ -2478,6 +2478,11 @@ body.enReglas .lupa{z-index:340}
 .globo.actua .plegar{color:#F4E9D6;opacity:.85}
 
 .reglas .bienvenida{width:100%;max-width:340px;padding-top:6px}
+/* Mismo caso que la pantalla de las dos puertas: el cuerpo reparte el hueco
+   sobrante y este bloque, al ser hijo unico, quedaba flotando en el centro.
+   Colgado de la cabecera manda su propio padding-top de 6px y el hueco cae
+   debajo, que es donde no molesta. */
+.reglas .cuerpo > .bienvenida{margin-top:0;margin-bottom:auto}
 .reglas .bienvenida p{font-size:13px;line-height:1.6;color:#DCD3BC;
   margin-bottom:12px}
 
