@@ -124,7 +124,7 @@ img,.lupa img,.carta,.avatar,.mini,.mini-m{-webkit-touch-callout:none;
 
 .barra .mini{background:transparent;
   border-style:solid;border-width:1px;border-radius:0;border-color:transparent;
-  border-image:var(--piedra) 56 53 56 53 fill / 1px / 0 stretch;
+  border-image:var(--piedra) 57 55 55 57 / 1px / 0 stretch;
   color:var(--pergamino-2);font-size:9.5px;letter-spacing:.1em;padding:3px 7px}
 .barra .mini:active{background:var(--tinta-2)}
 
@@ -598,9 +598,12 @@ html.apretado .chat-lista{--tope:236px}
 
 
 
-html.apretado .sl-losa{aspect-ratio:auto;height:70px}
-
-html.apretado .sl-losa.puesta{background-position:center 20%}
+/* En apretado la losa se encoge, pero guardando su forma: en vez de aplastarla
+   a 70px de alto con los 87px de ancho, se estrecha a 45px y el alto sale solo
+   de la proporcion de siempre (45 / .647 = 70px). Mismo ahorro de alto, misma
+   forma de carta. El ancho de la silla no cambia, asi que los nombres de debajo
+   se quedan donde estaban. */
+html.apretado .sl-losa{width:45px;margin-left:auto;margin-right:auto}
 html.apretado .sl-mas{font-size:20px}
 html.apretado .sl-quien{display:none}
 html.apretado .sl-mote{margin-top:5px}
@@ -635,7 +638,7 @@ html.apretado .chat-cerrar:active{color:var(--pergamino)}
 .pregunta{width:100%;max-width:300px;padding:16px 16px 14px;border-radius:0;
   background:#0C0A08;
   border-style:solid;border-width:3px;
-  border-image:var(--piedra) 56 53 56 53 fill / 3px / 0 stretch;
+  border-image:var(--piedra) 57 55 55 57 / 3px / 0 stretch;
   box-shadow:0 10px 40px rgba(0,0,0,.7);text-align:center}
 .pregunta p{margin:0 0 14px;font-size:13px;line-height:1.45;color:var(--pergamino)}
 .pregunta-botones{display:flex;gap:8px}
@@ -646,7 +649,7 @@ html.apretado .chat-cerrar:active{color:var(--pergamino)}
   font-size:12px;letter-spacing:.08em;text-transform:uppercase;
   min-height:44px;color:#D2C6AE;background:#100E0C;
   border-style:solid;border-width:3px;border-radius:0;
-  border-image:var(--piedra) 56 53 56 53 fill / 3px / 0 stretch;
+  border-image:var(--piedra) 57 55 55 57 / 3px / 0 stretch;
   box-shadow:none;white-space:nowrap;cursor:pointer}
 
 .pregunta-botones .si{color:#EFE7D2}
@@ -1196,7 +1199,7 @@ html.apretado .chat-cerrar:active{color:var(--pergamino)}
 
 button.accion{flex:1 1 0;min-width:0;background:#100E0C;color:#D2C6AE;
   border-style:solid;border-width:3px;border-radius:0;
-  border-image:var(--piedra) 56 53 56 53 fill / 3px / 0 stretch;
+  border-image:var(--piedra) 57 55 55 57 / 3px / 0 stretch;
   padding:0 8px;font:inherit;font-size:13px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
@@ -1630,7 +1633,7 @@ html.apretado #opcionesSala .hoja{margin-top:4px}
 
 #opcionesSala .hoja{width:100%;max-width:300px;background:#0C0A08;
   border-style:solid;border-width:3px;border-radius:0;
-  border-image:var(--piedra) 56 53 56 53 fill / 3px / 0 stretch;
+  border-image:var(--piedra) 57 55 55 57 / 3px / 0 stretch;
   
   padding:12px 16px 12px}
 
@@ -1687,7 +1690,7 @@ html.apretado #opcionesSala .hoja{margin-top:4px}
   border:1px solid rgba(239,231,210,.09);
   background:linear-gradient(180deg,#211B14 0%,#14100B 100%);
   box-shadow:0 6px 18px rgba(0,0,0,.55);
-  transition:aspect-ratio .18s ease, height .18s ease}
+  transition:aspect-ratio .18s ease, height .18s ease, width .18s ease}
 .sl-losa::before{content:"";position:absolute;inset:0;pointer-events:none;
   z-index:0;border-radius:inherit;
   background:var(--losa) repeat;background-size:150px 150px;opacity:.14}
@@ -1773,7 +1776,7 @@ html.apretado #opcionesSala .hoja{margin-top:4px}
   letter-spacing:.10em;text-transform:uppercase;
   min-height:44px;background:#100E0C;
   border-style:solid;border-width:3px;border-radius:0;
-  border-image:var(--piedra) 56 53 56 53 fill / 3px / 0 stretch;
+  border-image:var(--piedra) 57 55 55 57 / 3px / 0 stretch;
   box-shadow:none;cursor:pointer}
 
 .portada .pie-fila .empezar{font-size:13.5px;line-height:1.25;
@@ -1785,12 +1788,12 @@ html.apretado #opcionesSala .hoja{margin-top:4px}
 .portada .pie-fila .empezar[disabled]{opacity:1;color:#6E6455;
   background:#0B0A08;border-color:transparent;
   border-radius:0;box-shadow:none;
-  border-image:var(--piedra) 56 53 56 53 fill / 3px / 0 stretch}
+  border-image:var(--piedra) 57 55 55 57 / 3px / 0 stretch}
 
 .portada .pie-fila .empezar:not(:disabled),
 .portada .pie-fila .empezar.listo{color:#EFE7D2;background:#100E0C;
   border-radius:0;box-shadow:none;
-  border-image:var(--piedra) 56 53 56 53 fill / 3px / 0 stretch}
+  border-image:var(--piedra) 57 55 55 57 / 3px / 0 stretch}
 .portada .pie-fila .empezar:not(:disabled):active,
 .portada .pie-fila .empezar.listo:active{background:#181512}
 
@@ -1821,7 +1824,7 @@ html.apretado #opcionesSala .hoja{margin-top:4px}
   font-size:13.5px;letter-spacing:.10em;text-transform:uppercase;
   color:#D2C6AE;background:#100E0C;
   border-style:solid;border-width:3px;border-radius:0;
-  border-image:var(--piedra) 56 53 56 53 fill / 3px / 0 stretch;
+  border-image:var(--piedra) 57 55 55 57 / 3px / 0 stretch;
   white-space:nowrap;cursor:pointer}
 #opcionesSala .cerrar:active{background:#181512;color:var(--pergamino)}
 
@@ -1833,7 +1836,7 @@ html.apretado #opcionesSala .hoja{margin-top:4px}
   font-size:13.5px;letter-spacing:.10em;text-transform:uppercase;
   color:#D2C6AE;background:#100E0C;
   border-style:solid;border-width:3px;border-radius:0;
-  border-image:var(--piedra) 56 53 56 53 fill / 3px / 0 stretch;
+  border-image:var(--piedra) 57 55 55 57 / 3px / 0 stretch;
   box-shadow:none;padding:0 14px;white-space:nowrap;cursor:pointer}
 #eligeL .sl-accion:active{background:#181512}
 
@@ -2225,6 +2228,7 @@ details.registro{border-top:1px solid var(--tinta-3);padding-top:6px}
   text-underline-offset:2px;word-break:break-all}
 
 .nostr.atajo{margin-top:9px}
+.nostr.rotulo-nostr.otra{margin-top:15px}
 
 .nostr:active{opacity:1}
 .nostr a:active{opacity:.75}
@@ -2249,7 +2253,7 @@ details.registro{border-top:1px solid var(--tinta-3);padding-top:6px}
   font-family:"Isla Serif","Iowan Old Style",Georgia,serif;font-weight:400;
   font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;
   border-style:solid;border-width:3px;border-radius:0;
-  border-image:var(--piedra) 56 53 56 53 fill / 3px / 0 stretch}
+  border-image:var(--piedra) 57 55 55 57 / 3px / 0 stretch}
 
 .reglas .cerrar-hoja:active{filter:brightness(1.35)}
 
@@ -2338,7 +2342,7 @@ details.registro{border-top:1px solid var(--tinta-3);padding-top:6px}
 .globo .sigue{font-family:inherit;font-size:0;border-radius:0;padding:5px 13px;
   background:transparent;color:var(--pergamino-2);
   border-style:solid;border-width:2px;border-color:transparent;
-  border-image:var(--piedra) 56 53 56 53 fill / 2px / 0 stretch;
+  border-image:var(--piedra) 57 55 55 57 / 2px / 0 stretch;
   display:inline-flex;align-items:center;justify-content:center;line-height:0}
 .globo .sigue::after{content:"";display:block;width:15px;height:15px;
   background:currentColor;
@@ -2375,11 +2379,12 @@ details.registro{border-top:1px solid var(--tinta-3);padding-top:6px}
   text-align:left;font:inherit;color:inherit;background:none;border:0;
   border-bottom:1px solid rgba(36,29,21,.7);padding:11px 2px}
 .reglas .fila-carta:active{background:rgba(255,255,255,.02)}
-.reglas .tacon{flex:0 0 auto;width:44px;height:62px;border-radius:3px;
-  background:var(--papel);border:1px solid var(--madera);overflow:hidden;
-  display:flex;align-items:center;justify-content:center;color:var(--madera-oscura);
-  box-shadow:0 1px 4px rgba(0,0,0,.5)}
-.reglas .tacon .foto{display:block;width:100%;height:100%}
+/* La miniatura es la carta vertical entera, montada igual que en la mesa: manda
+   --carta-an el ancho y --z el alto, con la proporcion de siempre (98 x 151).
+   Si cambias el 44, cambia el --z a la vez: --z = ancho / 98. */
+.reglas .tacon{flex:0 0 auto;--carta-an:44px;--z:.449;
+  width:var(--carta-an);display:block;color:var(--madera-oscura)}
+.reglas .tacon .carta{display:block;width:100%}
 .reglas .tacon svg{width:34px;height:34px}
 .reglas .lado{flex:1;min-width:0}
 .reglas .lado > span{display:block}
@@ -2398,12 +2403,18 @@ body.enReglas .lupa{z-index:340}
 
 .reglas .puertas{width:100%;max-width:340px;display:flex;flex-direction:column;
   align-items:center;gap:10px;margin-top:16px}
+/* El cuerpo reparte el hueco sobrante a partes iguales entre sus bloques, y eso
+   descolocaba esta pantalla: el aviso se despegaba de los botones, los botones
+   caian demasiado y las direcciones quedaban lejos del borde. Aqui se fija donde
+   empieza y donde acaba, y el hueco que sobre se va todo al centro. */
+.reglas .cuerpo > .puertas{margin-top:44px;margin-bottom:0}
+.reglas .cuerpo > .recado{margin-top:auto;margin-bottom:43px}
 
 .reglas .puerta{position:relative;display:flex;align-items:center;
   justify-content:center;width:250px;max-width:100%;min-height:44px;
   text-align:center;background:#100E0C;color:#D2C6AE;cursor:pointer;
   border-style:solid;border-width:3px;border-radius:0;
-  border-image:var(--piedra) 56 53 56 53 fill / 3px / 0 stretch;
+  border-image:var(--piedra) 57 55 55 57 / 3px / 0 stretch;
   padding:11px 16px;overflow:hidden}
 
 
@@ -2643,7 +2654,7 @@ body.enPrueba .lupa{z-index:330}
   font-weight:400;letter-spacing:.10em;text-transform:uppercase;color:#D2C6AE;
   background:#100E0C;border-style:solid;border-width:3px;border-radius:0;
   box-shadow:none;white-space:nowrap;font-style:normal;text-decoration:none;
-  border-image:var(--piedra) 56 53 56 53 fill / 3px / 0 stretch}
+  border-image:var(--piedra) 57 55 55 57 / 3px / 0 stretch}
 
 .portada.cruce .cuerpo .opciones button[data-reglas]{margin:0}
 
@@ -2664,13 +2675,13 @@ body.enPrueba .lupa{z-index:330}
   margin:5px auto 0;background:linear-gradient(90deg,transparent,#5E4A33,transparent)}
 
 
-#reglas .aviso-cuaderno{margin:18px auto 0;max-width:300px;text-align:center;
+#reglas .aviso-cuaderno{margin:26px auto auto;width:250px;max-width:100%;text-align:center;
   font-family:"Isla Serif","Iowan Old Style",Georgia,serif;font-size:10px;line-height:1.5;
   color:#6E6455}
 #reglas .dato-que{background:none;border:1px solid #4A4034;border-radius:50%;
   width:15px;height:15px;line-height:1;padding:0;margin-left:5px;color:#6E6455;
   font-size:9px;vertical-align:middle}
-#reglas .dato-texto{margin:10px auto 0;max-width:300px;text-align:left;
+#reglas .dato-texto{margin:10px auto 0;width:250px;max-width:100%;text-align:left;
   font-family:"Isla Serif","Iowan Old Style",Georgia,serif;font-size:10px;line-height:1.55;
   color:#6E6455}
 
@@ -3066,7 +3077,11 @@ body:has(#mesa:not([hidden])) .franja{margin-top:6px}
    de la altura de la pantalla. ---- */
 .portada.cruce::before,#fondoSala .escena::before,.reglas::before{
   background:var(--cielo) center top/cover no-repeat}
-.portada.en-sala .cuerpo{justify-content:center}
+/* La sala centraba su contenido sobre el alto entero de la pantalla, asi que en
+   pantallas altas las losas se iban al medio y chocaban con el chat, que va
+   anclado abajo. Colgadas de la cabecera vuelven a su sitio: el hueco que sobre
+   cae debajo, que es donde esta el chat. */
+.portada.en-sala .cuerpo{justify-content:flex-start}
 .reglas .cuerpo{justify-content:flex-start}
 .reglas .cuerpo > *{margin-top:auto;margin-bottom:auto}
 </style>
@@ -7294,6 +7309,11 @@ function reglasPuertas(){
         '<a href="https://spoo.me/islanegra" ' +
         'target="_blank" rel="noopener noreferrer">' +
         'spoo.me/islanegra</a></p>' +
+      '<p class="nostr rotulo-nostr otra">Juega en itch.io</p>' +
+      '<p class="nostr">' +
+        '<a href="https://islanegra.itch.io/sombras-sobre-isla-negra" ' +
+        'target="_blank" rel="noopener noreferrer">' +
+        'islanegra.itch.io/sombras-sobre-isla-negra</a></p>' +
     '</div>' +
     '</div>' +
     '<div class="pie"><button class="cerrar-hoja" id="cerrarReglas">Volver</button></div>';
@@ -7331,10 +7351,8 @@ function reglasCartas(){
     lista += '<h2><span class="n' + n + '">' + svgNivel(n) + '</span>' +
              TITULO[n] + '<span class="filo"></span></h2>';
     lista += grupo.map(c => {
-      const foto = estiloFoto(c.id);
       return '<button class="fila-carta" data-carta="' + c.id + '">' +
-        '<span class="tacon">' + (foto ? '<span class="foto" style="' + foto + '"></span>'
-                                       : svgReserva(c.arte)) + '</span>' +
+        '<span class="tacon"><span class="carta">' + htmlCarta(c) + '</span></span>' +
         '<span class="lado">' +
           '<span class="nom">' + c.nombre +
             '<span class="cuantas mono">×' + c.copias + '</span></span>' +
