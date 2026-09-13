@@ -1054,7 +1054,6 @@ html.apretado .chat-cerrar:active{color:var(--pergamino)}
   clip-path:inset(0 round calc(var(--rad) * var(--ux)))}
 .marco.mailo .papel{border-radius:calc(var(--rad) * var(--ux));height:100%;min-height:0;padding:0;
   display:block;overflow:hidden;position:relative;background:#EDE3C8}
-.carta.apagada .marco.mailo{filter:grayscale(.75) brightness(.65)}
 .carta.apagada .marco.mailo .papel{background:#E6DCC2}
 .marco.mailo .lienzo{position:absolute;
   left:calc((var(--bwm) + 4) * var(--ux));right:calc((var(--bwm) + 4) * var(--ux));
@@ -1111,12 +1110,14 @@ html.apretado .chat-cerrar:active{color:var(--pergamino)}
 .marco.mailo .el .t-atq{color:#C33A0A} .marco.mailo .el .t-res{color:#2431D6} .marco.mailo .el .t-tac{color:#0E7A45}
 .marco.mailo .el .regla{font-size:calc(8.2px * var(--z));line-height:calc(9.8px * var(--z));color:#332818;margin:0}
 .marco.mailo .el .regla i{display:block;font-style:normal;white-space:nowrap;overflow:hidden}
-.carta.apagada .marco.v2,.carta.apagada .entera2{filter:grayscale(.75) brightness(.65)}
 .carta.apagada .marco.v2{background:none}
 .carta.apagada .marco{background:repeating-linear-gradient(92deg,#413020 0 2px,#54402C 2px 5px,#4A3726 5px 7px,#5E4632 7px 9px)}
-.carta.apagada .arte .foto,.carta.apagada .arte svg{filter:grayscale(.85) brightness(.97)}
 .carta.apagada .papel{background:#E6DCC2}
-.carta.apagada{box-shadow:0 2px 4px rgba(0,0,0,.5)}
+/* las cartas que no puedes jugar se oscurecen con un velo en vez de con un
+   filtro de gris: se distinguen igual, conservan el color y no obligan al
+   navegador a montar una superficie aparte por carta */
+.carta.apagada::after{background:rgba(12,8,4,.60)}
+.carta.apagada{box-shadow:none}
 .niv{width:calc(12px * var(--z));height:calc(11px * var(--z));stroke:currentColor;stroke-width:1.7;
   stroke-linecap:round;fill:none;vertical-align:-1px}
 
@@ -1197,7 +1198,7 @@ html.apretado .chat-cerrar:active{color:var(--pergamino)}
 .vuelo.reparto .frente .regla{font-size:calc(9px * var(--z))}
 
 .vuelo.reparto .frente .carta{box-shadow:0 3px 7px rgba(0,0,0,.6)}
-.vuelo.reparto .frente .carta.apagada{box-shadow:0 2px 4px rgba(0,0,0,.5)}
+.vuelo.reparto .frente .carta.apagada{box-shadow:none}
 
 
 
@@ -3829,8 +3830,6 @@ Object.assign(TRAD, {
 })();
 function marcarIdioma(){
   if(document.body) document.body.classList.toggle("idioma-en", IDIOMA === "en");
-  /* el idioma declarado de la pagina, para el lector de pantalla y los buscadores */
-  try{ document.documentElement.lang = (IDIOMA === "en") ? "en" : "es"; }catch(e){}
 }
 /* Cambiar de idioma no debe rehacer la pantalla: se recorren los textos que ya
    están puestos y se cambian en el sitio. De cada uno se guarda el español
@@ -8074,7 +8073,7 @@ function reajustarTitulos(){
   }).observe(document.body, {childList:true, subtree:true});
   window.addEventListener('resize', reajustarTitulos);
 })();
-const VERSION = "1.1.5";
+const VERSION = "1.1.6";
 document.title = "Sombras sobre Isla Negra · " + VERSION;
 function panelPortada(html, pie, bajoTitulo){
   const p = document.getElementById("portada");
