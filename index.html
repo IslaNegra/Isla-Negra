@@ -22962,5 +22962,35 @@ Object.assign(TRAD, { "Música del combate": "Fight music" });
 Object.assign(TRAD, { "Música del combate aleatoria o a elegir": "Random or chosen fight music", "Foto de perfil": "Profile photo" });
 
 </script>
+<script>/* 12-10-2026 (Artur): aviso de actualización en la app */
+/* aviso de actualización en la app: sale nada más abrir; «Actualizar» y el juego arranca de nuevo solo */
+(function(){
+  if(typeof APK_EN_MARCO === "undefined" || !APK_EN_MARCO) return;           /* solo en la app que carga la web */
+  const LL = "islanegra-version-app";
+  let antes = null; try{ antes = localStorage.getItem(LL) || localStorage.getItem("islanegra-version-vista"); }catch(e){}
+  const guarda = () => { try{ localStorage.setItem(LL, VERSION); }catch(e){} };
+  if(!antes){ guarda(); return; }                                              /* recién instalada: nada que avisar */
+  if(!versionMasNueva(VERSION, antes)){ guarda(); return; }
+  const en = (() => { try{ return localStorage.getItem("islaIdioma") === "en"; }catch(e){ return false; } })();
+  const st = document.createElement("style");
+  st.textContent =
+    "#avisoAct{position:fixed;inset:0;z-index:2147483647;background:#070605;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:24px;box-sizing:border-box;text-align:center;color:#ECDCC0;font-family:Georgia,serif}" +
+    "#avisoAct p{margin:0;font-size:17px;letter-spacing:.06em}" +
+    "#avisoAct small{display:block;margin-top:8px;font-size:13px;opacity:.7;letter-spacing:.12em}" +
+    "#avisoAct button{font:14px Georgia,serif;letter-spacing:.14em;text-transform:uppercase;color:#ECDCC0;background:rgba(14,12,10,.55);border:1px solid rgba(239,231,210,.45);border-radius:6px;padding:14px 30px}";
+  const caja = document.createElement("div"); caja.id = "avisoAct";
+  caja.innerHTML = '<p>' + (en ? "A new update is available" : "Hay una actualización nueva") + '<small>v' + VERSION + '</small></p>' +
+                   '<button>' + (en ? "Update" : "Actualizar") + '</button>';
+  const pon = () => { document.head.appendChild(st); document.body.appendChild(caja); };
+  if(document.body) pon(); else document.addEventListener("DOMContentLoaded", pon);
+  ["pointerdown","click","touchstart","keydown"].forEach(ev => caja.addEventListener(ev, e => e.stopPropagation()));
+  caja.querySelector("button").addEventListener("click", () => {
+    caja.querySelector("button").disabled = true;
+    caja.querySelector("p").firstChild.textContent = en ? "Updating…" : "Actualizando…";
+    guarda(); setTimeout(() => location.reload(), 400);
+  });
+})();
+
+</script>
 </body>
 </html>
