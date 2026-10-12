@@ -12251,7 +12251,7 @@ function reajustarTitulos(){
   window.addEventListener('resize', reajustarTitulos);
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(reajustarTitulos);
 })();
-const VERSION = "2.1.5";
+const VERSION = "2.1.6";
 document.title = "Sombras sobre Isla Negra · " + VERSION;
 function panelPortada(html, pie, bajoTitulo){
   const p = document.getElementById("portada");
@@ -21643,7 +21643,7 @@ function mimonPintaLista(){
   L.scrollTop = MIM.scroll || 0;
   L.querySelector("[data-cerrar]").onclick = mimonCerrar;
   L.querySelectorAll(".mitad").forEach(b => b.onclick = () => { MIM.scroll = L.scrollTop; mimonPintaRetratos(parseInt(b.dataset.k, 10), b.dataset.lado); });
-  L.querySelector("[data-defecto]").onclick = () => { MIM.borrador = mimonDefecto(); mimonPintaLista(); mimonAviso(idi("El mazo del Mimón, sin el −1 de daño.")); };
+  L.querySelector("[data-defecto]").onclick = () => { MIM.borrador = mimonDefecto(); mimonPintaLista(); /* 12-10-2026 (Artur): «Por defecto» sin texto */ };
   L.querySelector("[data-azar]").onclick = () => { MIM.borrador = mimonAzar(); mimonPintaLista(); };
   L.querySelector("[data-guardar]").onclick = () => mimonRanuras("guardar");
   L.querySelector("[data-cargar]").onclick = () => mimonRanuras("cargar");
@@ -21849,10 +21849,19 @@ Object.assign(TRAD, {
 </style>
 <script>/* 9-10-2026 (Artur): tarjeta de novedades */
 /* 10-10-2026 (Artur): novedades de la v2.1.1 (con título) */
-const NOVEDADES = { ver:"2.1.5", llave:"islanegra-version-vista",   /* 12-10-2026 (Artur): novedades de la v2.1.5 (v2) */
-  titulo:"",
-  lista:["Modo crea tu personaje: ahora se desbloquea al acabar la fase 2 del modo campaña"],
+const NOVEDADES = { ver:"2.1.6", llave:"islanegra-version-vista",   /* 12-10-2026 (Artur): novedades de la v2.1.6 */
+  titulo:"Se desbloquea en la fase 2 de la campaña:",
+  lista:["Modo crea tu personaje: actívalo en Opciones de sala",
+         "Música aleatoria: en el icono de sonido del menú de sala",
+         "Foto personalizada en el retrato",
+         "Nuevo dorso de cartas"],
   sub:"", lista2:null, nota:"" };
+Object.assign(TRAD, {
+  "Se desbloquea en la fase 2 de la campaña:": "Unlocked in stage 2 of the campaign:",
+  "Modo crea tu personaje: actívalo en Opciones de sala": "Build-your-own-character mode: turn it on in Room options",
+  "Música aleatoria: en el icono de sonido del menú de sala": "Random music: in the sound icon of the room menu",
+  "Foto personalizada en el retrato": "Your own photo in the portrait",
+  "Nuevo dorso de cartas": "New card back" });
 TRAD["Modo crea tu personaje: ahora se desbloquea al acabar la fase 2 del modo campaña"] = "Build-your-own-character mode: now unlocked when you finish stage 2 of the campaign";
 Object.assign(TRAD, {
   "Fase Isla Negra: elección de personaje": "Isla Negra stage: choose your fighter",
@@ -22991,6 +23000,10 @@ Object.assign(TRAD, { "Música del combate aleatoria o a elegir": "Random or cho
   });
 })();
 
+</script>
+<script>/* 12-10-2026 (Artur): foto de perfil, sin foto se abre directamente el menú de Android */
+{ const _caja = avatarCajita;
+  avatarCajita = function(){ avatarCargar(); }; }   /* 12-10-2026 (Artur): siempre directo al menú de Android, sin botones */
 </script>
 </body>
 </html>
