@@ -23830,5 +23830,88 @@ document.addEventListener("contextmenu", e => { if(e.target.closest && e.target.
 Object.assign(TRAD, { "Mazo simple": "Simple deck", "Mazo doble elección": "Double choice deck" });
 
 </script>
+<script>/* 13-10-2026 (Artur): textos de Crea tu personaje */
+/* 13-10-2026 (Artur): textos de «Crea tu personaje»: la bienvenida y el cartel ¡Desbloqueado! */
+crearBienvenida = function(){
+  let visto = false; try{ visto = localStorage.getItem("islanegra-crear-visto") === "1"; }catch(e){}
+  if(visto || document.getElementById("crearBienvenida")) return;
+  try{ localStorage.setItem("islanegra-crear-visto", "1"); }catch(e){}
+  const caja = document.createElement("div"); caja.id = "crearBienvenida"; caja.className = "pregunta-fondo";
+  caja.innerHTML = '<div class="pregunta"><p class="nv-t">' + idi("Crea tu personaje") + '</p>' +
+    '<p class="cb">' + idi("Crea tu propio mazo con cartas de todos los personajes.") + '</p>' +
+    '<p class="cb"><b>' + idi("Mazo simple") + ':</b> ' + idi("crea un mazo simple.") + '</p>' +
+    '<p class="cb"><b>' + idi("Mazo doble") + ':</b> ' + idi("crea un mazo de doble elección.") + '</p>' +
+    '<div class="pregunta-botones"><button class="si">' + idi("Vale") + '</button></div></div>';
+  document.body.appendChild(caja);
+  caja.querySelector(".si").onclick = () => caja.remove();
+};
+{ const _prT = premioCartel;
+  premioCartel = function(cual){
+    const r = _prT.apply(this, arguments);
+    try{
+      const c = document.getElementById("premioCaja");
+      if(c && cual === "fase2"){ const f = c.querySelector(".pr-fila"); const b = f && f.querySelector(".pr-t b"), s = f && f.querySelector(".pr-t small");
+        if(b) b.textContent = idi("Crea tu personaje: mazo simple y mazo doble elección"); if(s) s.remove(); }
+    }catch(e){}
+    return r;
+  }; }
+Object.assign(TRAD, { "Crea tu propio mazo con cartas de todos los personajes.": "Build your own deck with cards from every character.",
+                      "crea un mazo simple.": "build a simple deck.", "Mazo doble": "Double deck", "crea un mazo de doble elección.": "build a deck of double choices.",
+                      "Crea tu personaje: mazo simple y mazo doble elección": "Create your character: simple deck and double choice deck" });
+
+</script>
+<script>/* 13-10-2026 (Artur): lupas fijas y Reiniciar */
+/* 13-10-2026 (Artur): las lupas se quedan fijas hasta que vuelves a tocar (para leer con calma); mover el dedo ya no las cierra.
+   Crear mazo simple: botón «Reiniciar» (todo a «Selecciona carta») */
+const LUPA_FIJA = { calla:0 };
+{ const _alF = abrirLupa;
+  abrirLupa = function(cartaId, indiceMano, pulsando){
+    const r = _alF.apply(this, arguments);
+    const lupa = document.getElementById("lupa");
+    if(pulsando && lupa && lupa.classList.contains("abierta")){
+      lupa.dataset.pulsando = "";                       /* ya no se cierra al soltar */
+      lupa.dataset.fija = "1";
+      lupa.onpointerdown = e => { e.stopPropagation(); LUPA_FIJA.calla = Date.now(); cerrarLupa(); };
+    }
+    return r;
+  }; }
+{ const _stF = soltarToque;
+  soltarToque = function(){ const l = document.getElementById("lupa");
+    if(toque && toque.lupa && l && l.dataset.fija) toque.lupa = false;      /* soltar el dedo no la cierra */
+    return _stF.apply(this, arguments); }; }
+{ const _clF = cerrarLupa;
+  cerrarLupa = function(){ const l = document.getElementById("lupa"); if(l) l.dataset.fija = ""; return _clF.apply(this, arguments); }; }
+/* con la lupa abierta, mover el dedo no arrastra la carta ni la cierra */
+document.addEventListener("pointermove", e => {
+  const l = document.getElementById("lupa");
+  if(l && l.classList.contains("abierta") && !l.classList.contains("reglas-pj") && typeof arrastre !== "undefined" && !arrastre && typeof toque !== "undefined" && toque && toque.lupa)
+    e.stopImmediatePropagation();
+}, { capture:true, passive:true });
+document.addEventListener("click", e => { if(Date.now() - LUPA_FIJA.calla < 450){ e.stopPropagation(); e.preventDefault(); } }, true);
+/* Crear mazo: el dibujo en grande también se queda fijo */
+cmLupa = function(r){
+  const v = document.createElement("div"); v.id = "cmLupa"; v.className = "fija";
+  v.innerHTML = '<span style="background-image:var(--f-' + r + '_personaje)"></span>';
+  document.body.appendChild(v);
+  v.onpointerdown = e => { e.stopPropagation(); LUPA_FIJA.calla = Date.now(); v.remove(); };
+};
+{ const st = document.createElement("style"); st.textContent = "#cmLupa.fija{pointer-events:auto}"; document.head.appendChild(st); }
+/* Mazo simple: «Reiniciar» */
+{ const _llR = libreLista;
+  libreLista = function(){
+    const r = _llR.apply(this, arguments);
+    try{
+      const L = document.getElementById("mimonMazo"), f = L && L.querySelector(".pie .fila1");
+      if(f && !f.querySelector("[data-reiniciar]")){
+        const b = document.createElement("button"); b.className = "sl-accion"; b.dataset.reiniciar = "1"; b.textContent = idi("Reiniciar");
+        b.onclick = () => { LIB.borrador = LIB_HUECOS.map(() => null); LIB.scroll = L.scrollTop; libreLista(); };
+        f.appendChild(b);
+      }
+    }catch(e){}
+    return r;
+  }; }
+Object.assign(TRAD, { "Reiniciar": "Reset" });
+
+</script>
 </body>
 </html>
