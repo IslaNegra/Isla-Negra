@@ -24223,5 +24223,16 @@ libreMejoras = function(k){
   }; }
 
 </script>
+<script>/* 13-10-2026 (Artur): marcos de las cartas por debajo de los botones de Crear mazo */
+/* 13-10-2026 (Artur): Crear mazo — los marcos de las cartas (Sumi, Minero…) ya no se pintan encima de «Volver» ni de los botones de abajo al hacer scroll */
+{ const st = document.createElement("style");
+  st.textContent = "#mimonMazo .cartas,#mimonMazo .par,#mimonMazo .retratos,#mimonMazo .cm-retratos{position:relative;z-index:0;isolation:isolate}" +
+                   "#mimonMazo .pie{z-index:30 !important}" +
+                   "#mimonMazo .cm-tapa{z-index:29 !important}" +
+                   "#mimonMazo .aspa{z-index:31 !important}" +
+                   "#mimonMazo .ranuras,#mimonMazo .aviso{z-index:40 !important}";
+  document.head.appendChild(st); }
+
+</script>
 </body>
 </html>
