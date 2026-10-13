@@ -24253,5 +24253,144 @@ libreMejoras = function(k){
 Object.assign(TRAD, { "Jugador": TRAD["Jugador"] || "Player" });
 
 </script>
+<script>/* 13-10-2026 (Artur): grupo Tácticas en el mazo simple y Espejismo en Respuesta */
+/* 13-10-2026 (Artur): Mazo simple con grupo «Tácticas» (2 huecos, solo tácticas básicas, como Roku):
+   Básicas 6 · Avanzadas 6 · Expertas 4 · Maestras 4 · Tácticas 2 · Mejoras 4. En Básicas solo golpes y guardias;
+   las tácticas de nivel alto (Aiki, Espejismo, Distracción) en su nivel. Mazo doble: Espejismo va en la columna de Respuesta. */
+LIB_MOLDE.splice(0, LIB_MOLDE.length, ["Básicas", 1, 6], ["Avanzadas", 2, 6], ["Expertas", 3, 4], ["Maestras", 4, 4], ["Tácticas", 1, 2], ["Mejoras", 0, 4]);
+LIB_HUECOS.length = 0;
+LIB_MOLDE.forEach(([nom, n, c], g) => { for(let k = 0; k < c; k++) LIB_HUECOS.push({ n, g, mejora: n === 0, tactica: nom === "Tácticas" }); });
+librePozo = function(k, mazo){
+  const h = LIB_HUECOS[k]; if(!h) return [];
+  const de = c => c.copias > 0 && !c.mimon && (!mazo || c.mazo === mazo) && mimonLuchadores().some(m => m.id === c.mazo);
+  if(h.mejora){
+    const l = CARTAS.filter(c => c.tipo === "mejora" && de(c));
+    if(!mazo || mazo === "riko"){ const mj = CARTAS.find(c => c.mazo === "riko" && c.tipo === "mejora" && c.copias > 0); if(mj && !l.some(c => c.id === mj.id)) l.push(mj); }
+    return l;
+  }
+  if(h.tactica) return CARTAS.filter(c => c.tipo === "tactica" && c.nivel === 1 && de(c));
+  const orden = { ataque:0, respuesta:1, tactica:2 };
+  return CARTAS.filter(c => orden[c.tipo] !== undefined && c.nivel === h.n && (c.tipo !== "tactica" || h.n > 1) && de(c))
+               .sort((a, b) => orden[a.tipo] - orden[b.tipo]);
+};
+/* los mazos simples guardados antes (8 básicas con tácticas, sin grupo Tácticas) se recolocan al cargarlos */
+function libreRecolocar(viejas){
+  const nuevo = LIB_HUECOS.map(() => null);
+  const ini = g => LIB_HUECOS.findIndex(h => h.g === g);
+  const pon = (g, id) => { const a = ini(g), n = LIB_MOLDE[g][2]; for(let k = a; k < a + n; k++) if(!nuevo[k]){ nuevo[k] = id; return true; } return false; };
+  const V = [[0, 8], [8, 6], [14, 4], [18, 4], [22, 4]];      /* básicas, avanzadas, expertas, maestras, mejoras (antes) */
+  V.forEach(([a, n], q) => {
+    for(let k = a; k < a + n; k++){
+      const id = viejas[k]; const c = id ? defCarta(id) : null; if(!c) continue;
+      if(q === 4){ pon(5, id); continue; }
+      if(c.tipo === "tactica" && c.nivel === 1){ pon(4, id); continue; }
+      pon(q, id);
+    }
+  });
+  return nuevo;
+}
+{ const _lgT = libreGuardados;
+  libreGuardados = function(){
+    let crudos = []; try{ crudos = JSON.parse(localStorage.getItem(LIB.llave) || "null") || []; }catch(e){}
+    return _lgT.apply(this, arguments).map((x, k) => { if(!x) return x; const c = crudos[k];
+      return (c && c.v === 2) ? x : { f:x.f, cartas: libreRecolocar(x.cartas) }; });
+  }; }
+{ const _lgdT = libreGuardar;
+  libreGuardar = function(k, cartas){
+    const ok = _lgdT.apply(this, arguments);
+    try{ const l = JSON.parse(localStorage.getItem(LIB.llave)); if(l && l[k]){ l[k].v = 2; localStorage.setItem(LIB.llave, JSON.stringify(l)); } }catch(e){}
+    return ok;
+  }; }
+/* Mazo doble: Espejismo (táctica experta del Mago) en la columna de Respuesta, no en la de Ataque */
+const TAC_DEFENSA = new Set(CARTAS.filter(c => c.tipo === "tactica" && c.mazo === "mago" && c.nombre === "Espejismo").map(c => c.id));
+{ const _mlT = mimonLista;
+  mimonLista = function(tipo, nivel, mazo){
+    let l = _mlT.apply(this, arguments);
+    if(tipo === "ataque") l = l.filter(c => !TAC_DEFENSA.has(c.id));
+    if(tipo === "respuesta" && nivel > 1 && !MIM2.conMochi)          /* la máquina no la lleva: no sabe jugarla desde esa mitad */
+      l = l.concat(mimonPozo("tactica", nivel, mazo).filter(c => TAC_DEFENSA.has(c.id)));
+    return l;
+  }; }
+{ const _gvT = mimonGolpeVale;
+  mimonGolpeVale = function(id){ return TAC_DEFENSA.has(id) ? false : _gvT.apply(this, arguments); }; }
+{ const _pbT = mimonParBien;
+  mimonParBien = function(p, k){
+    const t = MIM_PLANTILLA[k];
+    if(p && t && !t.t && TAC_DEFENSA.has(p.r)){ const c = defCarta(p.r); return !!(c && c.nivel === t.n && mimonGolpeVale(p.g, t.n)); }
+    return _pbT.apply(this, arguments);
+  }; }
+/* al cargar un mazo doble, Espejismo en Respuesta se respeta */
+{ const _clT = cmLimpiarMimon;
+  cmLimpiarMimon = function(){
+    const guardar = MIM.borrador.map(p => (p && TAC_DEFENSA.has(p.r)) ? p.r : null);
+    _clT.apply(this, arguments);
+    MIM.borrador.forEach((p, k) => { if(guardar[k] && MIM_PLANTILLA[k] && !MIM_PLANTILLA[k].t && defCarta(guardar[k]).nivel === MIM_PLANTILLA[k].n) p.r = guardar[k]; });
+  }; }
+
+</script>
+<script>/* 13-10-2026 (Artur): Invitar con los ataques */
+/* 13-10-2026 (Artur): Invitar (táctica básica de Hana) va con los ataques: en el mazo simple, en Básicas; en el mazo doble, en la
+   columna de Ataque de Básicas. En Tácticas solo las de coger cartas o recuperar vida. (El mazo por defecto del Mimón no cambia.) */
+const TAC_ATAQUE = new Set(CARTAS.filter(c => c.tipo === "tactica" && c.nivel === 1 && c.mazo === "hana" && c.nombre === "Invitar").map(c => c.id));
+{ const _lpA = librePozo;
+  librePozo = function(k, mazo){
+    const h = LIB_HUECOS[k]; const r = _lpA.apply(this, arguments);
+    if(!h || h.mejora) return r;
+    if(h.tactica) return r.filter(c => !TAC_ATAQUE.has(c.id));
+    if(h.n === 1){
+      const de = c => c.copias > 0 && !c.mimon && (!mazo || c.mazo === mazo) && mimonLuchadores().some(m => m.id === c.mazo);
+      CARTAS.filter(c => TAC_ATAQUE.has(c.id) && de(c)).forEach(c => { if(!r.some(x => x.id === c.id)) r.push(c); });
+    }
+    return r;
+  }; }
+{ const _rcA = libreRecolocar;
+  libreRecolocar = function(viejas){
+    const n = _rcA.apply(this, arguments);
+    /* si Invitar quedó en Tácticas, pasa a Básicas (si hay hueco) */
+    const ini = g => LIB_HUECOS.findIndex(h => h.g === g);
+    const t0 = ini(4), b0 = ini(0);
+    for(let k = t0; k < t0 + 2; k++) if(n[k] && TAC_ATAQUE.has(n[k])){
+      const id = n[k]; n[k] = null;
+      for(let q = b0; q < b0 + 6; q++) if(!n[q]){ n[q] = id; break; }
+    }
+    return n;
+  }; }
+{ const _mlA = mimonLista;
+  mimonLista = function(tipo, nivel, mazo){
+    let l = _mlA.apply(this, arguments);
+    if(tipo === "tactica") l = l.filter(c => !TAC_ATAQUE.has(c.id));
+    if(tipo === "ataque" && nivel === 1) l = l.concat(mimonPozo("tactica", 1, mazo).filter(c => TAC_ATAQUE.has(c.id)));
+    return l;
+  }; }
+{ const _gvA = mimonGolpeVale;
+  mimonGolpeVale = function(id, n){ if(TAC_ATAQUE.has(id)){ const c = defCarta(id); return !!c && c.nivel === n; } return _gvA.apply(this, arguments); }; }
+Object.assign(TRAD, { "Tácticas": TRAD["Tácticas"] || "Tactics" });
+
+</script>
+<script>/* 13-10-2026 (Artur): Crear mazo sin la ×, con Volver */
+/* 13-10-2026 (Artur): Crear mazo sin la ×: en todas sus páginas se vuelve con «Volver»; en la página principal, «Volver» junto a «Aceptar»
+   (sale sin cambiar nada y vuelve a la elección de luchador) */
+{ const st = document.createElement("style");
+  st.textContent = "#mimonMazo .aspa{display:none !important}" +
+    "#mimonMazo .pie .fila2{display:flex;gap:8px;justify-content:center;width:100%;max-width:420px}" +
+    "#mimonMazo .pie .fila2 .sl-accion{flex:1;max-width:200px}";
+  document.head.appendChild(st); }
+function cmVolverPrincipal(cerrar){
+  const L = document.getElementById("mimonMazo"); if(!L) return;
+  const pie = L.querySelector(".pie"), ac = pie && pie.querySelector("[data-aceptar]"); if(!ac || pie.querySelector("[data-salir]")) return;
+  const f = document.createElement("div"); f.className = "fila2";
+  const v = document.createElement("button"); v.className = "sl-accion"; v.dataset.salir = "1"; v.textContent = idi("Volver");
+  ac.classList.remove("ancho");
+  ac.parentNode.insertBefore(f, ac); f.appendChild(v); f.appendChild(ac);
+  v.onclick = () => { const i = cerrar(); if(typeof i === "number" && i >= 0) try{ abrirAsiento(i); }catch(e){} };
+}
+{ const _llS = libreLista;
+  libreLista = function(){ const r = _llS.apply(this, arguments);
+    try{ cmVolverPrincipal(() => { const i = LIB.abierto; libreCerrar(); return i; }); }catch(e){} return r; }; }
+{ const _plS = mimonPintaLista;
+  mimonPintaLista = function(){ const r = _plS.apply(this, arguments);
+    try{ if(!RED.mimon) cmVolverPrincipal(() => { const i = MIM.abierto; mimonCerrar(); return i; }); }catch(e){} return r; }; }
+
+</script>
 </body>
 </html>
