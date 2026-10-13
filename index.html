@@ -12251,7 +12251,7 @@ function reajustarTitulos(){
   window.addEventListener('resize', reajustarTitulos);
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(reajustarTitulos);
 })();
-const VERSION = "2.1.7";
+const VERSION = "2.1.8";
 document.title = "Sombras sobre Isla Negra · " + VERSION;
 function panelPortada(html, pie, bajoTitulo){
   const p = document.getElementById("portada");
@@ -21849,13 +21849,11 @@ Object.assign(TRAD, {
 </style>
 <script>/* 9-10-2026 (Artur): tarjeta de novedades */
 /* 10-10-2026 (Artur): novedades de la v2.1.1 (con título) */
-const NOVEDADES = { ver:"2.1.7", llave:"islanegra-version-vista",   /* 13-10-2026 (Artur): novedades de la v2.1.7 */
-  titulo:"Se desbloquea en la fase 2 de la campaña:",
-  lista:["Modo crea tu personaje: elige entre mazo simple y mazo doble",
-         "Música aleatoria: en el icono de sonido del menú de sala",
-         "Foto personalizada en el retrato",
-         "Nuevo dorso de cartas"],
+const NOVEDADES = { ver:"2.1.8", llave:"islanegra-version-vista",   /* 13-10-2026 (Artur): novedades de la v2.1.8 */
+  titulo:"",
+  lista:["Modo crea tu personaje mejorado"],
   sub:"", lista2:null, nota:"" };
+TRAD["Modo crea tu personaje mejorado"] = "Improved build-your-own-character mode";
 TRAD["Modo crea tu personaje: elige entre mazo simple y mazo doble"] = "Build-your-own-character mode: choose a simple deck or a double deck";
 Object.assign(TRAD, {
   "Se desbloquea en la fase 2 de la campaña:": "Unlocked in stage 2 of the campaign:",
@@ -23911,6 +23909,318 @@ cmLupa = function(r){
     return r;
   }; }
 Object.assign(TRAD, { "Reiniciar": "Reset" });
+
+</script>
+<script>/* 13-10-2026 (Artur): guardar y cargar seguros, orden de botones */
+/* 13-10-2026 (Artur): Crear mazo — guardar sin perder nunca los otros mazos guardados; al cargar, lo que ya no se pueda usar queda en «Selecciona carta».
+   Botones: simple → Cargar · Guardar · Aleatorio · Reiniciar; doble → Cargar · Guardar · Aleatorio · Por defecto (con cartas puestas: Reiniciar) */
+function cmCrudos(llave){ let l = null; try{ l = JSON.parse(localStorage.getItem(llave) || "null"); }catch(e){ l = null; }
+  if(!Array.isArray(l)) l = []; while(l.length < 5) l.push(null); return l.slice(0, 5); }
+libreGuardados = function(){
+  return cmCrudos(LIB.llave).map(x => (x && Array.isArray(x.cartas) && x.cartas.length === LIB_HUECOS.length) ? { f:String(x.f || ""), cartas:x.cartas.map(c => typeof c === "string" ? c : null) } : null);
+};
+libreGuardar = function(k, cartas){
+  const l = cmCrudos(LIB.llave), d = new Date();
+  l[k] = { f: d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear(), cartas };
+  try{ localStorage.setItem(LIB.llave, JSON.stringify(l)); }catch(e){ return false; }
+  try{ return JSON.stringify(JSON.parse(localStorage.getItem(LIB.llave))[k].cartas) === JSON.stringify(cartas); }catch(e){ return false; }
+};
+mimonGuardados = function(){
+  return cmCrudos(MIM_LLAVE).map(x => { if(!x || !Array.isArray(x.pares)) return null;
+    const p = mimonEstirar(x.pares); return p.length === MIM_PLANTILLA.length ? { f:String(x.f || ""), pares:p } : null; });
+};
+mimonGuardar = function(k, pares){
+  const l = cmCrudos(MIM_LLAVE), d = new Date();
+  l[k] = { f: d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear(), pares };
+  try{ localStorage.setItem(MIM_LLAVE, JSON.stringify(l)); }catch(e){ return false; }
+  try{ return JSON.stringify(JSON.parse(localStorage.getItem(MIM_LLAVE))[k].pares) === JSON.stringify(pares); }catch(e){ return false; }
+};
+/* al cargar: fuera lo que ya no vale (p. ej. cartas de un luchador aún bloqueado) */
+function cmLimpiarLibre(){ for(let k = 0; k < LIB.borrador.length; k++) if(LIB.borrador[k] && !libreHuecoBien(LIB.borrador, k)) LIB.borrador[k] = null; }
+function cmLimpiarMimon(){
+  const libres = new Set(mimonLuchadores().map(m => m.id));
+  const vale = id => { const c = id ? defCarta(id) : null; return !!c && libres.has(c.mazo); };
+  MIM.borrador = MIM.borrador.map((p, k) => {
+    const t = MIM_PLANTILLA[k]; p = p || {};
+    if(t.t) return { a: (mimonTacBasica(p.a) && vale(p.a)) ? p.a : "", b: (mimonTacBasica(p.b) && vale(p.b)) ? p.b : "" };
+    return { g: (mimonGolpeVale(p.g, t.n) && vale(p.g)) ? p.g : "", r: (mimonCarta(p.r, "respuesta") && vale(p.r)) ? p.r : "" };
+  });
+}
+{ const _llB = libreLista;
+  libreLista = function(){
+    try{ if(LIB.recienCargado){ LIB.recienCargado = false; cmLimpiarLibre(); } }catch(e){}
+    const r = _llB.apply(this, arguments);
+    try{
+      const L = document.getElementById("mimonMazo"), f = L && L.querySelector(".pie .fila1"); if(!f) return r;
+      ["[data-cargar]", "[data-guardar]", "[data-azar]", "[data-reiniciar]"].forEach(s => { const b = f.querySelector(s); if(b) f.appendChild(b); });
+    }catch(e){}
+    return r;
+  }; }
+{ const _plB = mimonPintaLista;
+  mimonPintaLista = function(){
+    try{ if(MIM.recienCargado){ MIM.recienCargado = false; cmLimpiarMimon(); } }catch(e){}
+    const r = _plB.apply(this, arguments);
+    try{
+      const L = document.getElementById("mimonMazo"), f = L && L.querySelector(".pie .fila1"); if(!f) return r;
+      ["[data-cargar]", "[data-guardar]", "[data-azar]", "[data-defecto]"].forEach(s => { const b = f.querySelector(s); if(b) f.appendChild(b); });
+      const b = f.querySelector("[data-defecto]");
+      if(b){
+        const hay = MIM.borrador.some(p => p && Object.values(p).some(x => x));   /* con alguna carta: «Reiniciar»; vacío: «Por defecto» */
+        b.textContent = idi(hay ? "Reiniciar" : "Por defecto");
+        b.onclick = () => { MIM.borrador = hay ? MIM_PLANTILLA.map(() => ({})) : mimonDefecto(); MIM.scroll = L.scrollTop; mimonPintaLista(); };
+      }
+    }catch(e){}
+    return r;
+  }; }
+/* cargar marca que hay que limpiar lo que ya no vale */
+{ const _lrB = libreRanuras;
+  libreRanuras = function(modo){ const r = _lrB.apply(this, arguments);
+    if(modo === "cargar"){ const v = document.querySelector("#mimonMazo .ranuras"); if(v) v.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => { LIB.recienCargado = true; }, true)); }
+    return r; }; }
+{ const _mrB = mimonRanuras;
+  mimonRanuras = function(modo){ const r = _mrB.apply(this, arguments);
+    if(modo === "cargar"){ const v = document.querySelector("#mimonMazo .ranuras"); if(v) v.querySelectorAll("[data-r]").forEach(b => b.addEventListener("click", () => { MIM.recienCargado = true; }, true)); }
+    return r; }; }
+
+</script>
+<script>/* 13-10-2026 (Artur): pie de Crear mazo como el original */
+/* 13-10-2026 (Artur): el pie de Crear mazo vuelve a ser como el original: borde de arriba difuminado y con transparencia */
+{ const st = document.createElement("style");
+  st.textContent = "#mimonMazo .pie{background:linear-gradient(transparent,rgba(7,6,5,.92) 40%,#070605 70%) !important;padding-top:46px !important;border-top:none !important}";
+  document.head.appendChild(st); }
+
+</script>
+<script>/* 13-10-2026 (Artur): Mejoras en la mesa, cada una con su dibujo */
+/* 13-10-2026 (Artur): las Mejoras en la mesa (cartitas junto al retrato y en la losa) con el dibujo de cada Mejora jugada, no siempre la primera del mazo */
+function mejorasCadaUna(h, a, clase){
+  if(!a || !Array.isArray(a.mesa) || !a.mesa.length) return h;
+  let k = 0;
+  return h.replace(new RegExp('class="' + clase + '([^"]*)" style="([^"]*)"', "g"), (m, cl, st) => {
+    const id = a.mesa[Math.min(k, a.mesa.length - 1)]; k++;
+    const f = (id && estiloFoto(id, [0, 0, 1, 1])) || st;
+    return 'class="' + clase + cl + '" style="' + f + '"';
+  });
+}
+{ const _hmM = htmlMejoras;
+  htmlMejoras = function(a){ const h = _hmM.apply(this, arguments); try{ return mejorasCadaUna(h, a, "mini-m"); }catch(e){ return h; } }; }
+{ const _hfM = htmlFicha;
+  htmlFicha = function(a){ const h = _hfM.apply(this, arguments); try{ return mejorasCadaUna(h, a, "mini-f"); }catch(e){ return h; } }; }
+
+</script>
+<script>/* 13-10-2026 (Artur): cuerda solo de Mochi y sello de daños acumulados */
+/* 13-10-2026 (Artur): la cuerda (dohyō) es solo de Mochi — los mazos de «Crea tu personaje» con cartas de Mochi no la sacan,
+   ni en 1 contra 1 ni en multijugador; sus cartas siguen haciendo lo que dicen */
+dohyoDeMimo = function(){ return -1; };
+function cuerdaSoloMochi(fn){
+  return function(){
+    const em = esMochi;
+    esMochi = function(a){ return em.apply(this, arguments) && !(a && typeof esMimo === "function" && esMimo(a)); };
+    try{ return fn.apply(this, arguments); } finally { esMochi = em; }
+  };
+}
+["dohyoDueno", "dohyoHay", "dohyoEmpujaVarios", "dohyoEmpuja", "pintarDohyoTira", "pintarDohyoLosas"].forEach(n => {
+  try{ if(typeof window[n] === "function") window[n] = cuerdaSoloMochi(window[n]); }catch(e){}
+});
+
+</script>
+<script>/* 13-10-2026 (Artur): sin etiqueta de daño acumulado (el daño se mira en el rodillo) */
+</script>
+<script>/* 13-10-2026 (Artur): sombra de los textos flotantes y Berserker tras recoger la mesa */
+/* 13-10-2026 (Artur): textos flotantes sin la mancha gris sobre las cartas: sombra corta y un contorno fino en vez de la sombra grande y difusa */
+{ const st = document.createElement("style");
+  st.textContent = ".sube,.sube.chico{text-shadow:0 1px 2px rgba(0,0,0,.95),0 0 3px rgba(0,0,0,.8) !important;" +
+                   "-webkit-text-stroke:.7px rgba(0,0,0,.9);paint-order:stroke fill}";
+  document.head.appendChild(st); }
+
+</script>
+<script>/* 13-10-2026 (Artur): el cartel «Berserker» sale cuando la mesa ya está recogida (también tras un combo largo): primero se retira todo, luego el cartel */
+revisarBerserker = function(yaRecogido){
+  if(ESTADO.modo !== "equipos") return;
+  ESTADO.asientos.forEach((s, i) => {
+    const ahora = enBerserker(i);
+    if(ahora === !!s.berserker) return;
+    s.berserker = ahora;
+    if(!ahora){
+      s.inicioBers = 0; s.marcaDesde = 0;
+      anotar(s.nombre + " ya no está en inferioridad: se acaba el berserker.", "hito");
+      return;
+    }
+    s.inicioBers = Date.now();
+    sonar("nivel");
+    if(navigator.vibrate) navigator.vibrate([25, 50, 25]);
+    const LEE = 2400, recoge = yaRecogido ? 0 : RITMO.recoge + RITMO.barrido;
+    const reserva = t => {                       /* hasta que acabe el cartel, nadie juega y las losas no se mueven */
+      s.marcaDesde = Date.now() + t + LEE;
+      PARADA_BERS = Math.max(PARADA_BERS || 0, Date.now() + t + LEE + 640 + 800);
+      congelarMesa(t + LEE);
+    };
+    reserva(Math.max(recoge, (typeof esperaMesaLimpia === "function" ? esperaMesaLimpia() : 0)));
+    const t0 = Date.now();
+    const cartelYa = () => {
+      if(!enBerserker(i)) return;
+      reserva(0);
+      cartel("Berserker", "berserk", LEE);
+      tarde(LEE, () => {
+        if(!enBerserker(i)) return;
+        anotar(s.nombre + " se queda solo: BERSERKER. Hereda el turno de su compañero.", "hito");
+        evento(i, "berserker", "pelea por los dos");
+        pintar();
+      });
+    };
+    /* primero se acaban los avisos (el combo), luego se recogen las cartas, y entonces el cartel */
+    const tras = () => {
+      const r = restoAvisos();
+      if(r > 0 && Date.now() - t0 < 12000){ reserva(r + recoge); tarde(r + 120, tras); return; }
+      if(recoge){ reserva(recoge); tarde(recoge, cartelYa); return; }
+      cartelYa();
+    };
+    tarde(yaRecogido ? 0 : 60, tras);
+  });
+};
+
+</script>
+<script>/* 13-10-2026 (Artur): combos ganadores empujan 5 */
+/* 13-10-2026 (Artur): los combos que ganan (Doble Imparable y el de maestras) empujan 5: el círculo se sale por el otro lado.
+   En 1 contra 1, cuando Mochi saca al rival, el círculo recorre las casillas, se sale (desaparece) y la calavera se enciende en rojo;
+   cuando sacan a Mochi por su lado, igual pero se enciende el −3 PV, y luego vuelve al centro */
+{ const _ltC = lanzarTecnica;
+  lanzarTecnica = function(origen, objetivo, carta){
+    try{ if(carta && carta.esCombo && (carta.ganaCombate || carta.ganaAsalto) && carta.efecto) carta.efecto.empuja = Math.max(carta.efecto.empuja || 1, 5); }catch(e){}
+    return _ltC.apply(this, arguments);
+  }; }
+const CAE_MOCHI = { hasta:0, t:null };
+{ const _deF = dohyoEmpuja;
+  dohyoEmpuja = function(p){
+    if(ESTADO.asientos.length !== 2) return _deF.apply(this, arguments);
+    const pf = ponFicha;
+    ponFicha = function(m, r, v){                       /* sale del círculo y pierde el asalto: la ficha se queda fuera, no vuelve al centro */
+      try{ if(v === 0 && ESTADO.asientos[r] && ESTADO.asientos[r].pv === 0 && p && p.objetivo === r) v = REGLAS_MOCHI.dohyo.borde; }catch(e){}
+      try{ if(v <= -REGLAS_MOCHI.dohyo.borde){ CAE_MOCHI.hasta = Date.now() + lento(2300); clearTimeout(CAE_MOCHI.t); CAE_MOCHI.t = setTimeout(() => { try{ pintarDohyoTira(); }catch(e){} }, lento(2350)); } }catch(e){}   /* Mochi se cae por su lado */
+      return pf.call(this, m, r, v);
+    };
+    try{ return _deF.apply(this, arguments); } finally { ponFicha = pf; }
+  }; }
+{ const _ptF = pintarDohyoTira;
+  pintarDohyoTira = function(){
+    const r = _ptF.apply(this, arguments);
+    try{
+      const k = dohyoDueno(), d = document.getElementById("dohyoTira"); if(k < 0 || !d) return r;
+      const a = ESTADO.asientos[k], B = REGLAS_MOCHI.dohyo.borde, f = a.ficha || 0;
+      if(Math.abs(f) >= B && ESTADO.asientos.length === 2){
+        /* el círculo recorre las casillas hasta el borde, se sale (desaparece) y la calavera se enciende en rojo */
+        const fv = (k === asientoVista()) ? Math.sign(f) * (B - 1) : -Math.sign(f) * (B - 1);
+        d.style.setProperty("--fx", ((0.5 + fv * 0.4 / (B - 1)) * 100).toFixed(2) + "%");
+        d.classList.add("cuerda"); d.classList.remove("avanza");
+        if(!d.dataset.fuera){ d.dataset.fuera = "1"; clearTimeout(d._tFuera); d._tFuera = setTimeout(() => { if(d.dataset.fuera) d.classList.add("fuera"); }, lento(750)); }
+      } else if(d.dataset.fuera){ delete d.dataset.fuera; clearTimeout(d._tFuera); d.classList.remove("fuera"); }
+      /* Mochi sale por su lado: la ficha llega a su última casilla, desaparece y se enciende el −3 PV; luego vuelve al centro */
+      if(Date.now() < CAE_MOCHI.hasta && ESTADO.asientos.length === 2){
+        const fv = (k === asientoVista()) ? -(B - 1) : (B - 1);
+        d.style.setProperty("--fx", ((0.5 + fv * 0.4 / (B - 1)) * 100).toFixed(2) + "%");
+        d.classList.add("cuerda"); d.classList.remove("avanza");
+        if(!d.dataset.cae){ d.dataset.cae = "1"; clearTimeout(d._tCae); d._tCae = setTimeout(() => { if(d.dataset.cae) d.classList.add("fuera-m"); }, lento(750)); }
+      } else if(d.dataset.cae){ delete d.dataset.cae; clearTimeout(d._tCae); d.classList.remove("fuera-m"); }
+    }catch(e){}
+    return r;
+  }; }
+{ const st = document.createElement("style");
+  st.textContent = "#dohyoTira i{transition:left .7s cubic-bezier(.3,1.3,.5,1),opacity .35s}" +
+    "#dohyoTira.fuera i,#dohyoTira.fuera-m i{opacity:0}" +
+    "#dohyoTira.fuera-m .menos.m1{filter:sepia(1) saturate(9) hue-rotate(-50deg) brightness(.85) drop-shadow(0 0 4px rgba(225,40,30,1)) drop-shadow(0 0 10px rgba(225,40,30,.8))}" +
+    "#dohyoTira.fuera .calav{filter:sepia(1) saturate(9) hue-rotate(-50deg) brightness(.85) drop-shadow(0 0 4px rgba(225,40,30,1)) drop-shadow(0 0 10px rgba(225,40,30,.8))}";
+  document.head.appendChild(st); }
+
+</script>
+<script>/* 13-10-2026 (Artur): franja de arriba y página de Mejoras */
+/* 13-10-2026 (Artur): Crear mazo — arriba, una franja oscura bajo la × (solo al bajar) para que las cartas no se monten con ella al hacer scroll;
+   en los huecos de Mejora, directamente una página con todas las Mejoras (sin elegir luchador) */
+{ const st = document.createElement("style");
+  st.textContent = "#mimonMazo .cm-tapa{position:fixed;top:0;left:var(--mm-l,0px);width:var(--mm-w,100%);height:50px;z-index:2;pointer-events:none;" +
+                   "background:linear-gradient(#070605 0,#070605 62%,rgba(7,6,5,0));opacity:0;transition:opacity .2s}" +
+                   "#mimonMazo .cm-tapa.ver{opacity:1}";
+  document.head.appendChild(st); }
+function cmTapa(){
+  const L = document.getElementById("mimonMazo"); if(!L || L.querySelector(":scope > .cm-tapa")) return;
+  const t = document.createElement("div"); t.className = "cm-tapa"; L.appendChild(t);
+  const mira = () => t.classList.toggle("ver", L.scrollTop > 12);      /* solo al bajar: arriba del todo se ve el título */
+  if(!L.dataset.tapa){ L.dataset.tapa = "1"; L.addEventListener("scroll", () => { const x = L.querySelector(":scope > .cm-tapa"); if(x) x.classList.toggle("ver", L.scrollTop > 12); }, { passive:true }); }
+  mira();
+}
+{ const _lcT = libreCartas; libreCartas = function(){ const r = _lcT.apply(this, arguments); try{ cmTapa(); }catch(e){} return r; }; }
+{ const _lrT = libreRetratos; libreRetratos = function(k){
+    const h = LIB_HUECOS[k];
+    if(h && h.mejora) return libreMejoras(k);
+    const r = _lrT.apply(this, arguments); try{ cmTapa(); }catch(e){} return r; }; }
+{ const _llT = libreLista; libreLista = function(){ const r = _llT.apply(this, arguments); try{ cmTapa(); }catch(e){} return r; }; }
+{ const _plT = mimonPintaLista; mimonPintaLista = function(){ const r = _plT.apply(this, arguments); try{ cmTapa(); }catch(e){} return r; }; }
+function libreMejoras(k){
+  const L = document.getElementById("mimonMazo"); if(!L) return;
+  const lista = librePozo(k);
+  const w = window.innerWidth || 393, z = Math.max(1, Math.min(1.9, (Math.min(w, 420) * 0.44) / 98));
+  L.innerHTML = '<button class="aspa" data-cerrar="1" aria-label="' + idi("Cerrar") + '">×</button><h1>' + idi("Mejoras") + '</h1>' +
+    '<p class="sub">' + idi("Toca la carta que quieras en ese hueco") + '</p>' +
+    (lista.length ? '<div class="cartas">' + lista.map(c => { const q = libreQuedan(c, LIB.borrador, k);
+      return '<button class="elige' + (q > 0 ? '' : ' agotada') + '" data-id="' + c.id + '" aria-label="' + escapar(c.nombre) + '"' + (q > 0 ? '' : ' disabled') + '>' +
+        '<div class="lupa-vertical" style="--z:' + z.toFixed(3) + ';--carta-an:' + (98 * z).toFixed(1) + 'px"><div class="carta">' + htmlCarta(c) + '</div></div>' +
+        '<span class="quedan">' + escapar(mimonCorto(c.mazo)) + ' · ' + idi("Quedan") + ' ' + Math.max(0, q) + '/' + c.copias + '</span></button>'; }).join("") + '</div>'
+                 : '<p class="nada">' + idi("No tiene cartas de ese tipo.") + '</p>') +
+    '<div class="pie"><button class="sl-accion" data-volver="1">' + idi("Volver") + '</button></div>';
+  L.scrollTop = 0;
+  L.querySelector("[data-cerrar]").onclick = libreCerrar;
+  L.querySelector("[data-volver]").onclick = libreLista;
+  L.querySelectorAll("[data-id]:not([disabled])").forEach(b => b.onclick = () => { LIB.borrador[k] = b.dataset.id; libreLista(); });
+  try{ cmTapa(); if(typeof crearMazoCartas === "function") crearMazoCartas(); }catch(e){}
+}
+
+</script>
+<script>/* 13-10-2026 (Artur): Mejora del Mimón, página de Mejoras pequeña y dibujo del Mimón por defecto */
+/* 13-10-2026 (Artur): Mazo simple — la Mejora del Mimón (Carcajada) también se puede elegir; la página de Mejoras, en pequeño como la de
+   luchadores (todas a la vista, sin scroll); el dibujo por defecto del personaje creado es el del Mimón (no el disfrazado) */
+{ const _lpM = librePozo;
+  librePozo = function(k, mazo){
+    const r = _lpM.apply(this, arguments);
+    try{
+      const h = LIB_HUECOS[k];
+      if(h && h.mejora && (!mazo || mazo === "riko")){
+        const mj = CARTAS.find(c => c.mazo === "riko" && c.tipo === "mejora" && c.copias > 0);
+        if(mj && !r.some(c => c.id === mj.id)) r.push(mj);
+      }
+    }catch(e){}
+    return r;
+  }; }
+libreMejoras = function(k){
+  const L = document.getElementById("mimonMazo"); if(!L) return;
+  const lista = librePozo(k);
+  L.innerHTML = '<button class="aspa" data-cerrar="1" aria-label="' + idi("Cerrar") + '">×</button><h1>' + idi("Mejoras") + '</h1>' +
+    '<p class="sub">' + idi("Toca la carta que quieras en ese hueco") + '</p>' +
+    '<div class="retratos cm-mejoras">' + lista.map(c => { const q = libreQuedan(c, LIB.borrador, k), f = estiloFoto(c.id, [0, 0, 1, 1]) || "";
+      return '<button class="' + (q > 0 ? '' : 'no') + '" data-id="' + c.id + '" style="' + f + '" aria-label="' + escapar(c.nombre) + '"' + (q > 0 ? '' : ' disabled') + '>' +
+        '<small>' + Math.max(0, q) + '/' + c.copias + '</small></button>'; }).join("") + '</div>' +
+    '<div class="pie"><button class="sl-accion" data-volver="1">' + idi("Volver") + '</button></div>';
+  L.scrollTop = 0;
+  L.querySelector("[data-cerrar]").onclick = libreCerrar;
+  L.querySelector("[data-volver]").onclick = libreLista;
+  L.querySelectorAll("[data-id]:not([disabled])").forEach(b => b.onclick = () => { LIB.borrador[k] = b.dataset.id; libreLista(); });
+  try{ cmTapa(); }catch(e){}
+};
+{ const st = document.createElement("style");
+  st.textContent = "#mimonMazo .retratos.cm-mejoras button{position:relative}" +
+    "#mimonMazo .retratos.cm-mejoras small{position:absolute;right:3px;bottom:3px;padding:1px 4px;border-radius:6px;background:rgba(7,6,5,.75);" +
+    "color:#E5DCC6;font-size:9.5px;line-height:1.2;letter-spacing:.02em}";
+  document.head.appendChild(st); }
+/* el dibujo por defecto: el del Mimón */
+{ const _rdM = cmRetratoDe;
+  cmRetratoDe = function(i){
+    const r = _rdM.apply(this, arguments); if(r) return r;
+    const pl = RED.plazas && RED.plazas[i];
+    return (pl && (pl.mazo === "libre" || (pl.mazo === "riko" && pl.mim && pl.mim.tipo === "propio"))) ? "riko" : null;
+  }; }
+{ const _prM = premioCartel;
+  premioCartel = function(cual){
+    const r = _prM.apply(this, arguments);
+    try{ const c = document.getElementById("premioCaja"); if(c && cual === "fase2"){ const ic = c.querySelector(".pr-fila .pr-ico"); if(ic) ic.style.backgroundImage = "var(--f-riko_personaje)"; } }catch(e){}
+    return r;
+  }; }
 
 </script>
 </body>
