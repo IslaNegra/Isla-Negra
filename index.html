@@ -23617,5 +23617,20 @@ Object.assign(TRAD, { "{n} daño con Pólvora": "{n} Gunpowder damage", "Haz {n}
   "Detona 4 Cargas de golpe {n} veces": "Blow up 4 Charges at once {n} times", "Detona 4 Cargas de golpe": "Blow up 4 Charges at once" });
 
 </script>
+<script>/* 13-10-2026 (Artur): solo los desbloqueados (Mochi al acabar la fase 3) */
+/* 13-10-2026 (Artur): solo los desbloqueados — Mochi no se abre hasta acabar la campaña; Crear mazo, solo cartas de los desbloqueados */
+{ const _desbS = desbloqueado, TODO = false;
+  desbloqueado = function(id){
+    if(!TODO && id === "mochi"){ try{ if(datosCampana().fase !== "fin") return false; }catch(e){} }
+    return _desbS.apply(this, arguments);
+  }; }
+{ const _mlS = mimonLuchadores;
+  mimonLuchadores = function(){
+    const l = _mlS.apply(this, arguments);
+    if(MIM2.conMochi || CAMPANA.modo) return l;                    /* la máquina y la campaña, como siempre */
+    return l.filter(m => { try{ return desbloqueado(m.id); }catch(e){ return true; } });
+  }; }
+
+</script>
 </body>
 </html>
