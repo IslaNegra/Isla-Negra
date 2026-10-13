@@ -24392,5 +24392,73 @@ function cmVolverPrincipal(cerrar){
     try{ if(!RED.mimon) cmVolverPrincipal(() => { const i = MIM.abierto; mimonCerrar(); return i; }); }catch(e){} return r; }; }
 
 </script>
+<script>/* 13-10-2026 (Artur): Sumi, frase del final, Truco, dorso de la máquina y memoria de vídeos */
+/* Truco del mago: al darse la vuelta no vuelve a volar en pequeño desde la mano */
+/* 13-10-2026 (Artur): el Truco del rival ya ha volado boca abajo a la mesa; al destaparse se da la vuelta allí mismo,
+   sin desaparecer y volver a volar en pequeño desde la mano del rival */
+const TRUCO_YA = { id:null, t:0 };
+{ const _vcT = volarCarta;
+  volarCarta = function(cartaId, destino, opciones){
+    try{
+      const o = opciones || {};
+      if(typeof trucoTapado === "function" && trucoTapado(cartaId)){ TRUCO_YA.id = cartaId; TRUCO_YA.t = Date.now(); }
+      else if(TRUCO_YA.id && cartaId === TRUCO_YA.id && o.ocultarDestino && Date.now() - TRUCO_YA.t < 30000){
+        TRUCO_YA.id = null;                               /* ya está en la mesa: no vuelve a volar */
+        return;
+      }
+    }catch(e){}
+    return _vcT.apply(this, arguments);
+  }; }
+
+/* Sumi «Daño = nivel del rival»: también en los mazos creados cuenta el nivel del rival */
+/* 13-10-2026 (Artur): «Daño = nivel del rival» de las cartas de Sumi en un mazo creado: se mira el nivel del rival de quien la juega
+   (antes, si no había una Sumi de verdad en la partida, podía salir el nivel propio o un 2 fijo) */
+const OKUMA_QUIEN = { i:-1 };
+{ const _ltS = lanzarTecnica;
+  lanzarTecnica = function(origen){
+    const antes = OKUMA_QUIEN.i; OKUMA_QUIEN.i = origen;
+    try{ return _ltS.apply(this, arguments); } finally { OKUMA_QUIEN.i = antes; }
+  }; }
+{ const _onR = okumaNivelRival;
+  okumaNivelRival = function(){
+    const A = ESTADO.asientos;
+    if(!A) return _onR.apply(this, arguments);
+    let yo = OKUMA_QUIEN.i;
+    if(!(yo >= 0 && A[yo])) yo = -1;
+    if(yo >= 0 && A[yo].mazoId === "okuma") return _onR.apply(this, arguments);          /* la Sumi de verdad: como siempre */
+    if(yo < 0){ if(A.some(a => a.mazoId === "okuma")) return _onR.apply(this, arguments); yo = ESTADO.iniciativa; }
+    if(!(yo >= 0 && A[yo])) return _onR.apply(this, arguments);
+    let n = 0;
+    A.forEach((q, k) => { if(k !== yo && vivo(k) && q.nivel > n) n = q.nivel; });
+    return n || 1;
+  }; }
+
+/* final: frase en el dibujo de la barca */
+try{ if(CINE && CINE.fin && Array.isArray(CINE.fin.textos)){
+  CINE.fin.textos = CINE.fin.textos.filter(x => x[0] !== "Fin.").concat([
+    ["Eres el único superviviente del campeonato.", 34.5, 4.0],
+    ["Te marchas de Isla Negra con las manos vacías.", 38.7, 4.0],
+    ["Tendrás que esperar otros mil años para volver a intentarlo. Suerte.", 42.9, 3.6],
+    ["Fin.", 46.7, 3.5] ]); } }catch(e){}
+/* dorso: la máquina lleva el dorso que tengas elegido */
+{ const _dpv = dorsoPonerVar;
+  dorsoPonerVar = function(i, d){
+    try{ const s = PARTIDA.asientos && PARTIDA.asientos[i];
+      if(s && !s.humano){ d = ajustesDorso(); DORSO_IA[i] = d; } else delete DORSO_IA[i]; }catch(e){}
+    return _dpv.call(this, i, d); }; }
+const DORSO_IA = {};
+{ const _icD = iniciarCombate;
+  iniciarCombate = function(){ const r = _icD.apply(this, arguments);
+    try{ Object.keys(DORSO_IA).forEach(k => { const a = ESTADO.asientos[k]; if(a) a.dorso = DORSO_IA[k]; }); }catch(e){}
+    return r; }; }
+/* memoria: al quitar un vídeo de la pantalla se suelta del todo */
+{ const soltar = v => { try{ const u = v.getAttribute("src") || ""; v.pause(); v.removeAttribute("src"); v.load();
+      if(u.slice(0,5) === "blob:" && videoBlob.cache){ for(const [k, x] of videoBlob.cache) if(x === u){ videoBlob.cache.delete(k); URL.revokeObjectURL(u); } } }catch(e){} };
+  try{ new MutationObserver(ms => ms.forEach(m => m.removedNodes.forEach(n => {
+      if(n.nodeType !== 1) return;
+      if(n.tagName === "VIDEO") soltar(n); else n.querySelectorAll && n.querySelectorAll("video").forEach(soltar); })))
+    .observe(document.body, { childList:true, subtree:true }); }catch(e){} }
+
+</script>
 </body>
 </html>
