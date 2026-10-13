@@ -24234,5 +24234,24 @@ libreMejoras = function(k){
   document.head.appendChild(st); }
 
 </script>
+<script>/* 13-10-2026 (Artur): la máquina con mazo creado se llama Jugador N */
+/* 13-10-2026 (Artur): la máquina con un mazo creado (simple o doble) se llama por su asiento: «Jugador 1…4», no «Mazo simple / doble» */
+{ const _icN = iniciarCombate;
+  iniciarCombate = function(){
+    const r = _icN.apply(this, arguments);
+    try{
+      let cambia = false;
+      ESTADO.asientos.forEach((a, k) => {
+        if(!a || a.controlador !== "ia" || a.mote) return;
+        const m = MAZOS.find(x => x.id === a.mazoId);
+        if(m && m.mimon && /^mimon\d/.test(a.mazoId)){ a.nombre = idi("Jugador") + " " + (k + 1); cambia = true; }
+      });
+      if(cambia) pintar();
+    }catch(e){}
+    return r;
+  }; }
+Object.assign(TRAD, { "Jugador": TRAD["Jugador"] || "Player" });
+
+</script>
 </body>
 </html>
