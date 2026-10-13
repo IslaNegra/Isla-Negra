@@ -23586,5 +23586,36 @@ function dohyoDeMimo(){
   }; }
 
 </script>
+<script>/* 13-10-2026 (Artur): logros más largos, Pólvora y detonación múltiple */
+/* 13-10-2026 (Artur): logros más largos y dos nuevos (Soto: daño con Pólvora · Minero: detonación múltiple) */
+(function(){
+  const pon = (arr, nuevos) => { arr.splice(0, arr.length, ...nuevos); };
+  pon(ESC, [25, 100, 250]); pon(ESC_CL, [25, 50, 100]); pon(ESC_1, [1, 10, 25]); pon(ESC_1B, [1, 25, 50]);
+  const L = id => LOGROS_DEF.find(x => x.id === id);
+  if(L("dano")) L("dano").esc = [1000, 5000, 20000];
+  if(L("responde")) L("responde").esc = [250, 1000, 2500];
+  if(L("vesna_drena")) L("vesna_drena").esc = [50, 200, 500];
+  const tras = (id, nuevo) => { const k = LOGROS_DEF.findIndex(x => x.id === id); if(k >= 0 && !L(nuevo.id)) LOGROS_DEF.splice(k + 1, 0, nuevo); };
+  tras("pirata_polvora", { id:"pirata_polvora_dano", c:"{n} daño con Pólvora", s:"pj:pirata", t:"Haz {n} puntos de daño con Pólvora", esc:[25, 100, 250] });
+  tras("minero_patata", { id:"minero_multiple", c:"{n} detonaciones múltiples", c1:"Detonación múltiple", s:"pj:minero",
+                          t:"Detona 4 Cargas de golpe {n} veces", t1:"Detona 4 Cargas de golpe", esc:[1, 10, 25] });
+})();
+{ const _polL = polvora;
+  polvora = function(i){ const antes = LOGRO.polvora; LOGRO.polvora = i; try{ return _polL.apply(this, arguments); } finally { LOGRO.polvora = antes; } }; }
+{ const _ddL = danoDirecto;
+  danoDirecto = function(indice, dano, motivo){
+    try{ if(motivo === "la pólvora" && dano > 0 && typeof LOGRO.polvora === "number" && LOGRO.polvora >= 0 && logrosSoy(LOGRO.polvora, "pirata") && indice !== LOGRO.polvora)
+           logroCuenta("pirata_polvora_dano", dano); }catch(e){}
+    return _ddL.apply(this, arguments);
+  }; }
+{ const _dcL = detonarCargas;
+  detonarCargas = function(t){ const n = _dcL.apply(this, arguments);
+    try{ if(n >= 4 && logrosSoy(LOGRO.actor, "minero") && t !== LOGRO.actor) logroCuenta("minero_multiple"); }catch(e){}
+    return n; }; }
+Object.assign(TRAD, { "{n} daño con Pólvora": "{n} Gunpowder damage", "Haz {n} puntos de daño con Pólvora": "Deal {n} damage with Gunpowder",
+  "{n} detonaciones múltiples": "{n} multiple blasts", "Detonación múltiple": "Multiple blast",
+  "Detona 4 Cargas de golpe {n} veces": "Blow up 4 Charges at once {n} times", "Detona 4 Cargas de golpe": "Blow up 4 Charges at once" });
+
+</script>
 </body>
 </html>
