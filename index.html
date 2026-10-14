@@ -6769,7 +6769,7 @@ function alMonton(a, id){
 function robarRival(i, r, spec, porQue){
   const a = ESTADO.asientos[i], v = ESTADO.asientos[r];
   const n = spec.n || 1; let hechas = 0;
-  ROBO_ORIGEN.para = i; ROBO_ORIGEN.de = r; ROBO_ORIGEN.hasta = Date.now() + lento(6000);   /* la carta sale del lado del rival */
+  ROBO_ORIGEN.para = i; ROBO_ORIGEN.de = r; ROBO_ORIGEN.desde = "mano"; ROBO_ORIGEN.hasta = Date.now() + lento(6000);   /* 14-10-2026: la carta sale de la MANO del rival */
   for(let k = 0; k < n; k++){
     const vm = manoReal(v), ve = etqReal(v);                         /* VESNA: de murciélago, su mano de verdad */
     if(!vm.length) break;
@@ -6805,7 +6805,7 @@ function registrarBotin(a, r, c, seguir){
   anotar(a.nombre + " usa " + c.nombre + ": mira " + vistas.length + (vistas.length === 1 ? " carta" : " cartas") +
          " de arriba del mazo de " + v.nombre + ".", "nuevo");
   const quedan = Math.min(R.queda || 1, vistas.length);
-  ROBO_ORIGEN.para = yo; ROBO_ORIGEN.de = r; ROBO_ORIGEN.hasta = Date.now() + lento(6000);   /* las cartas salen del mazo del rival */
+  ROBO_ORIGEN.para = yo; ROBO_ORIGEN.de = r; ROBO_ORIGEN.desde = "mazo"; ROBO_ORIGEN.hasta = Date.now() + lento(6000);   /* las cartas salen del MAZO del rival */
   vistas.forEach(id => { a.mano.push(id); a.manoEtq.push(++ETIQUETA); });
   const avisarBotin = () => avisar(() => {
     efx("birlar");                                            /* 6-10-2026: robar del mazo del rival, con el sonido de birlar */
@@ -7702,6 +7702,7 @@ function lanzarTecnica(origen, objetivo, carta){
                        desdeSombra: !!ESTADO.sombraLanza, rafaga: !!carta.efecto.rafaga,
                        escondeTras: !!carta.efecto.esconde,
                        alEntrar: carta.efecto.alEntrar || null,
+                       birla: carta.efecto.birla || null,                           /* Abordaxe: roba si encaja */
                        desequilibra: !!carta.efecto.desequilibra,                   /* Sumi */
                        empuja: carta.efecto.empuja || 1, esCombo: !!carta.esCombo, poker: !!carta.poker, conAmigo: !!carta.conAmigo,   /* Mochi */
                        restoCombo: carta.restoCombo || 0, devuelveBase: carta.devuelveBase,             /* Mochi jefe */
@@ -7711,6 +7712,18 @@ function lanzarTecnica(origen, objetivo, carta){
   soltarTrucoSale();
   ESTADO.sombraLanza = false;
   if(inev) anotar("Es inevitable: no admite respuesta.");
+  if(ESTADO.cargaPolvora && ESTADO.cargaPolvora.origen === origen){   /* 14-10-2026 (Artur): primero la Carga destapada por la pólvora; el golpe queda congelado */
+    const cp = ESTADO.cargaPolvora; ESTADO.cargaPolvora = null;
+    /* mientras dura la animación de la destapada, el golpe pendiente sigue siendo el del Pirata: la mesa no cambia.
+       Cuando la Carga deja la mesa (en la cola de avisos de la pólvora) pasa a ser el golpe pendiente y responde el rival. */
+    ESTADO.cargaPolvoraPend = cp;
+    ESTADO.fase = "resolviendo";
+    pintar();
+    tardeTrasAvisos(lento(2500), () => {                   /* por si acaso: si la Carga no llegó a lanzarse, sigue el golpe del Pirata */
+      if(ESTADO.cargaPolvoraPend){ ESTADO.cargaPolvoraPend = null; if(ESTADO.pendiente && ESTADO.pendiente.cartaId !== "carga") pedirRespuesta(); }
+    });
+    return;
+  }
   pedirRespuesta();
 }
 function candidatosRespuesta(p){
@@ -8104,6 +8117,7 @@ function aplicarDano(){
       pintar();
     }, 850);
   }
+  if(dano > 0 && p.birla && !p.reflejo) robarRival(p.origen, p.objetivo, p.birla, p.nombre);   /* 14-10-2026 (Artur): Abordaxe, si encaja le roba una carta */
   if(dano > 0 && p.alEntrar && p.alEntrar.conejo && !p.reflejo)     /* Cuchillos al aire (Mago): Conejo */
     aconejar(p.objetivo, p.alEntrar.conejo, p.nombre);
   if(dano > 0 && p.alEntrar && p.alEntrar.carga && !p.reflejo) sembrarCargas(p.objetivo, p.alEntrar.carga, p.nombre);   /* MINERO */
@@ -8293,11 +8307,20 @@ function aplicarEfectoNoAtaque(a, c, seguir, objetivo, trasCanario){
   anotar(a.nombre + " usa " + c.nombre + " y coge " + n + (n === 1 ? " carta" : " cartas")
          + (n < cuantas ? " (no le quedaban más)" : "") + ".", "nuevo");
   evento(a, "+" + n + (n === 1 ? " carta" : " cartas"), c.nombre);
+  /* 14-10-2026 (Artur): la máquina elige qué soltar ANTES de que se vea: a su mano solo vuelan las que se queda */
+  const sueltasIA = a.controlador === "ia" ? Math.min(c.efecto.descarta || 0, n) : 0;
+  if(sueltasIA){
+    const idxIA = []; for(let k = a.mano.length - n; k < a.mano.length; k++) idxIA.push(k);
+    const elegidasIA = iaElegirDescartes(a, idxIA, sueltasIA);
+    jugadaHecha("soltar", ESTADO.asientos.indexOf(a), elegidasIA);
+    soltarCartas(a, elegidasIA);
+    anotar(a.nombre + " se queda con " + (n - sueltasIA) + " y suelta " + sueltasIA + ".");
+  }
   if(n > 0 && !(a.controlador !== "ia" && Math.min(c.efecto.descarta || 0, n) > 0)){   /* 8-10-2026: si eliges qué soltar, sin texto: sale el menú */
     const yoR = ESTADO.asientos.indexOf(a);
     avisar(() => { subeMarca("+" + n + (n === 1 ? " carta" : " cartas"), "a" + yoR + " chico"); pintar(); }, 850);
   }
-  const sueltas = Math.min(c.efecto.descarta || 0, n);
+  const sueltas = sueltasIA ? 0 : Math.min(c.efecto.descarta || 0, n);
   if(!sueltas){ seguir(); return; }
   elegirDescartes(a, n, sueltas, seguir);
 }
@@ -8447,6 +8470,23 @@ function volarMurcielago(i, id){
 }
 function terminarResolucion(prisa){
   soltarTrucoSale();
+  if(ESTADO.pendienteCongelado){                            /* 14-10-2026 (Artur): resuelta la Carga de la pólvora, se resuelve el golpe del Pirata */
+    const p = ESTADO.pendienteCongelado; ESTADO.pendienteCongelado = null;
+    apuntarBajas();
+    if(ganadorAsalto() === -1 && vivo(p.origen) && vivo(p.objetivo) && ESTADO.fase !== "finAsalto" && ESTADO.fase !== "finCombate"){
+      ESTADO.quienJuegaTras = null; ESTADO.soloAtaques = false;
+      ESTADO.fase = "resolviendo";
+      anotar("Estalló la Carga: ahora se resuelve " + p.nombre + " de " + ESTADO.asientos[p.origen].nombre + ".", "nuevo");
+      pintar();
+      tardeTrasAvisos(RITMO.verCarta, () => {
+        if(ESTADO.fase === "finAsalto" || ESTADO.fase === "finCombate") return;
+        ESTADO.pendiente = p; ESTADO.huboGolpe = true;
+        pintar();
+        pedirRespuesta();
+      });
+      return;
+    }
+  }
   if(ESTADO.enjambre){                                     /* VESNA: Murciélagos, el siguiente golpe */
     const K = ESTADO.enjambre;
     apuntarBajas();
@@ -8791,6 +8831,35 @@ function polvora(indiceAsiento, objetivo, carta){
     return;
   }
   const id = a.mazo.shift(), d = defCarta(id);
+  if(esCarga(id)){                                         /* 14-10-2026 (Artur): destapa una Carga: sale la Carga y empieza su juego; el golpe del Pirata espera */
+    anotar(a.nombre + " destapa una Carga: ¡sale volando! El golpe de " + a.nombre + " espera a que estalle.", "hito");
+    ESTADO.cargaPolvora = { origen: indiceAsiento, objetivo };
+    /* la misma animación que una destapada de pólvora: entra del mazo al lado de la pólvora, texto, y se retira de la mesa */
+    avisar(() => {
+      ESTADO.secuencia.push({ asiento: indiceAsiento, carta: "carga", polvora: true });
+      pintar();
+      sonar("carta"); if(typeof efx === "function") efx("jugar_carta");
+      volarCarta("carga", document.querySelector("#combate .paso.ult .carta"), { ocultarDestino: true, desde: "mz" + indiceAsiento });
+    }, lento(820));
+    avisar(() => { subeMarca("¡Carga!", "a" + indiceAsiento + " chico"); pintar(); }, 850);
+    avisar(() => {
+      const k = ESTADO.secuencia.findIndex(x => x.polvora && esCarga(x.carta));
+      if(k < 0) return;
+      { const el = document.querySelectorAll("#combate .secuencia .paso")[k];   /* dónde está la Carga en la mesa: de ahí arranca la Carga viva */
+        if(el){ const c = el.querySelector(".carta") || el; window.CARGA_DESDE = { r: c.getBoundingClientRect(), t: Date.now() }; } }
+      const cp = ESTADO.cargaPolvoraPend; ESTADO.cargaPolvoraPend = null;
+      if(cp && ESTADO.pendiente && ESTADO.pendiente.cartaId !== "carga" && !ESTADO.pendienteCongelado
+         && ESTADO.fase !== "finAsalto" && ESTADO.fase !== "finCombate"){
+        ESTADO.pendienteCongelado = ESTADO.pendiente;       /* el golpe del Pirata espera */
+        ESTADO.pendiente = { origen: cp.origen, objetivo: cp.objetivo, dano: (defCarta("carga").efecto.dano || 2), nivel: 1, inevitable: false,
+                             nombre: "Carga", cartaId: "carga", alEntrar: null, empuja: 1, intercambio: ++ESTADO.sello };
+        anotar(ESTADO.asientos[cp.origen].nombre + " lanza la Carga contra " + ESTADO.asientos[cp.objetivo].nombre + ".", "nuevo");
+      }
+      sacarPasoSuave(k);                                      /* la Carga deja la mesa (la viva arranca en su sitio) y Andanada se desliza */
+      if(cp) tarde(lento(500), () => { if(ESTADO.pendiente && ESTADO.pendiente.cartaId === "carga") pedirRespuesta(); });
+    }, lento(700));
+    return;
+  }
   a.descartes.push(id);
   /* La destapada se VE en el tablero: entra volando desde el mazo y se queda
      ahí con las demás hasta que se recoge la sucesión entera. El aviso va en
@@ -8868,7 +8937,7 @@ function rematarConObjetivo(indiceAsiento, indiceMano, objetivo, tras){
       anotar(a.nombre + " lanza " + a.nivel + " murciélagos: se paran uno a uno.", "nuevo");
     }
     polvora(indiceAsiento, objetivo, c);
-    if(c.efecto.birla) robarRival(indiceAsiento, objetivo, c.efecto.birla, c.nombre);   /* Abordaxe (Soto) */
+    /* 14-10-2026 (Artur): Abordaxe ya no roba al jugarla: roba solo si el rival encaja (en aplicarDano) */
     lanzarTecnica(indiceAsiento, objetivo, c); return;
   }
   pintar();
@@ -10052,10 +10121,16 @@ function anclaMazo(i){
   return caja ? (caja.querySelector("svg,.ic-mazo") || caja) : null;
 }
 /* 10-10-2026 (Artur): el botín sale del mazo del rival */
-const ROBO_ORIGEN = { para:-1, de:-1, hasta:0 };
+const ROBO_ORIGEN = { para:-1, de:-1, hasta:0, desde:"mazo" };
 { const _anclaMazo = anclaMazo;
   anclaMazo = function(i){
-    if(i === ROBO_ORIGEN.para && Date.now() < ROBO_ORIGEN.hasta) return _anclaMazo(ROBO_ORIGEN.de);
+    if(i === ROBO_ORIGEN.para && Date.now() < ROBO_ORIGEN.hasta){
+      /* 14-10-2026 (Artur): birlar de la mano sale del abanico de dorsos del rival; robar del mazo, de su mazo */
+      if(ROBO_ORIGEN.desde === "mano"){
+        try{ const m = document.querySelector("#dorsosRival .fan-r"); if(m && ROBO_ORIGEN.de === asientoOtro() && m.getBoundingClientRect().width) return m; }catch(e){}
+      }
+      return _anclaMazo(ROBO_ORIGEN.de);
+    }
     return _anclaMazo(i);
   }; }
 let TEXTO_DE = -1, TEXTO_MUDO = false;
@@ -10247,7 +10322,8 @@ function htmlSecuencia(){
   const zMesa = z * 1.1;                 // la carta jugada conserva la escala de la carta alzada
   const AN = Math.round(98 * zMesa);
   const ancho = ANCHO_LIENZO;
-  const reserva = (ESTADO.pendiente && ESTADO.pendiente.cartaId === "carga") ? 70 : 0;   /* MINERO: sitio para la Carga */
+  const vivaAun = (() => { try{ const v = document.getElementById("cargaViva"); return !!(v && v.classList.contains("ver") && Date.now() < (window.CARGA_BUM_HASTA || 0)); }catch(e){ return false; } })();   /* 14-10-2026: la Carga que está estallando sigue a la vista */
+  const reserva = ((ESTADO.pendiente && ESTADO.pendiente.cartaId === "carga") || vivaAun) ? 70 : 0;   /* MINERO: sitio para la Carga */
   const hueco = Math.max(240, Math.min(680, ancho - 44)) - reserva;
   const salto = seq.length > 1
     ? Math.max(30, Math.min(AN + 6, (hueco - AN) / (seq.length - 1)))
@@ -11556,7 +11632,7 @@ function pintarCarga(){
   let el = document.getElementById("cargaViva");
   if(!el){ el = document.createElement("div"); el.id = "cargaViva"; document.body.appendChild(el); }
   const p = ESTADO.pendiente;
-  if(!(p && p.cartaId === "carga")){ el.classList.remove("ver"); return; }
+  if(!(p && p.cartaId === "carga") || (p.vivaDesde && Date.now() < p.vivaDesde)){ el.classList.remove("ver"); return; }
   const zona = document.getElementById("combate").getBoundingClientRect();
   /* la Carga tiene el tamaño de las cartas de la mesa; a un lado se encoge */
   const z = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--z")) || 1) * 1.1;
@@ -11567,10 +11643,12 @@ function pintarCarga(){
   const nueva = !el.classList.contains("ver");
   if(nueva){
     /* recién lanzada: cae en el centro de la mesa como cualquier carta, y al rato se va a su sitio */
-    CARGA_VISTA.grande = Date.now() + lento(1100);
+    const d0 = (window.CARGA_DESDE && Date.now() - CARGA_DESDE.t < 4000) ? CARGA_DESDE.r : null; window.CARGA_DESDE = null;   /* 14-10-2026 (Artur): la Carga de la pólvora arranca donde estaba en la mesa */
+    CARGA_VISTA.grande = Date.now() + (d0 ? 0 : lento(1100));   /* la de la pólvora se va al lateral al momento, a la vez que la mesa se recoloca */
+    if(d0) tarde(40, () => { try{ pintarCarga(); }catch(e){} });
     el.style.transition = "none";
-    el.style.left = (zona.left + zona.width / 2 - an / 2) + "px";
-    el.style.top = (zona.top + zona.height / 2 - al / 2) + "px";
+    el.style.left = (d0 ? d0.left + d0.width / 2 - an / 2 : zona.left + zona.width / 2 - an / 2) + "px";
+    el.style.top = (d0 ? d0.top + d0.height / 2 - al / 2 : zona.top + zona.height / 2 - al / 2) + "px";
     el.style.transform = "none";
     el.classList.add("ver");
     el.offsetWidth; el.style.transition = "";
@@ -12251,7 +12329,7 @@ function reajustarTitulos(){
   window.addEventListener('resize', reajustarTitulos);
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(reajustarTitulos);
 })();
-const VERSION = "2.2";
+const VERSION = "2.2.1";
 document.title = "Sombras sobre Isla Negra · " + VERSION;
 function panelPortada(html, pie, bajoTitulo){
   const p = document.getElementById("portada");
@@ -17484,6 +17562,15 @@ function lanzarTecnica(E, origen, objetivo, carta, alAire){
                   escondeTras: !!carta.efecto.esconde };
   E.sombraLanza = false;
   if(inev) anotar(E, "Es inevitable: no admite respuesta.");
+  if(E.cargaPolvora && E.cargaPolvora.origen === origen){   /* 14-10-2026 (Artur): primero la Carga de la pólvora; el golpe queda congelado */
+    const cp = E.cargaPolvora; E.cargaPolvora = null;
+    E.pendienteCongelado = E.pendiente;
+    E.pendiente = { origen: cp.origen, objetivo: cp.objetivo, dano: (defCarta("carga").efecto.dano || 2), nivel: 1, inevitable: false, nombre: "Carga",
+                    cola: null, responde: null, cartaId: "carga", alEntrar: null, empuja: 1 };
+    anotar(E, E.asientos[cp.origen].nombre + " lanza la Carga contra " + E.asientos[cp.objetivo].nombre + ".");
+    pedirRespuesta(E);
+    return;
+  }
   pedirRespuesta(E);
 }
 function candidatosRespuesta(E, p){
@@ -18269,6 +18356,16 @@ function cederIniciativa(E){
   empezarTurno(E);
 }
 function terminarResolucion(E){
+  if(E.pendienteCongelado){                                                 /* 14-10-2026 (Artur): resuelta la Carga de la pólvora, el golpe del Pirata */
+    const p = E.pendienteCongelado; E.pendienteCongelado = null;
+    apuntarBajas(E);
+    if(ganadorAsalto(E) === -1 && vivo(E, p.origen) && vivo(E, p.objetivo) && E.fase !== "finAsalto" && E.fase !== "finCombate"){
+      anotar(E, "Estalló la Carga: ahora se resuelve " + p.nombre + " de " + E.asientos[p.origen].nombre + ".");
+      E.pendiente = p;
+      pedirRespuesta(E);
+      return;
+    }
+  }
   if(E.enjambre){                                                           /* VESNA: Murciélagos, el siguiente golpe */
     const K = E.enjambre;
     apuntarBajas(E);
@@ -18377,6 +18474,12 @@ function polvora(E, indiceAsiento, objetivo, carta){
     return;
   }
   const id = a.mazo.shift(), d = defCarta(id);
+  if(esCarga(id)){                                         /* 14-10-2026 (Artur): destapa una Carga: sale la Carga; el golpe del Pirata espera */
+    anotar(E, a.nombre + " destapa una Carga: ¡sale volando! El golpe de " + a.nombre + " espera a que estalle.");
+    E.cargaPolvora = { origen: indiceAsiento, objetivo };
+    cont(E, indiceAsiento, "polvora_carga");
+    return;
+  }
   a.descartes.push(id);
   if(d.tipo === "ataque"){
     const extra = d.efecto.dano || 0;
@@ -21363,8 +21466,20 @@ function humoCargaViva(){
     const el = document.getElementById("cargaViva");
     if(!el || !el.classList.contains("ver")) return;
     humoSobre([el.querySelector(".carta") || el], "detonar");
+    const antes = [...document.querySelectorAll("#combate .secuencia .paso")].map(x => x.getBoundingClientRect());   /* 14-10-2026: la mesa se recoloca deslizando cuando la Carga se va */
     el.style.transition = "none"; el.classList.remove("ver");
     el.offsetWidth; el.style.transition = "";
+    try{
+      pintar();
+      const pasos = {};
+      document.querySelectorAll("#combate .secuencia .paso").forEach((x, i) => {
+        const r0 = antes[i]; if(!r0 || !ESTADO.secuencia[i]) return;
+        const r1 = x.getBoundingClientRect(); const dx = r0.left - r1.left, dy = r0.top - r1.top;
+        if(Math.abs(dx) < .5 && Math.abs(dy) < .5) return;
+        pasos[i] = { carta: ESTADO.secuencia[i].carta, dx, dy };
+      });
+      if(Object.keys(pasos).length){ DESLIZ.pasos = pasos; DESLIZ.desde = Date.now(); pintar(); }
+    }catch(e){}
   }catch(e){}
 }
 { const _pintarCargaHM = pintarCarga;
@@ -24814,7 +24929,120 @@ const DORSO_IA = {};
     .observe(document.body, { childList:true, subtree:true }); }catch(e){} }
 
 </script>
+<script>/* 14-10-2026 (Artur): partida «pillada»: con un mazo creado (Mazo simple o doble), al volver a la sala se quitan sus cartas,
+   pero la mesa vieja seguía con ellas en la mano; al Empezar, el repintado previo fallaba y la partida nueva no llegaba a arrancar
+   (se veía la vieja). Ahora un fallo al repintar la mesa vieja no impide empezar la nueva. */
+{ const _aEP = ajustarEscala;
+  ajustarEscala = function(){ try{ return _aEP.apply(this, arguments); }catch(e){ console.error("ajustarEscala:", e); } }; }
+</script>
+<script>/* 14-10-2026 (Artur): la última carta de la mano del rival también vuela a la mesa: al jugarla, el abanico de dorsos
+   desaparecía antes del vuelo y la carta salía directamente en la mesa. Ahora vuela desde donde estaba ese último dorso. */
+const ULTIMO_DORSO = { r:null, t:0 };
+{ const _pdrU = pintarDorsosRival;
+  pintarDorsosRival = function(){
+    try{ const f = document.querySelector("#dorsosRival .fan-r"); const r = f ? f.getBoundingClientRect() : null;
+         if(r && r.width){ ULTIMO_DORSO.r = { left:r.left, top:r.top, width:r.width, height:r.height }; ULTIMO_DORSO.t = Date.now(); } }catch(e){}
+    return _pdrU.apply(this, arguments);
+  }; }
+{ const _vcU = volarCarta;
+  volarCarta = function(cartaId, destino, opciones){
+    const o = opciones || {};
+    let fantasma = null;
+    try{
+      if(!(o.desde && document.getElementById(o.desde)) && !document.querySelector(".fan-r") && !mesaGrande()
+         && ULTIMO_DORSO.r && Date.now() - ULTIMO_DORSO.t < 8000){
+        const r = ULTIMO_DORSO.r;
+        fantasma = document.createElement("div"); fantasma.id = "ultimoDorsoRival";
+        fantasma.style.cssText = "position:fixed;visibility:hidden;pointer-events:none;left:" + r.left + "px;top:" + r.top + "px;width:" + r.width + "px;height:" + r.height + "px";
+        document.body.appendChild(fantasma);
+        opciones = Object.assign({}, o, { desde:"ultimoDorsoRival" });
+      }
+    }catch(e){}
+    try{ return _vcU.call(this, cartaId, destino, opciones); }
+    finally{ if(fantasma) fantasma.remove(); }
+  }; }
+</script>
+<script>/* 14-10-2026 (Artur): logros nuevos — «Gana partidas con…» en todos los luchadores (25, 50, 100), Sumi Maestra con el rival
+   en Básico, Mazo simple y Mazo doble, completar el tutorial; berserker junto a los de multijugador; de una sola vez: Sumi Maestra, Hana sin ataques,
+   combo de 4 del Invisible y 4 Cargas de golpe; fuera «sin que te vean» (Invisible) y «sin elegir todas las cartas» (Mimón) */
+{ const pon = (L, antesDe) => { const k = LOGROS_DEF.findIndex(x => x.s === antesDe); if(k >= 0) LOGROS_DEF.splice(k, 0, L); else LOGROS_DEF.push(L); };
+  [["okuma", "Sumi"], ["hana", "Hana"], ["minero", "el Minero"], ["pirata", "Soto"], ["vesna", "Vesna"],
+   ["invisible", "el Invisible"], ["mago", "el Mago"], ["riko", "el Mimón"], ["mochi", "Mochi"]].forEach(([id, n]) => {
+    if(!LOGROS_DEF.some(x => x.id === id + "_gana"))
+      pon({ id:id + "_gana", c:"{n} con " + n, s:"pj:" + id, t:"Gana {n} partidas con " + n, esc:ESC_CL }, "pj:" + id); });
+  { const k = LOGROS_DEF.findIndex(x => x.id === "inv_sin_ver"); if(k >= 0) LOGROS_DEF.splice(k, 1); }
+  { const k = LOGROS_DEF.findIndex(x => x.id === "okuma_gana");
+    LOGROS_DEF.splice(k + 1, 0, { id:"sumi_maestra", c:"{n} Maestra", c1:"Maestra", s:"pj:okuma",
+      t:"Gana {n} partidas siendo Maestra con el rival en Básico", t1:"Gana 1 partida siendo Maestra con el rival en Básico", esc:ESC_1 }); }
+  { let k = -1; LOGROS_DEF.forEach((x, j) => { if(x.s === "pj:riko") k = j; });
+    LOGROS_DEF.splice(k + 1, 0,
+      { id:"libre_gana", c:"{n} Mazo simple", s:"pj:riko", t:"Gana {n} combates con un Mazo simple", esc:ESC_CL },
+      { id:"doble_gana", c:"{n} Mazo doble", s:"pj:riko", t:"Gana {n} combates con un Mazo doble", esc:ESC_CL }); }
+  { const k = LOGROS_DEF.findIndex(x => x.id === "gana_berserker");      /* berserker, junto a los de multijugador */
+    if(k >= 0){ const L = LOGROS_DEF.splice(k, 1)[0]; const m = LOGROS_DEF.findIndex(x => x.id === "gana_multi"); LOGROS_DEF.splice(m >= 0 ? m + 1 : LOGROS_DEF.length, 0, L); } }
+  ["sumi_maestra", "hana_sin_ataques", "inv_combo4", "minero_multiple"].forEach(id => { const L = LOGROS_DEF.find(x => x.id === id); if(L) L.esc = [1]; });   /* una sola vez */
+  { const k = LOGROS_DEF.findIndex(x => x.id === "mimon_elige"); if(k >= 0) LOGROS_DEF.splice(k, 1); }
+  LOGROS_DEF.push({ id:"tutorial", c:"Tutorial", s:"misc", t:"Completa el tutorial", unico:() => (logrosDatos().c.tutorial || 0) > 0 });
+  Object.assign(TRAD, {
+    "Gana {n} partidas con Sumi": "Win {n} games with Sumi", "Gana {n} partidas con Hana": "Win {n} games with Hana",
+    "Gana {n} partidas con el Minero": "Win {n} games with the Miner", "Gana {n} partidas con Soto": "Win {n} games with Soto",
+    "Gana {n} partidas con Vesna": "Win {n} games with Vesna", "Gana {n} partidas con el Invisible": "Win {n} games with the Invisible Man",
+    "Gana {n} partidas con el Mago": "Win {n} games with the Magician", "Gana {n} partidas con el Mimón": "Win {n} games with the Great Mimón",
+    "Gana {n} partidas con Mochi": "Win {n} games with Mochi",
+    "{n} con Sumi": "{n} with Sumi", "{n} con Hana": "{n} with Hana", "{n} con el Minero": "{n} with the Miner", "{n} con Soto": "{n} with Soto",
+    "{n} con Vesna": "{n} with Vesna", "{n} con el Invisible": "{n} with the Invisible Man", "{n} con el Mago": "{n} with the Magician",
+    "{n} con el Mimón": "{n} with the Mimón", "{n} con Mochi": "{n} with Mochi",
+    "Gana {n} partidas siendo Maestra con el rival en Básico": "Win {n} games as a Master with your rival still Basic",
+    "Gana 1 partida siendo Maestra con el rival en Básico": "Win 1 game as a Master with your rival still Basic",
+    "{n} Maestra": "{n} Master", "Maestra": "Master",
+    "Gana {n} combates con un Mazo simple": "Win {n} fights with a Simple deck", "Gana {n} combates con un Mazo doble": "Win {n} fights with a Double deck",
+    "{n} Mazo simple": "{n} Simple deck", "{n} Mazo doble": "{n} Double deck",
+    "Completa el tutorial": "Complete the tutorial", "Tutorial": "Tutorial" }); }
+{ const _lfcN = logrosFinCombate;
+  logrosFinCombate = function(equipo){
+    let gane = false, yo = -1, a = null;
+    try{ if(LOGRO.p && !TUTO.activo){ yo = logrosYo(); a = ESTADO.asientos[yo]; gane = !!a && equipo.indexOf(yo) !== -1; } }catch(e){}
+    const r = _lfcN.apply(this, arguments);
+    try{
+      if(gane){
+        const m = a.mazoId;
+        const pj = esMimo(a) ? null : (m === "okumajefe" ? "okuma" : (esMochi(a) ? "mochi" : m));
+        if(["okuma", "hana", "minero", "pirata", "vesna", "invisible", "mago", "riko", "mochi"].indexOf(pj) !== -1) logroCuenta(pj + "_gana");
+        if(pj === "okuma" && (a.nivel || 1) >= 4){
+          const rivales = ESTADO.asientos.filter((s, k) => k !== yo && !sonAliados(yo, k));
+          if(rivales.length && rivales.every(s => (s.nivel || 1) === 1)) logroCuenta("sumi_maestra");
+        }
+        if(esMimo(a)){
+          const s = PARTIDA.asientos[yo], t = s && s.mim && s.mim.tipo;
+          if(t === "libre") logroCuenta("libre_gana"); else if(t === "propio") logroCuenta("doble_gana");
+        }
+      }
+    }catch(e){ console.error("logros:", e); }
+    return r;
+  }; }
+{ const _taL = tutoAvanza;
+  tutoAvanza = function(){
+    const r = _taL.apply(this, arguments);
+    try{ if(!TUTO.activo && TUTO.paso >= ESCENAS.length) logroCuenta("tutorial"); }catch(e){}
+    return r;
+  }; }
+</script>
 </body>
 <!-- aligerar_v4: música, vídeos y dibujos fuera del archivo, precarga de dibujos, v2.2 -->
 <!-- ovacion_centro_v1: ovación y se aburre en el centro -->
+<!-- robar_mano_v1: birlar sale de la mano del rival, robar del mazo -->
+<!-- polvora_carga_v1: la pólvora que destapa una Carga lanza la Carga y congela el golpe del Pirata -->
+<!-- polvora_carga_v2: la Carga de la pólvora no va a la mesa -->
+<!-- polvora_carga_v3: la Carga de la pólvora entra en la mesa y se va al lateral -->
+<!-- polvora_carga_v4: la Carga de la pólvora se anima como una destapada y el juego sigue después -->
+<!-- polvora_carga_v5: la Carga pasa a pendiente cuando la destapada ya se ha retirado -->
+<!-- polvora_carga_v6: Carga viva desde la mesa y deslizamiento suave -->
+<!-- polvora_carga_v7: la Carga va de la mesa al lateral, sin salir por el borde -->
+<!-- polvora_carga_v8: la Carga viva y Andanada se mueven a la vez -->
+<!-- polvora_carga_v9: la mesa guarda el hueco hasta que la Carga desaparece -->
+<!-- pillado_v1: un fallo al repintar la mesa vieja ya no impide empezar la partida nueva -->
+<!-- ultima_v1: la ultima carta del rival vuela desde su ultimo dorso -->
+<!-- coge_v1: la maquina suelta antes de que se vea; solo vuelan las que se queda -->
+<!-- abordaje_v1: Abordaxe roba solo si el rival encaja -->
+<!-- logros_v5: logros nuevos y cambiados del 14-10-2026 -->
 </html>
