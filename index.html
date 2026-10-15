@@ -12512,6 +12512,7 @@ function versionMasNueva(a, b){   /* true si a > b ("2.1" > "2.0.3") */
 /* 10-10-2026 (Artur): la app que carga el juego de la web pasa su versión (?apk=); el aviso es para la app, no para el juego */
 const APK_EN_MARCO = window.parent !== window && /[?&]apk=/.test(location.search);
 function buscarActualizacion(){
+  if(/[?&]play=1/.test(location.search)) return;   /* 15-10-2026 (Artur): la app de Google Play no avisa de descargar APK (Play se actualiza sola) */
   const apk = (/[?&]apk=([0-9.]+)/.exec(location.search) || [])[1];
   if(!window.IslaAndroid && !apk) return;                  /* solo en la app de Android */
   const mia = apk || VERSION;
@@ -12921,19 +12922,12 @@ function reglasPuertas(){
       '<button class="puerta" id="puertaTexto"><b>Instrucciones</b></button>' +   /* 4-10-2026: primero Instrucciones */
       '<button class="puerta" id="puertaTuto"><b>Tutorial</b></button>' +
     '</div>' +
-    '<div class="recado">' +
-      '<p class="nostr rotulo-nostr">Visítanos en Nostr</p>' +
+    '<div class="recado">' +   /* 15-10-2026 (Artur): solo la web de GitHub */
+      '<p class="nostr rotulo-nostr">Juega en iPhone</p>' +
       '<p class="nostr">' +
-        '<a href="nostr:npub13stg4nutmvv4a0507qp9yvay3s8udvg9aza8mws7zexgfak42qystqskc8">IslaNegra@nostrplebs.com</a></p>' +
-      '<p class="nostr atajo">' +
-        '<a href="https://spoo.me/islanegra" ' +
+        '<a href="https://islanegra.github.io/Isla-Negra/" ' +
         'target="_blank" rel="noopener noreferrer">' +
-        'spoo.me/islanegra</a></p>' +
-      '<p class="nostr rotulo-nostr otra">Juega en itch.io</p>' +
-      '<p class="nostr">' +
-        '<a href="https://islanegra.itch.io/sombras-sobre-isla-negra" ' +
-        'target="_blank" rel="noopener noreferrer">' +
-        'islanegra.itch.io/sombras-sobre-isla-negra</a></p>' +
+        'islanegra.github.io/Isla-Negra</a></p>' +
     '</div>' +
     '</div>' +
     '<div class="pie"><p class="version-puertas">v' + VERSION + '</p>' +            /* 4-10-2026: la versión, encima de Volver */
@@ -25214,6 +25208,73 @@ function quitarCruzMitad(){ const x = document.getElementById("cruzMitad"); if(x
     return h;
   }; }
 </script>
+<script>/* 15-10-2026 (Artur): rótulo del enlace a la web */
+Object.assign(TRAD, { "Juega en iPhone": "Play on iPhone" });
+</script>
+<script>/* 15-10-2026 (Artur): en el iPhone, si abren el juego en el navegador (no desde el icono), aviso de instalarlo */
+function iphoneEnNavegador(){
+  try{
+    if(window.IslaAndroid || window.parent !== window) return false;
+    const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const instalado = navigator.standalone === true || (window.matchMedia && matchMedia("(display-mode: standalone)").matches);
+    return ios && !instalado;
+  }catch(e){ return false; }
+}
+let IPHONE_AVISADO = false;
+function avisoIphone(){
+  if(IPHONE_AVISADO || !iphoneEnNavegador() || document.getElementById("iphoneCaja")) return;
+  IPHONE_AVISADO = true;
+  const caja = document.createElement("div");
+  caja.id = "iphoneCaja"; caja.className = "pregunta-fondo";
+  caja.innerHTML = '<div class="pregunta"><p class="nv-tit">' + idi("Instala el juego") + '</p>' +
+    '<p class="nv-nota" style="font-style:normal;color:#EFE7D2;font-size:14px">' + idi("Si no lo instalas, no se guardará tu avance.") + '</p>' +
+    '<p class="nv-nota" style="font-style:normal">' + idi("Pulsa Compartir y después «Añadir a pantalla de inicio».") + '</p>' +
+    '<div class="pregunta-botones"><button class="si">' + idi("Vale") + '</button></div></div>';
+  document.body.appendChild(caja);
+  caja.querySelector(".si").onclick = () => caja.remove();
+}
+function avisoIphoneCuandoListo(){
+  if(IPHONE_AVISADO || !iphoneEnNavegador()) return;
+  const t0 = Date.now();
+  const opa = el => { let o = 1; for(let x = el; x && x.nodeType === 1; x = x.parentElement) o *= parseFloat(getComputedStyle(x).opacity) || 0; return o; };
+  const mira = () => {
+    const b = document.querySelector('#portada [data-camino="solo"]');
+    if((b && opa(b) > 0.6) || Date.now() - t0 > 20000) return setTimeout(avisoIphone, 900);
+    setTimeout(mira, 250);
+  };
+  mira();
+}
+{ const _pasoCaminoIp = pasoCamino;
+  pasoCamino = function(){ const r = _pasoCaminoIp.apply(this, arguments); try{ avisoIphoneCuandoListo(); }catch(e){} return r; }; }
+Object.assign(TRAD, {
+  "Instala el juego": "Install the game",
+  "Si no lo instalas, no se guardará tu avance.": "If you don't install it, your progress won't be saved.",
+  "Pulsa Compartir y después «Añadir a pantalla de inicio».": "Tap Share, then “Add to Home Screen”."
+});
+</script>
+<script>/* 15-10-2026 (Artur): cartas dobles (Mimón): si el texto de una mitad no cabe, se achica la letra hasta que quepa entera */
+{ const PEND = new Set(); let pedido = false;
+  const encajar = t => {
+    const r = t.querySelector(".regla"); if(!r || !t.isConnected) return;
+    r.style.removeProperty("--p3-reg"); r.style.removeProperty("--p3-int");
+    const tb = t.getBoundingClientRect(); if(!tb.height) return;
+    const sobra = () => r.getBoundingClientRect().bottom - t.getBoundingClientRect().bottom > 0.5 || r.scrollWidth > r.clientWidth + 1;
+    if(!sobra()) return;
+    let tam = parseFloat(getComputedStyle(r).getPropertyValue("--p3-reg")) || 8, n = 0;
+    r.style.setProperty("--p3-int", "1.04");
+    while(sobra() && n++ < 20 && tam > 4.6){ tam -= 0.2; r.style.setProperty("--p3-reg", tam.toFixed(2)); }
+  };
+  const tanda = () => { pedido = false; const l = [...PEND]; PEND.clear(); l.forEach(t => { try{ encajar(t); }catch(e){} }); };
+  const pedir = t => { PEND.add(t); if(!pedido){ pedido = true; requestAnimationFrame(tanda); } };
+  const mirar = nodo => {
+    const el = nodo.nodeType === 1 ? nodo : nodo.parentElement; if(!el) return;
+    const propia = el.closest && el.closest(".marco.mz-riko .txt3"); if(propia) pedir(propia);
+    if(el.querySelectorAll) el.querySelectorAll(".marco.mz-riko .txt3").forEach(pedir);
+  };
+  new MutationObserver(ms => ms.forEach(m => { if(m.type === "characterData") mirar(m.target); else m.addedNodes.forEach(mirar); }))
+    .observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+}
+</script>
 </body>
 <!-- aligerar_v4: música, vídeos y dibujos fuera del archivo, precarga de dibujos, v2.2 -->
 <!-- ovacion_centro_v1: ovación y se aburre en el centro -->
@@ -25236,4 +25297,6 @@ function quitarCruzMitad(){ const x = document.getElementById("cruzMitad"); if(x
 <!-- cruz_columna_v1: cruz al elegir mitad, todo dentro de la columna en el ordenador, sin repartir otra vez -->
 <!-- truco_doble_v1: el Truco desde una carta doble como con el Mago -->
 <!-- doble_dibujo_v1: dibujo nuevo de las cartas dobles del Mimón -->
+<!-- enlaces_iphone_v1: solo «Juega en iPhone», aviso de instalar en iPhone, Play sin aviso de APK -->
+<!-- encaje_v1: el texto de las cartas dobles del Mimón se achica si no cabe -->
 </html>
