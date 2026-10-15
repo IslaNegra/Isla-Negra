@@ -12329,7 +12329,7 @@ function reajustarTitulos(){
   window.addEventListener('resize', reajustarTitulos);
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(reajustarTitulos);
 })();
-const VERSION = "2.2.1";
+const VERSION = "2.2.2";
 document.title = "Sombras sobre Isla Negra · " + VERSION;
 function panelPortada(html, pie, bajoTitulo){
   const p = document.getElementById("portada");
@@ -23922,7 +23922,7 @@ function crearBienvenida(){
   caja.innerHTML = '<div class="pregunta"><p class="nv-t">' + idi("Crear mazo") + '</p>' +
     '<p class="cb">' + idi("Crea tu propio mazo con cartas de todos los luchadores.") + '</p>' +
     '<p class="cb"><b>' + idi("Libre") + ':</b> ' + idi("elige un mazo simple.") + '</p>' +
-    '<p class="cb"><b>Mimón:</b> ' + idi("elige un mazo de doble elección.") + '</p>' +
+    '<p class="cb"><b>Mimón:</b> ' + idi("elige un mazo doble.") + '</p>' +
     '<div class="pregunta-botones"><button class="si">' + idi("Vale") + '</button></div></div>';
   document.body.appendChild(caja);
   caja.querySelector(".si").onclick = () => caja.remove();
@@ -24128,10 +24128,10 @@ crearMazoModos = function(modo){
   const viejo = L.querySelector(".cm-modos"); if(viejo) viejo.remove();
   const d = document.createElement("div"); d.className = "opciones cm-modos";
   d.innerHTML = '<button data-cm="libre"' + (modo === "libre" ? ' class="on"' : '') + '>' + idi("Mazo simple") + '</button>' +
-                '<button data-cm="mimon"' + (modo === "mimon" ? ' class="on"' : '') + '>' + idi("Mazo doble elección") + '</button>';
+                '<button data-cm="mimon"' + (modo === "mimon" ? ' class="on"' : '') + '>' + idi("Mazo doble") + '</button>';
   h1.insertAdjacentElement("afterend", d);
   const sub = L.querySelector(".sub");
-  if(sub) sub.textContent = modo === "mimon" ? idi("Elige un mazo de doble elección.") : idi("Elige un mazo simple.");
+  if(sub) sub.textContent = modo === "mimon" ? idi("Elige un mazo doble.") : idi("Elige un mazo simple.");
   d.querySelectorAll("[data-cm]").forEach(b => b.onclick = () => {
     if(b.dataset.cm === modo) return;
     LIB.modo = b.dataset.cm; LIB.scroll = 0; MIM.scroll = 0;
@@ -24188,9 +24188,9 @@ function crearTitulos(doble){
                    "#mimonMazo .par.cm-cols span{text-align:center;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#C4B79A;opacity:.85}" +
                    "#mimonMazo .mitad.vacio small{font-size:11px;letter-spacing:.04em;text-transform:none}";
   document.head.appendChild(st); }
-Object.assign(TRAD, { "Crea tu personaje": "Create your character", "Mazo simple": "Simple deck", "Mazo doble elección": "Double choice deck",
-                      "Selecciona carta": "Select a card", "Elige un mazo de doble elección.": "Build a deck of double choices.",
-                      "elige un mazo de doble elección.": "build a deck of double choices." });
+Object.assign(TRAD, { "Crea tu personaje": "Create your character", "Mazo simple": "Simple deck", "Mazo doble": "Double choice deck",
+                      "Selecciona carta": "Select a card", "Elige un mazo doble.": "Build a deck of double choices.",
+                      "elige un mazo doble.": "build a deck of double choices." });
 
 </script>
 <script>/* 13-10-2026 (Artur): Crea tu personaje v3 (dibujo a elegir, nombres de mazo, lupa) */
@@ -24232,7 +24232,7 @@ function cmRetratoFila(i){
 function cmNombreMazo(pl){
   if(!pl) return null;
   if(pl.mazo === "libre") return "Mazo simple";
-  if(pl.mazo === "riko" && pl.mim && pl.mim.tipo === "propio") return "Mazo doble elección";
+  if(pl.mazo === "riko" && pl.mim && pl.mim.tipo === "propio") return "Mazo doble";
   return null;
 }
 { const _dibR = dibujarSala;
@@ -24261,7 +24261,7 @@ function cmNombrar(id, nom){
 }
 { const _mrR = mimonRegistrar;
   mimonRegistrar = function(i){ const id = _mrR.apply(this, arguments);
-    try{ if(typeof id === "string" && /^mimon\d/.test(id)){ cmRetratoAlias(i, id); cmNombrar(id, idi("Mazo doble elección")); } }catch(e){} return id; }; }
+    try{ if(typeof id === "string" && /^mimon\d/.test(id)){ cmRetratoAlias(i, id); cmNombrar(id, idi("Mazo doble")); } }catch(e){} return id; }; }
 { const _lrR = libreRegistrar;
   libreRegistrar = function(i){ const id = _lrR.apply(this, arguments); try{ cmRetratoAlias(i, id); cmNombrar(id, idi("Mazo simple")); }catch(e){} return id; }; }
 /* mantener pulsado un dibujo: se ve más grande */
@@ -24294,7 +24294,7 @@ document.addEventListener("contextmenu", e => { if(e.target.closest && e.target.
     "#cmLupa span{width:min(62vw,250px);aspect-ratio:600/960;background-size:cover;background-position:center;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.8)}";
   document.head.appendChild(st); }
 
-Object.assign(TRAD, { "Mazo simple": "Simple deck", "Mazo doble elección": "Double choice deck" });
+Object.assign(TRAD, { "Mazo simple": "Simple deck", "Mazo doble": "Double choice deck" });
 
 </script>
 <script>/* 13-10-2026 (Artur): textos de Crea tu personaje */
@@ -24307,7 +24307,7 @@ crearBienvenida = function(){
   caja.innerHTML = '<div class="pregunta"><p class="nv-t">' + idi("Crea tu personaje") + '</p>' +
     '<p class="cb">' + idi("Crea tu propio mazo con cartas de todos los personajes.") + '</p>' +
     '<p class="cb"><b>' + idi("Mazo simple") + ':</b> ' + idi("crea un mazo simple.") + '</p>' +
-    '<p class="cb"><b>' + idi("Mazo doble") + ':</b> ' + idi("crea un mazo de doble elección.") + '</p>' +
+    '<p class="cb"><b>' + idi("Mazo doble") + ':</b> ' + idi("crea un mazo doble.") + '</p>' +
     '<div class="pregunta-botones"><button class="si">' + idi("Vale") + '</button></div></div>';
   document.body.appendChild(caja);
   caja.querySelector(".si").onclick = () => caja.remove();
@@ -24318,13 +24318,13 @@ crearBienvenida = function(){
     try{
       const c = document.getElementById("premioCaja");
       if(c && cual === "fase2"){ const f = c.querySelector(".pr-fila"); const b = f && f.querySelector(".pr-t b"), s = f && f.querySelector(".pr-t small");
-        if(b) b.textContent = idi("Crea tu personaje: mazo simple y mazo doble elección"); if(s) s.remove(); }
+        if(b) b.textContent = idi("Crea tu personaje: mazo simple y mazo doble"); if(s) s.remove(); }
     }catch(e){}
     return r;
   }; }
 Object.assign(TRAD, { "Crea tu propio mazo con cartas de todos los personajes.": "Build your own deck with cards from every character.",
-                      "crea un mazo simple.": "build a simple deck.", "Mazo doble": "Double deck", "crea un mazo de doble elección.": "build a deck of double choices.",
-                      "Crea tu personaje: mazo simple y mazo doble elección": "Create your character: simple deck and double choice deck" });
+                      "crea un mazo simple.": "build a simple deck.", "Mazo doble": "Double deck", "crea un mazo doble.": "build a deck of double choices.",
+                      "Crea tu personaje: mazo simple y mazo doble": "Create your character: simple deck and double choice deck" });
 
 </script>
 <script>/* 13-10-2026 (Artur): lupas fijas y Reiniciar */
@@ -25027,6 +25027,193 @@ const ULTIMO_DORSO = { r:null, t:0 };
     return r;
   }; }
 </script>
+<script>/* 15-10-2026 (Artur): ficha del Mimón con Crear mazo desbloqueado (al acabar la fase Campeonato; fuera de la campaña): Mazo simple y Mazo doble */
+{ const NUEVAS = [ {titulo:"Habilidad de personaje"},
+    ["Mazo simple", "Crea tu propio mazo. Elige entre las cartas que más te gusten de cualquier personaje."],
+    ["Mazo doble", "Elige un ataque y una respuesta y crea cartas dobles. Construye y adapta tu mazo conforme avanza el combate."] ];
+  const _ahrM = abrirHojaReglas;
+  abrirHojaReglas = function(mazoId){
+    const R = (typeof REGLAS_PJ !== "undefined") ? REGLAS_PJ.riko : null;
+    let antes = null;
+    try{
+      if(R && (mazoId === "riko" || REGLAS_PJ[mazoId] === R) && typeof libreAbierto === "function" && libreAbierto()){
+        antes = R.reglas;
+        const noImites = antes.filter(x => Array.isArray(x) && x[0] === "No me imites");
+        R.reglas = NUEVAS.concat(noImites);
+      }
+    }catch(e){}
+    try{ return _ahrM.apply(this, arguments); }
+    finally{ if(antes) R.reglas = antes; }
+  };
+  Object.assign(TRAD, {
+    "Crea tu propio mazo. Elige entre las cartas que más te gusten de cualquier personaje.": "Build your own deck. Pick the cards you like best from any character.",
+    "Elige un ataque y una respuesta y crea cartas dobles. Construye y adapta tu mazo conforme avanza el combate.": "Pick an attack and a response to make double cards. Build and adapt your deck as the fight goes on.",
+    "Mazo doble": "Double deck", "Mazo simple": "Simple deck", "Elige un mazo doble.": "Build a double deck.", "elige un mazo doble.": "build a double deck.",
+    "crea un mazo doble.": "build a double deck.", "Crea tu personaje: mazo simple y mazo doble": "Create your character: simple deck and double deck" }); }
+</script>
+<script>/* 15-10-2026 (Artur): el mazo creado (Mazo simple o doble) se queda al volver a la sala: antes, al volver, el asiento
+   seguía diciendo «Mazo simple/doble» pero se perdían sus cartas y en la partida siguiente salía un mazo al azar.
+   Y en Crear mazo, los botones en este orden: Guardar, Cargar… */
+{ const _mscM = mesaSinCable;
+  mesaSinCable = function(){
+    const r = _mscM.apply(this, arguments);
+    try{
+      let cambia = false;
+      (RED.plazas || []).forEach((p, i) => {
+        const s = PARTIDA.asientos[i];
+        if(s && s.mim && !p.mim && p.mazo === s.mazo){ p.mim = s.mim; cambia = true; }
+      });
+      if(cambia) dibujarSala();
+    }catch(e){ console.error("mazo guardado:", e); }
+    return r;
+  }; }
+{ const ordenGC = () => { try{
+    const L = document.getElementById("mimonMazo"), g = L && L.querySelector(".pie [data-guardar]"), c = L && L.querySelector(".pie [data-cargar]");
+    if(g && c && g.parentNode === c.parentNode && (c.compareDocumentPosition(g) & Node.DOCUMENT_POSITION_FOLLOWING)) c.parentNode.insertBefore(g, c);
+  }catch(e){} };
+  const _llG = libreLista;  libreLista = function(){ const r = _llG.apply(this, arguments); ordenGC(); return r; };
+  const _plG = mimonPintaLista; mimonPintaLista = function(){ const r = _plG.apply(this, arguments); ordenGC(); return r; }; }
+</script>
+<script>/* 15-10-2026 (Artur): elegir luchador sin scroll, siempre (todos los modos y la campaña): rejilla de 4 por fila (como en Crear mazo),
+   con el tamaño justo para que quepan todos en la pantalla; los bloqueados, con su interrogante */
+{ const st = document.createElement("style");
+  st.textContent =
+    "#eligeL.rejilla .fila{display:grid;grid-template-columns:repeat(4,var(--anR,84px));gap:8px;max-width:none;justify-content:center}" +
+    "#eligeL.rejilla .cm-fila{display:flex;justify-content:center}" +
+    "#eligeL.rejilla .luchador-b{width:var(--anR,84px)}" +
+    "#eligeL.rejilla .luchador-b.puesto{transform:translateY(-3px)}" +
+    "#eligeL.rejilla .hoja-asiento{gap:8px;overflow-y:hidden}" +
+    "#eligeL.rejilla .cm-titulo{margin:6px 0 2px}" +
+    "#eligeL.rejilla .luchador-b.bloqueado .retrato{font-size:calc(var(--anR,84px) * .45) !important}" +
+    "#eligeL.rejilla .luchador-b.bloqueado .retrato b{font-size:calc(var(--anR,84px) * .5) !important;top:-6% !important}" +
+    "#eligeL.rejilla .luchador-b.bloqueado .bloq-txt{font-size:calc(var(--anR,84px) * .1) !important;line-height:1.15;left:4px !important;right:4px !important;top:62% !important}";
+  document.head.appendChild(st); }
+function rejillaLuchadores(){
+  const caja = document.getElementById("eligeL"); if(!caja) return;
+  const hoja = caja.querySelector(".hoja-asiento"); if(!hoja) return;
+  const botones = caja.querySelectorAll(".luchador-b");
+  if(!botones.length) return;
+  caja.classList.add("rejilla");
+  const W = caja.clientWidth - 32;
+  let an = Math.floor(Math.min((Math.min(W, 420) - 26 - 3 * 8) / 4, 112));
+  caja.style.setProperty("--anR", an + "px");
+  while(an > 48 && hoja.scrollHeight > hoja.clientHeight + 1){ an -= 2; caja.style.setProperty("--anR", an + "px"); }   /* hasta que quepa sin scroll */
+}
+{ const _abrR = abrirAsiento;
+  abrirAsiento = function(){ const r = _abrR.apply(this, arguments); try{ rejillaLuchadores(); }catch(e){ console.error(e); } return r; }; }
+window.addEventListener("resize", () => { try{ rejillaLuchadores(); }catch(e){} });
+</script>
+<script>/* 15-10-2026 (Artur): en el ordenador, lo que se abre en grande (elegir mitad de una carta doble, ver una carta manteniendo
+   pulsado, la ficha de un personaje) se queda dentro de la columna del juego, a su tamaño */
+{ const st = document.createElement("style");
+  st.textContent = ".lupa.en-columna .mitades .mitad-elegir{max-width:46%}" +
+    ".lupa.en-columna img{max-width:min(96%, 377px)}" +
+    ".lupa.en-columna .hoja-reglas{max-width:min(92%, 420px)}" +
+    ".lupa.en-columna .ficha-txt{max-width:100%}";
+  document.head.appendChild(st); }
+function lupaColumna(){
+  const lupa = document.getElementById("lupa"); if(!lupa) return null;
+  const r = document.body.getBoundingClientRect();
+  const enCol = r.width > 0 && r.width < window.innerWidth - 4;
+  lupa.classList.toggle("en-columna", enCol);
+  /* el fondo oscuro sigue tapando toda la pantalla (tocar fuera cancela); solo el contenido se queda en la columna */
+  lupa.style.paddingLeft = enCol ? Math.round(r.left + 18) + "px" : "";
+  lupa.style.paddingRight = enCol ? Math.round(window.innerWidth - r.right + 18) + "px" : "";
+  return enCol ? r.width : window.innerWidth;
+}
+function lupaReescalar(enMitades){
+  const lupa = document.getElementById("lupa"); if(!lupa) return;
+  const w = lupaColumna(); if(!w || !lupa.classList.contains("en-columna")) return;
+  const hh = window.innerHeight || 740;
+  const z = enMitades ? Math.max(1, Math.min(2.6, (w * 0.42) / 98, (hh * 0.5) / 159))
+                      : Math.max(1, Math.min(377 / 98, (w * 0.8) / 98, (hh * 0.55) / 159));
+  lupa.querySelectorAll(".lupa-vertical").forEach(v => { v.style.setProperty("--z", z.toFixed(3)); v.style.setProperty("--carta-an", (98 * z).toFixed(1) + "px"); });
+  if(typeof ajustarTitulos === "function") try{ ajustarTitulos(); }catch(e){}
+}
+{ const _alC = abrirLupa;
+  abrirLupa = function(){ const r = _alC.apply(this, arguments); try{ lupaReescalar(false); }catch(e){} return r; }; }
+{ const _ahC = abrirHojaReglas;
+  abrirHojaReglas = function(){ const r = _ahC.apply(this, arguments); try{ lupaColumna(); }catch(e){} return r; }; }
+{ const _emC = elegirMitadEnPantalla;
+  elegirMitadEnPantalla = function(){ const r = _emC.apply(this, arguments); try{ lupaReescalar(true); }catch(e){} return r; }; }
+{ const _clC = cerrarLupa;
+  cerrarLupa = function(){ const r = _clC.apply(this, arguments);
+    try{ const l = document.getElementById("lupa"); if(l){ l.classList.remove("en-columna"); l.style.paddingLeft = l.style.paddingRight = ""; } }catch(e){} return r; }; }
+/* al arrastrar una carta doble a la mesa sale la elección de mitad: la mano ya no se vuelve a repartir entera por debajo */
+{ const _omC = olvidarMano;
+  olvidarMano = function(){
+    const l = document.getElementById("lupa");
+    if(l && l.classList.contains("abierta") && l.querySelector(".mitades")){ MANO_VISTA.estructura = ""; MANO_VISTA.estado = ""; return; }
+    return _omC.apply(this, arguments);
+  }; }
+</script>
+<script>/* 15-10-2026 (Artur): al elegir mitad de una carta doble, una cruz (sin círculo) encima de la esquina derecha de la carta derecha, a la altura del título, para cancelar
+   (sigue cancelándose también tocando fuera de las cartas) */
+{ const st = document.createElement("style");
+  st.textContent = "#cruzMitad{position:fixed;z-index:2147483000;width:36px;height:36px;padding:0;margin:0;" +
+    "display:flex;align-items:center;justify-content:flex-end;background:none;border:0;box-shadow:none;" +
+    "color:#EFE7D2;font:34px/1 Georgia,serif;cursor:pointer;text-shadow:0 1px 4px rgba(0,0,0,.8)}" +
+    "#cruzMitad:active{opacity:.6}";
+  document.head.appendChild(st); }
+function quitarCruzMitad(){ const x = document.getElementById("cruzMitad"); if(x) x.remove(); }
+{ const _emP = elegirMitadEnPantalla;
+  elegirMitadEnPantalla = function(){
+    const r = _emP.apply(this, arguments);
+    try{
+      const lupa = document.getElementById("lupa");
+      if(lupa && lupa.classList.contains("abierta") && lupa.querySelector(".mitades")){
+        quitarCruzMitad();
+        const x = document.createElement("button"); x.id = "cruzMitad"; x.setAttribute("aria-label", idi("Cancelar")); x.textContent = "×";
+        /* sin círculo: encima de la esquina derecha de la carta de la derecha, a la altura del título «Elige una mitad» */
+        const cartas = lupa.querySelectorAll(".mitades .carta"), ult = cartas[cartas.length - 1];
+        const rc = ult ? ult.getBoundingClientRect() : null;
+        const tit = lupa.querySelector(".cabecera-ensena"), rt = tit ? tit.getBoundingClientRect() : null;
+        const lineaT = tit ? (parseFloat(getComputedStyle(tit).lineHeight) || 22) : 22;
+        x.style.left = ((rc && rc.width ? rc.right : window.innerWidth - 10) - 36) + "px";
+        x.style.top = ((rt && rt.height ? rt.top + lineaT / 2 : 24) - 18) + "px";
+        x.onclick = e => { e.stopPropagation(); quitarCruzMitad(); cerrarLupa(); };
+        document.body.appendChild(x);
+        const vigila = () => { if(!document.getElementById("cruzMitad")) return;
+          if(!lupa.classList.contains("abierta") || !lupa.querySelector(".mitades")){ quitarCruzMitad(); return; }
+          setTimeout(vigila, 120); };
+        setTimeout(vigila, 120);
+      }
+    }catch(e){ console.error(e); }
+    return r;
+  }; }
+</script>
+<script>/* 15-10-2026 (Artur): Truco desde una carta doble (Mazo doble): se juega igual que con la baraja del Mago — cae a la mesa y se da la
+   vuelta boca abajo una sola vez, sin el vuelo desde la mano que la enseñaba boca arriba y la giraba a destiempo */
+{ const _vcT2 = volarCarta;
+  volarCarta = function(cartaId, destino, opciones){
+    try{
+      const o = opciones || {};
+      if(o.desde === "clonVuelo" && o.dura === 420 && typeof TAPE !== "undefined" && TAPE.id === cartaId && trucoTapado(cartaId)){
+        if(destino) destino.style.visibility = "";
+        TAPE.desde = Date.now() + VOLTEO.pausa; VUELO.volando = 0;
+        pintar();
+        return;
+      }
+    }catch(e){ console.error(e); }
+    return _vcT2.apply(this, arguments);
+  }; }
+</script>
+<script>/* 15-10-2026 (Artur): cartas dobles del Mimón con su dibujo nuevo (el Mimón tras el cristal, en sepia):
+   una plantilla para ataque/respuesta y otra para las de dos tácticas; el círculo de nivel va ya puesto en cada una (I a IIII).
+   Sin los sellos de puño, mano y máscara: el dibujo ya está en la plantilla. */
+{ const AR = [1,2,3,4].map(n => "imagenes/mimon_doble_ar_" + n + ".webp"), TAC = [1,2,3,4].map(n => "imagenes/mimon_doble_tac_" + n + ".webp");
+  AR.concat(TAC).forEach(s => { try{ const im = new Image(); im.src = s; }catch(e){} });
+  const _hcdN = htmlCartaDual;
+  htmlCartaDual = function(c){
+    const viejo = NAIPE2.mimonDual;
+    if(c && (c.mazo === "riko" || c.mimon) && viejo) NAIPE2.mimonDual = c.tipo === "dualT" ? TAC : AR;
+    let h;
+    try{ h = _hcdN.apply(this, arguments); }
+    finally{ NAIPE2.mimonDual = viejo; }
+    if(c && (c.mazo === "riko" || c.mimon) && typeof h === "string") h = h.replace(/<img class="sello-mimo[^>]*>/g, "");
+    return h;
+  }; }
+</script>
 </body>
 <!-- aligerar_v4: música, vídeos y dibujos fuera del archivo, precarga de dibujos, v2.2 -->
 <!-- ovacion_centro_v1: ovación y se aburre en el centro -->
@@ -25045,4 +25232,8 @@ const ULTIMO_DORSO = { r:null, t:0 };
 <!-- coge_v1: la maquina suelta antes de que se vea; solo vuelan las que se queda -->
 <!-- abordaje_v1: Abordaxe roba solo si el rival encaja -->
 <!-- logros_v5: logros nuevos y cambiados del 14-10-2026 -->
+<!-- mimon_rejilla_v1: ficha del Mimón, Mazo doble, rejilla de luchadores, mazo creado que se queda -->
+<!-- cruz_columna_v1: cruz al elegir mitad, todo dentro de la columna en el ordenador, sin repartir otra vez -->
+<!-- truco_doble_v1: el Truco desde una carta doble como con el Mago -->
+<!-- doble_dibujo_v1: dibujo nuevo de las cartas dobles del Mimón -->
 </html>
