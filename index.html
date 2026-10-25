@@ -12548,7 +12548,7 @@ function reajustarTitulos(){
   window.addEventListener('resize', reajustarTitulos);
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(reajustarTitulos);
 })();
-const VERSION = "2.3";
+const VERSION = "2.3.1";
 document.title = "Sombras sobre Isla Negra · " + VERSION;
 function panelPortada(html, pie, bajoTitulo){
   const p = document.getElementById("portada");
@@ -27829,6 +27829,7 @@ function verFuturo(rv, ids, alTocar){
 
 /* ── 5. VIAJAR ── */
 function hacerViaje(v){
+  { const g = ganadorAsalto(); if(g !== -1){ LAD.viaje = null; finAsalto(g); return true; } }   /* 25-10-2026 (Artur): primero el daño; si el rival queda a 0, gana el asalto y no se viaja */
   const M = LAD.marcas[v.asiento], t = v.asiento, yo = ESTADO.asientos[t];
   if(M && M.soloMarca && M.soloMarca === v.cartaId){ delete M.soloMarca; return false; }   /* PRUEBA: Efecto mariposa marcó: no viaja */
   if(LAD.pasado && M && M.llegada){ anotar(yo.nombre + " ya está en la marca: no viaja.", "hito"); avisar(() => { subeMarca("ya estás en la marca", "a" + t + " chico"); pintar(); }, 850); return false; }   /* PRUEBA: ya estás en la marca */
