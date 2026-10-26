@@ -6160,9 +6160,14 @@ function aplicarVesna(cfg){
   R("m4","Frenesí","ataque",4,1,"2 Daños. Inevitable. Gasta una mejora.","",{ dano:2, inevitable:true, gastaMejora:true });
   /* la mano del MURCIÉLAGO: no van en el mazo (copias 0) */
   R("m_enjambre","Murciélagos","ataque",1,0,"Golpes = tu nivel. 1 daño cada uno. Se paran uno a uno.","",{ dano:1, enjambre:true },{ murcielago:true });
-  { const ef = { dejaJugarCarta:true };
-    Object.defineProperty(ef, "evitaHasta", { enumerable:true, get(){ const a = ESTADO.asientos && ESTADO.asientos.find(q => q.mazoId === "vesna" && q.murcielago); return a ? a.nivel : 1; } });
-    R("m_resp","Aleteo","respuesta",1,0,"Evita tu nivel. Juega otra carta.","",ef,{ murcielago:true }); }
+  { const vn = () => { const a = ESTADO.asientos && ESTADO.asientos.find(q => q.mazoId === "vesna" && q.murcielago); return a ? a.nivel : 1; };   /* 26-10-2026 (Artur): Aleteo es del nivel de Vesna */
+    const ef = { dejaJugarCarta:true };
+    Object.defineProperty(ef, "evitaHasta", { enumerable:true, get(){ return vn(); } });
+    Object.defineProperty(ef, "gastaMejora", { enumerable:true, get(){ return vn() >= 4; } });   /* siendo Maestra, gasta una Mejora */
+    R("m_resp","Aleteo","respuesta",1,0,"Evita tu nivel. Juega otra carta.","",ef,{ murcielago:true });
+    const x = L[L.length - 1];
+    Object.defineProperty(x, "nivel", { enumerable:true, configurable:true, get(){ return vn(); } });
+    Object.defineProperty(x, "texto", { enumerable:true, configurable:true, get(){ return vn() >= 4 ? "Evita tu nivel. Juega otra carta. Gasta una mejora." : "Evita tu nivel. Juega otra carta."; } }); }
   R("m_maestra","Picado","ataque",4,0,"2 Daños. Inevitable. Gasta una mejora.","",{ dano:2, inevitable:true, gastaMejora:true },{ murcielago:true });
   L.forEach(c => CARTAS.push(c));
   /* textos propios en las cartas nuevas y en las del murciélago */
@@ -29955,6 +29960,20 @@ function cyRivalSilu(){
 </script>
 <script>/* traduccion_hilvana_v1 (24-10-2026, Artur): Hilvana y Sastrilegios en inglés */
 Object.assign(TRAD, {"Puntada": "Stitch", "Remendar": "Mend", "Hilván": "Basting", "Buscar tela": "Find Fabric", "Pinchazo": "Prick", "Pespunte": "Lockstitch", "Dobladillo": "Hem", "Tijeretazo": "Snip", "Zurcido": "Darn", "Tijeras de sastre": "Tailor's Shears", "Punto atrás": "Backstitch", "Hilo rojo": "Red Thread", "Traje a medida": "Bespoke Suit", "Del revés": "Inside Out", "Sastrilegio": "Sewcery", "Sastrilegios": "Sewceries", "Nuevos Sastrilegios": "New Sewceries", "Sastrilegio avanzado": "Advanced Sewcery", "Sastrilegio experto": "Expert Sewcery", "Sastrilegio maestro": "Master Sewcery", "Sastrilegio mayor": "Greater Sewcery", "Descarta hasta 3": "Discard up to 3", "Coge otras tantas": "Draw as many", "Coge otras tantas.": "Draw as many.", "Coge 3": "Draw 3", "Descarta 1": "Discard 1", "Descarta 1.": "Discard 1.", "Al cogerla: −1 PV": "When drawn: −1 HP", "Al cogerla: −1 PV.": "When drawn: −1 HP.", "Roba 1 carta": "Steal 1 card", "Roba 1 carta.": "Steal 1 card.", "Rival descarta 1": "Opponent discards 1", "Rival descarta 1.": "Opponent discards 1.", "Rival descarta 2": "Opponent discards 2", "Rival descarta 2.": "Opponent discards 2.", "Rival no coge carta": "Opponent draws no card", "Rival no coge carta.": "Opponent draws no card.", "Rival −2 Mejoras": "Opponent −2 Upgrades", "Rival −2 Mejoras.": "Opponent −2 Upgrades.", "5 Daños": "5 damage", "6 Daños": "6 damage", "Drenar 3": "Drain 3", "Drenar 3.": "Drain 3.", "Puedes jugar otro ataque": "You may play another attack", "Puedes jugar otro ataque.": "You may play another attack.", "Birlar 1": "Pilfer 1", "Birlar 1.": "Pilfer 1.", "Robar 1": "Steal 1", "Robar 1.": "Steal 1.", "Cose 2 cartas → 1 sastrilegio al azar.": "Sew 2 cards → 1 random Sewcery.", "¡COSIDO!": "SEWN!", "cose": "sews", "Coser": "Sew", "¡pinchazo!": "prick!", "¡marca!": "mark!", "Marca": "Mark", "No descartar": "Don't discard", "Descartar 1": "Discard 1", "Descartar 2": "Discard 2", "Descartar 3": "Discard 3", "Alterar tiempo": "Alter time", "Presente": "Present"});
+</script>
+<script>/* 26-10-2026 (Artur): Aleteo con el círculo de nivel de Vesna (el de sus propias cartas: II, III o maestra) */
+{ const st = document.createElement("style");
+  st.textContent = ".marco.v3 .v-nivel{position:absolute;inset:0;background-size:100% 100%;pointer-events:none;clip-path:ellipse(8.4% 5.2% at 13.85% 7.7%)}";
+  document.head.appendChild(st);
+  const DE = { 2:"vesna_g2", 3:"vesna_bruma", 4:"vesna_m_maestra" };
+  const _hc = htmlCarta;
+  htmlCarta = function(c){
+    const h = _hc.apply(this, arguments);
+    if(!c || c.id !== "vesna_m_resp" || !(c.nivel > 1)) return h;
+    const n = NAIPE2[DE[Math.min(4, c.nivel)]]; if(!n || !n.plana) return h;
+    return h.replace('<div class="txt3">', '<div class="v-nivel" style="background-image:url(\'' + n.plana + '\')"></div><div class="txt3">');
+  }; }
+TRAD["Evita tu nivel. Juega otra carta. Gasta una mejora."] = "Blocks your level. Play another card. Spend an upgrade.";
 </script>
 </body>
 <!-- aligerar_v4: música, vídeos y dibujos fuera del archivo, precarga de dibujos, v2.2 -->
