@@ -27668,6 +27668,7 @@ function hacerMarca(i, tipo, indiceMano, tras){
   }
   const yaVista = tipo === "respuesta" && LAD.vistaPend === i;
   LAD.marcas[i] = { tipo, modo: tipo === "respuesta" ? "turno" : (tras ? "tras" : "turno"), F, cuadros:[], firma:"", oculta:!yaVista };
+  LAD.marcas[i].orden = (LAD.nOrden = (LAD.nOrden || 0) + 1);   /* 26-10-2026 (Artur): orden en que se marcó */
   LAD.marcas[i].enPasado = !!LAD.pasado;   /* PRUEBA v11b: marca puesta en el pasado */ LAD.marcas[i].turno = LAD.pasado ? LAD.pasado.turnoMarca : (window.PRUEBA_ALTERAR ? PRUEBA_ALTERAR.turno : 0);   /* PRUEBA: en qué turno se marcó */
   if(yaVista) LAD.vistaPend = null;
   anotar(a.nombre + " marca este momento.", "nuevo");
@@ -27734,6 +27735,15 @@ function preViaje(){ const q = LAD.pre; LAD.pre = null; if(q && q.v.pv < q.pv0){
   terminarResolucion = function(){
     preViaje();
     const v = LAD.viaje;
+    if(!LAD.animando && ESTADO.enjambre && v && LAD.marcas[v.asiento] && !LAD.marcas[v.asiento].oculta && !LAD.pasado && !ESTADO.pendienteCongelado && ganadorAsalto() === -1){
+      /* 26-10-2026 (Artur): murciélagos: se viaja en mitad de la sucesión de golpes; al volver (si no se alteró la línea temporal) siguen los que faltan */
+      const sello = ESTADO.selloPartida, self = this, args = arguments;
+      ESTADO.fase = "resolviendo"; pintar();
+      const ir = () => { if(sello !== ESTADO.selloPartida || LAD.animando) return; const v2 = LAD.viaje; LAD.viaje = null; if(!v2 || !hacerViaje(v2)) _tr.apply(self, args); };
+      const mira = () => { if(sello !== ESTADO.selloPartida) return; if(AVISOS.cola.length || berserkerEnMarcha()){ setTimeout(mira, 50); return; } setTimeout(ir, AVISOS.activo ? lento(450) : 60); };
+      setTimeout(mira, 30);
+      return;
+    }
     const corta = !LAD.animando && ((v && LAD.marcas[v.asiento] && !LAD.marcas[v.asiento].oculta) || LAD.pasado) && !ESTADO.enjambre && !ESTADO.pendienteCongelado && ganadorAsalto() === -1;
     if(!corta) return _tr.apply(this, arguments);
     let r; LAD.cortaTarde = true;
@@ -27841,8 +27851,10 @@ function hacerViaje(v){
   if(M && M.soloMarca && M.soloMarca === v.cartaId){ delete M.soloMarca; return false; }   /* PRUEBA: Efecto mariposa marcó: no viaja */
   if(LAD.pasado && M && M.llegada){ anotar(yo.nombre + " ya está en la marca: no viaja.", "hito"); avisar(() => { subeMarca("ya estás en la marca", "a" + t + " chico"); pintar(); }, 850); return false; }   /* PRUEBA: ya estás en la marca */
   if(!M){
-    anotar(yo.nombre + " no tiene marca: no viaja.", "hito");
-    avisar(() => { subeMarca("sin marca: no viaja", "a" + t + " chico"); pintar(); }, 850);
+    if(v.tipo !== "rebobinar"){   /* 26-10-2026 (Artur): al rebobinar sin marca no sale ningún texto */
+      anotar(yo.nombre + " no tiene marca: no viaja.", "hito");
+      avisar(() => { subeMarca("sin marca: no viaja", "a" + t + " chico"); pintar(); }, 850);
+    }
     return false;
   }
   if(v.tipo === "rebobinar"){
@@ -27850,7 +27862,10 @@ function hacerViaje(v){
     quitarAlDescarte(S, S.asientos[t], v.cartaId);
     const cuadros = M.cuadros.slice();
     if(window.PRUEBA_ALTERAR) PRUEBA_ALTERAR.turno = (M.turno || 0) - (M.tipo === "respuesta" ? 1 : 0);   /* PRUEBA: el reloj vuelve a la marca */
-    LAD.marcas = {}; LAD.pend = null; LAD.vistaPend = null;
+    { const o = M.orden || 0, quedan = {};   /* 26-10-2026 (Artur): las marcas de los demás puestas antes que esta se quedan; las de después, no */
+      Object.keys(LAD.marcas).forEach(k => { const x = LAD.marcas[k]; if(+k !== t && x && x !== M && (x.orden || 0) < o) quedan[k] = x; });
+      LAD.marcas = quedan; }
+    LAD.pend = null; LAD.vistaPend = null;
     if(LAD.pasado){ LAD.pasado = null; quitarPasado(false); }   /* PRUEBA: rebobinar desde el pasado: te quedas allí */
     anotar(yo.nombre + " rebobina: todo vuelve a la marca.", "hito");
     LAD.animando = true; ESTADO.fase = "cambio"; pintar();
@@ -27959,6 +27974,7 @@ function volverAlPresente(){
     jugadas.forEach(id => { const c = defCarta(idReal(id)); if(c && c.tipo === "mejora" && mesa.length < L.mejorasEnMesa) mesa.push(id); else alMonton(L, id); });
     anotar("Vuelta al presente.", "hito");
     if(window.PRUEBA_ALTERAR) PRUEBA_ALTERAR.trasVolver(X);   /* PRUEBA: línea temporal */
+    if(X.sim) ESTADO.enjambre = null;   /* 26-10-2026 (Artur): línea temporal alterada: manda la partida nueva (los murciélagos que faltaban no siguen) */
     fin.forEach((f, k) => { const a = ESTADO.asientos[k]; if(f.pv <= 0 && a.pv > 0){ a.pv = 0; anotar(a.nombre + " cayó en el pasado: no llega al presente.", "hito"); } });   /* PRUEBA: si cae en el pasado, se gana el asalto */
   };
   cartel(X.sim ? "Línea temporal alterada" : "Presente", "lad-cartel", lento(X.sim ? 1900 : 1300));                               /* v2 (Artur): «poner de nuevo presente» */
@@ -27970,7 +27986,7 @@ function volverAlPresente(){
       pintar();
       apuntarBajas();
       const g = ganadorAsalto();
-      tarde(lento(150), () => { if(g !== -1) finAsalto(g); else if(X.simEmpezado) PRUEBA_ALTERAR.seguirTurno(); else cederIniciativa(); });
+      tarde(lento(150), () => { if(g !== -1) finAsalto(g); else if(X.simEmpezado) PRUEBA_ALTERAR.seguirTurno(); else if(ESTADO.enjambre) terminarResolucion(); else cederIniciativa(); });   /* 26-10-2026 (Artur): siguen los murciélagos */
     }, true);
   }
 }
@@ -28554,7 +28570,7 @@ function huecoMarca(id, clase){
         if(!!s.escondido && !s.fuera) lista.push([ei, k]);
         if(s.ilusion > 0 && !s.fuera) lista.push([eg, k * 1.02]);
         const m = ver(q); if(m) lista.push([em, k]);
-        em.style.top = (cy - 110) + "px";
+        em.style.top = (cy - 120) + "px";   /* 26-10-2026 (Artur): a la misma altura que el Invisible y el espejismo */
         em.classList.toggle("activo", m);
         const pasos = lista.length === 3 ? [-92, 0, 92] : lista.length === 2 ? [-46, 46] : [0];
         lista.forEach(([e, esc], n) => { if(e) e.style.transform = "translateX(" + pasos[n] + "px) scale(" + esc + ")"; });
@@ -29921,16 +29937,16 @@ function colocarBerserker(){
 function cyRivalSilu(){
   try{
     const fo = document.getElementById("arbolFondo"), d = document.getElementById("dorsosRival");
-    if(!fo || !d || !fo.offsetHeight) return 335;
+    if(!fo || !d || !fo.offsetHeight) return cyRivalSilu.ult || 335;   /* 26-10-2026 (Artur): si no se puede medir, la última altura buena (antes saltaba más abajo) */
     const R = fo.getBoundingClientRect(), k = R.height / fo.offsetHeight;
     const dentro = y => (y - R.top) / k;
-    const rd = d.getBoundingClientRect(); if(!rd.height) return 335;
+    const rd = d.getBoundingClientRect(); if(!rd.height) return cyRivalSilu.ult || 335;
     let cy = dentro(rd.bottom) + 66;                       /* tus relojes quedan así de encima de tu mano */
     const t = document.getElementById("dohyoTira");
     if(t){ const rt = t.getBoundingClientRect(), st = getComputedStyle(t);
       if(rt.height > 0 && st.display !== "none" && st.visibility !== "hidden" && +st.opacity > 0) cy = Math.max(cy, dentro(rt.bottom) + 64); }
-    return Math.round(Math.min(Math.max(cy, 200), 380));
-  }catch(e){ return 335; }
+    return (cyRivalSilu.ult = Math.round(Math.min(Math.max(cy, 200), 380)));
+  }catch(e){ return cyRivalSilu.ult || 335; }
 }
 { const st = document.createElement("style");
   st.textContent = "#arbolFondo .silu{transition:opacity 1.2s ease-in-out,transform .8s ease,top .8s ease}";
