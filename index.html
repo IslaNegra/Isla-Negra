@@ -26665,7 +26665,7 @@ function llevaDedal(c){
   return c.mazo === ID && !!document.getElementById("mimonMazo") && !c.cosida && !c.dualDe;   /* en Crear mazo */
 }
 { const _hcD = htmlCarta;
-  htmlCarta = function(c){ const h = _hcD.apply(this, arguments); try{ if(llevaDedal(c)) return h + DEDAL; }catch(e){} return h; }; }
+  htmlCarta = function(c){ return _hcD.apply(this, arguments); }; }   /* 26-10-2026 (Artur): en la partida las cartas no llevan dedal; solo se indica en la sala, al elegir personajes */
 { const st = document.createElement("style");
   st.textContent = ".carta .cos-dedal{position:absolute;left:calc(6px * var(--z,1));top:calc(31px * var(--z,1));width:calc(19px * var(--z,1));height:calc(19px * var(--z,1));" +
     "border-radius:50%;background:#8a1a22;box-shadow:0 0 0 1.5px #f3e6c4,0 1px 3px rgba(0,0,0,.6);z-index:11;display:flex;align-items:center;justify-content:center;pointer-events:none}" +
