@@ -27784,13 +27784,14 @@ function preViaje(){ const q = LAD.pre; LAD.pre = null; if(q && q.v.pv < q.pv0){
         tardeTrasAvisos(0, () => verFuturo(rv, ids, () => { subeMarca("−" + ids.length + " del mazo", "a" + rv + " chico"); pintar(); _aena.call(null, a, c2, seguir, objetivo); }));
         return;
       }
-      if(ids.length) avisar(() => { verFuturo(rv, ids); subeMarca("−" + ids.length + " del mazo", "a" + rv + " chico"); pintar(); }, 2900);
+      const lasVeo = yo === asientoLocal() && a.controlador !== "ia";   /* 26-10-2026 (Artur): las caras solo las ve Dr. When; los demás, boca abajo */
+      if(ids.length) avisar(() => { verFuturo(rv, ids, undefined, !lasVeo); subeMarca("−" + ids.length + " del mazo", "a" + rv + " chico"); pintar(); }, 2900);
       return _aena.call(this, a, c2, seguir, objetivo);
     }
     const c2 = Object.assign({}, c, { efecto: Object.assign({}, c.efecto) }); delete c2.efecto.futuroRival;
     return _aena.call(this, a, c2, seguir, objetivo);
   }; }
-function verFuturo(rv, ids, alTocar){
+function verFuturo(rv, ids, alTocar, bocaAbajo){
   if(sinMovimiento()){ if(alTocar) alTocar(); return; }
   const cartas = [];
   const anc = document.getElementById("mz" + rv) || anclaMazo(rv), ra = anc ? anc.getBoundingClientRect() : null;
@@ -27801,7 +27802,8 @@ function verFuturo(rv, ids, alTocar){
   const sx = ra ? ra.left + ra.width / 2 : zona.left + zona.width / 2, sy = ra ? ra.top + ra.height / 2 : zona.top;
   ids.forEach((id, k) => {
     const d = document.createElement("div");
-    d.className = "carta lad-futuro"; d.innerHTML = htmlCarta(defCarta(idReal(id)));
+    d.className = "carta lad-futuro"; d.innerHTML = bocaAbajo ? "" : htmlCarta(defCarta(idReal(id)));
+    if(bocaAbajo){ d.classList.add("lad-futuro-dorso"); d.style.background = dorsoDe(rv) + " center / cover no-repeat"; }   /* 26-10-2026 (Artur): el rival no ve cuáles son */
     d.style.width = w0 + "px"; d.style.height = h0 + "px";
     d.style.left = (x0 + k * paso - w0 / 2) + "px"; d.style.top = (y0 - h0 / 2) + "px";
     const S = w / w0, giro = (k - (n - 1) / 2) * 4;
@@ -29221,7 +29223,7 @@ const P = window.PRUEBA_ALTERAR = {
 };
 const vuelta = () => "todo";
 /* ── 1. ¿se ha alterado la línea temporal? ── */
-const foto = asientos => asientos.map(a => ({ mano: a.mano.slice(), mazo: a.mazo.slice(), descartes: a.descartes.slice(), prog: P.progreso(a) }));
+const foto = asientos => asientos.map(a => ({ mano: a.mano.slice(), mazo: a.mazo.slice(), descartes: a.descartes.slice(), prog: P.progreso(a), comodin: a.comodin || 0 }));
 const resta = (A, B) => { const r = A.slice(); B.forEach(x => { const q = r.indexOf(x); if(q >= 0) r.splice(q, 1); }); return r; };
 const igual = (A, B) => A.length === B.length && resta(A, B).length === 0;
 function alterada(ini, t, ahora){                 /* v11b: «ahora», el estado con el que se compara (si no, el de la partida) */
@@ -29232,6 +29234,7 @@ function alterada(ini, t, ahora){                 /* v11b: «ahora», el estado 
     if(k !== t){
       if(!igual(a1.mano, a0.mano) || !igual(a1.descartes, a0.descartes)) return "el rival juega o pierde cartas";
       if(P.progreso(a1) !== a0.prog) return "Mejoras del rival";
+      if((a1.comodin || 0) !== (a0.comodin || 0)) return "el rival responde";   /* 26-10-2026 (Artur): el Comodín gastado en el pasado cuenta como responder */
       continue;
     }
     const fuera = resta(a0.mano, a1.mano), dentro = resta(a1.mano, a0.mano);
