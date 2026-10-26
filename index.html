@@ -29991,6 +29991,34 @@ Object.assign(TRAD, {"Puntada": "Stitch", "Remendar": "Mend", "Hilván": "Bastin
   }; }
 TRAD["Evita tu nivel. Juega otra carta. Gasta una mejora."] = "Blocks your level. Play another card. Spend an upgrade.";
 </script>
+<script>/* 26-10-2026 (Artur): en el menú de sonido se elige la canción («Mochi 1», «Mochi 2»…; con una sola, el nombre a secas).
+   Al acabarse la elegida, siguen las demás de ese personaje. */
+(function(){
+  if(typeof musicaLuchadores !== "function" || typeof MUSICA === "undefined" || !MUSICA.temas) return;
+  const _ml = musicaLuchadores;
+  musicaLuchadores = function(){
+    const out = [];
+    _ml().forEach(m => { const t = MUSICA.temas[m.id] || [];
+      t.forEach((x, k) => out.push({ id: m.id + "#" + k, corto: idi(m.corto) + (t.length > 1 ? " " + (k + 1) : ""), mazo: m.id })); });
+    return out;
+  };
+  try{ if(AJ.musica && AJ.musica.indexOf("#") < 0 && MUSICA.temas[AJ.musica]) AJ.musica += "#0"; }catch(e){}   /* lo guardado antes (un personaje): su canción 1 */
+  const _mc = musicaCombate;
+  musicaCombate = function(mazoId){
+    const aj = typeof ajustesMusica === "function" ? ajustesMusica() : "";
+    const m = mazoId !== "generico" && /^(.+)#(\d+)$/.exec(aj || "");
+    const t = m && MUSICA.temas[m[1]];
+    if(t && t.length){
+      const k = Math.min(+m[2], t.length - 1);
+      MUSICA.lista = "combate:" + m[1];
+      MUSICA.cola = t.slice(k).concat(t.slice(0, k));                      /* la elegida y después las demás de ese personaje */
+      musicaPoner(MUSICA.cola.shift(), true);
+      return;
+    }
+    return _mc.apply(this, arguments);
+  };
+})();
+</script>
 </body>
 <!-- aligerar_v4: música, vídeos y dibujos fuera del archivo, precarga de dibujos, v2.2 -->
 <!-- ovacion_centro_v1: ovación y se aburre en el centro -->
