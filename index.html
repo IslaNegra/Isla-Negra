@@ -22633,7 +22633,6 @@ function novedadesCuandoListo(){
     const entrando = !!p && p.classList.contains("entrando") && !p.classList.contains("va");   /* aún no ha empezado a aparecer */
     const listo = !entrando && b && h && a && opa(b) > 0.6 && opa(h) > 0.95 && opa(a) > 0.95;
     if(listo) return setTimeout(novedadesSiToca, 500);
-    if(Date.now() - t0 > 30000) return novedadesSiToca();
     setTimeout(mira, 250);
   };
   setTimeout(mira, 400);
@@ -29683,11 +29682,9 @@ const NORI_TXT = "<p>Nori es tu rival. Cada uno tiene <b>10 PV</b>. Si llegas a 
 const REMATE = "<p>Es tu momento, responde con una esquiva que te deja jugar otra carta y juega una patada para terminar el asalto.</p>";
 const NV = [0, 1, 2, 3, 4].map(n => svgNivel(n));
 const ENLACES = [
-  ["Nostr", "https://spoo.me/islanegra", "deja tus comentarios", "leave your comments"],
-  ["Itchio", "https://islanegra.itch.io/sombras-sobre-isla-negra", "android, escritorio, iPhone", "android, desktop, iPhone"],
-  ["Zapstore", "https://zapstore.dev/apps/com.islanegra.juego", "descarga android", "android download"],
-  ["TapTap", "https://www.taptap.io/app/34202650", "descarga android", "android download"],
-  ["Github", "https://github.com/IslaNegra/Isla-Negra.git", "repositorio oficial<br>escritorio, android, iPhone", "official repository<br>desktop, android, iPhone"]
+  ["Game Jolt", "https://gamejolt.com/games/sombras-sobre-isla-negra/1113130", "android, escritorio", "android, desktop"],
+  ["Github", "https://github.com/IslaNegra/Isla-Negra.git", "escritorio, android, iPhone", "desktop, android, iPhone"],
+  ["Zapstore", "https://zapstore.dev/apps/com.islanegra.juego", "descarga android", "android download"]
 ];
 const lista = en => '<div class="enl2">' + ENLACES.map(x => '<a href="' + x[1] + '" target="_blank" rel="noopener noreferrer"><b>' + x[0] + '</b><span>' + (en ? x[3] : x[2]) + '</span></a>').join('') + '</div>';
 const TXT_GRACIAS = '<p>Este juego ha sido desarrollado de manera totalmente altruista, sin beneficio personal alguno, bajo la vieja consigna «DIY-Non-profit» (hazlo tú mismo, sin ánimo de lucro). Si tienes un momento, visítanos en los distintos enlaces y deja tus comentarios:</p>' +
@@ -29841,11 +29838,11 @@ Object.assign(TRAD, {
 TRAD[TXT_GRACIAS] = TXT_GRACIAS_EN;
 { const st = document.createElement("style");
   st.textContent =
-    "#visita .globo .enl2{display:flex;flex-direction:column;gap:6px;margin:10px 0 12px}" +
-    "#visita .globo .enl2 a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 12px;border:1px solid rgba(232,194,122,.45);" +
+    "#visita .globo .enl2{display:flex;flex-direction:column;gap:4px;margin:8px 0 10px}" +
+    "#visita .globo .enl2 a{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:4px 12px;border:1px solid rgba(232,194,122,.45);" +
       "border-radius:6px;background:rgba(232,194,122,.07);color:#F1E6D0;text-decoration:none}" +
     "#visita .globo .enl2 a b{font-weight:600;color:#E8C27A;letter-spacing:.04em}" +
-    "#visita .globo .enl2 a span{font-size:11.5px;line-height:1.35;color:#BFB29A;text-align:right;flex:1}" +
+    "#visita .globo .enl2 a span{font-size:11.5px;line-height:1.35;color:#BFB29A;text-align:right;flex:1;white-space:nowrap}" +
     "#visita .globo .enl2 a::after{content:'\u203A';color:#E8C27A;font-size:18px;margin-left:2px}" +
     /* el último bocadillo: sin transparencia */
     "#visita .globo.opaco{background:linear-gradient(180deg,#28231d,#0c0a08) !important}" +
@@ -31774,6 +31771,7 @@ Object.assign(TRAD, { "Versión iPhone": "iPhone version", "Versión escritorio"
           '<p class="nostr rotulo-nostr">' + idi("Versión iPhone") + '</p>' +
           '<p class="nostr"><a href="https://islanegra.github.io/Isla-Negra/" target="_blank" rel="noopener noreferrer">islanegra.github.io/Isla-Negra</a></p>' +
           '<p class="nostr rotulo-nostr nostr-atajo2">' + idi("Versión escritorio") + '</p>' +
+          '<p class="nostr"><a href="https://gamejolt.com/games/sombras-sobre-isla-negra/1113130" target="_blank" rel="noopener noreferrer">gamejolt.com/games/sombras-sobre-isla-negra</a></p>' +
           '<p class="nostr"><a href="https://islanegra.itch.io/sombras-sobre-isla-negra" target="_blank" rel="noopener noreferrer">islanegra.itch.io/sombras-sobre-isla-negra</a></p>';
         rec.querySelectorAll("a[href^='http']").forEach(a => a.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); window.open(a.href, "_blank", "noopener,noreferrer"); }));
       }
