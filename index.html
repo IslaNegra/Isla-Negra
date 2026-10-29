@@ -56,13 +56,13 @@
 
 <link rel="manifest" id="manifiesto">
 
-<link rel="apple-touch-icon" sizes="180x180" href="imagenes/180x180.webp">
+<link rel="apple-touch-icon" sizes="180x180" href="imagenes/icono_hana_180.webp">
 <script>
 /* VERSIÓN MÓVIL: la música va en la carpeta musica/, como en la de ordenador (aligerar_v4) */
 </script>
 <script>
-var ICONO512 = "imagenes/img.webp";
-var ICONO192 = "imagenes/img_1.webp";
+var ICONO512 = "imagenes/icono_hana_512.webp";
+var ICONO192 = "imagenes/icono_hana_192.webp";
 (function(){
   try{
     var aqui    = location.href.split("#")[0].split("?")[0];
@@ -12444,7 +12444,7 @@ function reajustarTitulos(){
   window.addEventListener('resize', reajustarTitulos);
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(reajustarTitulos);
 })();
-const VERSION = "2.3.2";
+const VERSION = "2.3.3";
 document.title = "Sombras sobre Isla Negra · " + VERSION;
 function panelPortada(html, pie, bajoTitulo){
   const p = document.getElementById("portada");
@@ -19817,7 +19817,7 @@ window.__busqueda = {
    si alguno tarda más de 30 segundos, el juego arranca igual. */
 window.addEventListener("load", () => {
   const L = [
-    "imagenes/180x180.webp",
+    "imagenes/icono_hana_180.webp",
     "imagenes/drwhen_ico_marcar.webp",
     "imagenes/drwhen_ico_alterar.webp",
     "imagenes/drwhen_ico_rebobinar.webp",
@@ -19874,8 +19874,8 @@ window.addEventListener("load", () => {
     "imagenes/hana_serenidad_entera.webp",
     "imagenes/hana_shiho_nage_plana.webp",
     "imagenes/hana_tenkan_plana.webp",
-    "imagenes/img.webp",
-    "imagenes/img_1.webp",
+    "imagenes/icono_hana_512.webp",
+    "imagenes/icono_hana_192.webp",
     "imagenes/img_13.webp",
     "imagenes/img_15.webp",
     "imagenes/img_16.webp",
@@ -22597,10 +22597,11 @@ Object.assign(TRAD, {
 </style>
 <script>/* 9-10-2026 (Artur): tarjeta de novedades */
 /* 10-10-2026 (Artur): novedades de la v2.1.1 (con título) */
-const NOVEDADES = { ver:"2.3.2", llave:"islanegra-version-vista",   /* 29-10-2026 (Artur): novedades de la v2.3.2 */
+const NOVEDADES = { ver:"2.3.3", llave:"islanegra-version-vista",   /* 29-10-2026 (Artur): novedades de la v2.3.3 */
   titulo:"",
-  lista:["Cambios en los menús: reproducir el tutorial para más información"],
+  lista:["Nuevo icono de inicio"],
   sub:"", lista2:null, nota:"" };
+TRAD["Nuevo icono de inicio"] = "New home screen icon";
 TRAD["Cambios en los menús: reproducir el tutorial para más información"] = "Menu changes: replay the tutorial for more information";
 Object.assign(TRAD, { "Completa la fase 2 para desbloquear:": "Complete stage 2 to unlock:", "2 nuevos personajes": "2 new characters",
   "Nuevas habilidades y mecánicas": "New abilities and mechanics", "4 nuevas canciones": "4 new songs", "Nueva campaña": "New campaign",
