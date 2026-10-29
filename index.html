@@ -5591,7 +5591,7 @@ const CARTAS = [
   { id:"invisible_no_estar", mazo:"invisible", nombre:"No estar ahí", tipo:"respuesta",
     nivel:4, copias:1, texto:"Evita técnicas hasta maestras, también las inevitables hasta expertas. Te vuelves invisible. Gasta una mejora.",
     cita:"", arte:"vuelo_pelicano", efecto:{ evitaHasta:4, esconde:true, gastaMejora:true, evitaInevitable:true, evitaInevitableHasta:3 } },
-  { id:"mago_personaje", mazo:"mago", nombre:"El Mago", tipo:"personaje",
+  { id:"mago_personaje", mazo:"mago", nombre:"Fausto Corvi", tipo:"personaje",
     nivel:0, copias:1, texto:"Truco: juega el ataque boca abajo. Comodín en la manga: una vez por asalto, evita técnicas hasta maestras.", cita:"", arte:"chistera", efecto:{} },
   { id:"mago_chistera", mazo:"mago", nombre:"Chistera", tipo:"mejora",
     nivel:0, copias:4, texto:"Sube de nivel. Con dos en la mesa, mejoras.",
@@ -6256,7 +6256,7 @@ const MAZOS = [
   { id:"pirata", nombre:"Soto Aboal",     corto:"Soto" },
   { id:"vesna",  nombre:"Vesna",         corto:"Vesna" },
   { id:"invisible", nombre:"El hombre invisible", corto:"Invisible" },
-  { id:"mago",   nombre:"El Mago",       corto:"Mago" },
+  { id:"mago",   nombre:"Fausto Corvi",  corto:"Fausto" },
   { id:"minero", nombre:"Minero loco",   corto:"Minero" },   /* 1-10-2026 */
   { id:"riko",   nombre:"El Gran Mimón",          corto:"Mimón" },
   { id:"mochi",   nombre:"Mochi Chibiyama", corto:"Mochi" },
@@ -25168,7 +25168,7 @@ const ULTIMO_DORSO = { r:null, t:0 };
    combo de 4 del Invisible y 4 Cargas de golpe; fuera «sin que te vean» (Invisible) y «sin elegir todas las cartas» (Mimón) */
 { const pon = (L, antesDe) => { const k = LOGROS_DEF.findIndex(x => x.s === antesDe); if(k >= 0) LOGROS_DEF.splice(k, 0, L); else LOGROS_DEF.push(L); };
   [["okuma", "Sumi"], ["hana", "Hana"], ["minero", "el Minero"], ["pirata", "Soto"], ["vesna", "Vesna"],
-   ["invisible", "el Invisible"], ["mago", "el Mago"], ["riko", "el Mimón"], ["mochi", "Mochi"]].forEach(([id, n]) => {
+   ["invisible", "el Invisible"], ["mago", "Fausto"], ["riko", "el Mimón"], ["mochi", "Mochi"]].forEach(([id, n]) => {
     if(!LOGROS_DEF.some(x => x.id === id + "_gana"))
       pon({ id:id + "_gana", c:"{n} con " + n, s:"pj:" + id, t:"Gana {n} partidas con " + n, esc:ESC_CL }, "pj:" + id); });
   { const k = LOGROS_DEF.findIndex(x => x.id === "inv_sin_ver"); if(k >= 0) LOGROS_DEF.splice(k, 1); }
@@ -25188,10 +25188,10 @@ const ULTIMO_DORSO = { r:null, t:0 };
     "Gana {n} partidas con Sumi": "Win {n} matches with Sumi", "Gana {n} partidas con Hana": "Win {n} matches with Hana",
     "Gana {n} partidas con el Minero": "Win {n} matches with the Miner", "Gana {n} partidas con Soto": "Win {n} matches with Soto",
     "Gana {n} partidas con Vesna": "Win {n} matches with Vesna", "Gana {n} partidas con el Invisible": "Win {n} matches with the Invisible Man",
-    "Gana {n} partidas con el Mago": "Win {n} matches with the Magician", "Gana {n} partidas con el Mimón": "Win {n} matches with the Great Mimón",
+    "Gana {n} partidas con Fausto": "Win {n} matches with Fausto", "Gana {n} partidas con el Mimón": "Win {n} matches with the Great Mimón",
     "Gana {n} partidas con Mochi": "Win {n} matches with Mochi",
     "{n} con Sumi": "{n} with Sumi", "{n} con Hana": "{n} with Hana", "{n} con el Minero": "{n} with the Miner", "{n} con Soto": "{n} with Soto",
-    "{n} con Vesna": "{n} with Vesna", "{n} con el Invisible": "{n} with the Invisible Man", "{n} con el Mago": "{n} with the Magician",
+    "{n} con Vesna": "{n} with Vesna", "{n} con el Invisible": "{n} with the Invisible Man", "{n} con Fausto": "{n} with Fausto",
     "{n} con el Mimón": "{n} with the Mimón", "{n} con Mochi": "{n} with Mochi",
     "Gana {n} partidas siendo Maestra con el rival en Básico": "Win {n} matches as a Master with your rival still Basic",
     "Gana 1 partida siendo Maestra con el rival en Básico": "Win 1 match as a Master with your rival still Basic",
@@ -31369,6 +31369,8 @@ function jugarContraIA(){
 .portada.en-sala .lonja-sw.es-publica .bola{left:18px;background:#8FD8A4}
 .portada.en-sala .lonja-sw.mirando{pointer-events:none}
 .lonja-rapida .lonja-losa .sitios{display:flex;justify-content:center;gap:9px;margin:4px 0 18px;border-top:0;padding:0}
+/* 29-10-2026 (Artur): en Partida rápida hay un solo asiento y sitio de sobra: el alias y el nombre del luchador salen enteros, centrados bajo la losa */
+.lonja-rapida .sl-silla .sl-mote,.lonja-rapida .sl-silla .sl-papel{overflow:visible;text-overflow:clip;width:max-content;max-width:300px;position:relative;left:50%;transform:translateX(-50%)}
 #eligeL.de-asiento .hoja-asiento{position:relative;padding-top:22px}
 #eligeL.de-asiento .cerrar-x{position:absolute;top:0;right:0;width:34px;height:34px;display:flex;align-items:center;justify-content:center;
   padding:0 !important;background:none !important;border:0 !important;box-shadow:none !important;border-radius:0;line-height:0;color:var(--madera-viva);cursor:pointer;margin:0}
