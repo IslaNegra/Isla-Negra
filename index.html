@@ -41,7 +41,7 @@
 </script>
 <meta charset="utf-8">
 
-<style>body{background:#070605;margin:0}.accion.quieto{opacity:.45;pointer-events:none;}
+<style>body{background:#070605;margin:0}
 </style>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, interactive-widget=resizes-content">
@@ -986,8 +986,7 @@ html.apretado .chat-cerrar:active{color:var(--pergamino)}
 /* Pirata, nivel superior: mismo halo dorado que las demás jugables; el coste va en un
    sello pequeño y quieto, granate oscuro, pegado a la ficha de nivel */
 .txt3 > .sello-salto{position:static;align-self:flex-start;display:inline-block;margin-top:calc(3px * var(--z,1));}
-.txt3 .clase > .sello-salto.en-linea{display:inline-block;margin-left:calc(5px * var(--z,1));vertical-align:1px;
-  font-size:calc(8.5px * var(--z,1));padding:calc(1.5px * var(--z,1)) calc(3.5px * var(--z,1))}
+
 .carta > .sello-salto{position:absolute;top:calc(-7px * var(--z,1));left:calc(26px * var(--z,1));z-index:12;
   transform:rotate(-4deg)}
 .sello-salto{
@@ -2080,7 +2079,7 @@ details.registro{border-top:1px solid var(--tinta-3);padding-top:6px}
 .nostr a{color:var(--madera-viva);text-decoration:underline;
   text-underline-offset:2px;word-break:break-all}
 
-.nostr.atajo{margin-top:9px}
+
 .nostr.rotulo-nostr.otra{margin-top:15px}
 
 .nostr:active{opacity:1}
@@ -2461,10 +2460,7 @@ body.enPrueba .lupa{z-index:330}
   background-image:var(--marca);
   background-position:center;background-size:contain;background-repeat:no-repeat;
   opacity:.76;filter:sepia(.58) saturate(1) brightness(.95)}
-.portada.cruce .lema-cruce{margin:8px auto 0;font-family:"Isla Serif","Iowan Old Style",Georgia,serif;
-  
-  font-size:8px;letter-spacing:.24em;text-transform:none;color:#A99E88;
-  text-indent:.28em;opacity:1}
+
 .portada.cruce .sello{margin:6px auto 0;font-size:7px;letter-spacing:.18em;
   text-indent:.18em;color:#5E5449}
 
@@ -2697,11 +2693,9 @@ button.accion:active,.barra .mini:active,.portada.cruce .cuerpo .opciones button
 
 .col.izq .datos{padding-right:38px}
 .col.der .datos{padding-left:38px}
-.col .rondas-r{position:absolute;top:-2px;left:-4px;display:flex;gap:2px;
-  line-height:1;z-index:3}
-.col.der .rondas-r{left:auto;right:-4px}
-.col .rondas-r i{font-style:normal;font-size:9px;color:#E5B94E;
-  text-shadow:0 0 7px rgba(229,185,78,.55),0 1px 2px #000}
+
+
+
 
 
 .col .ini-f{position:absolute;top:-2px;right:-2px;left:auto;
@@ -2839,7 +2833,7 @@ body:has(#mesa:not([hidden])) .franja{margin-top:6px}
 /* invisible: la línea larga baja de renglón en vez de cortarse y, con cinco renglones, la letra encoge un poco */
 .marco.v3.mz-invisible .txt3 .regla i.largo{white-space:normal;font-size:inherit;line-height:inherit}
 .marco.v3.mz-invisible .txt3 .regla:has(> i:nth-child(5)),.marco.v3.mz-invisible .txt3 .regla:has(> i:nth-child(4)):has(> i.largo){--p3-reg:7.1;--p3-int:1.12}
-.accion.quieto{opacity:.45;pointer-events:none;}
+
 </style>
 
 <style>
@@ -2924,7 +2918,7 @@ body.enPrueba .barra .mandos{margin-right:var(--anchoSalir, 70px)}
   font:700 calc(var(--carta-an, 98px) * .52)/1 ui-sans-serif,system-ui,sans-serif;
   color:#241D14;opacity:.88;
   text-shadow:0 1px 0 rgba(255,250,235,.55), 0 0 18px rgba(255,248,230,.5)}
-.accion.quieto{opacity:.45;pointer-events:none;}
+
 </style>
 <style>
 /* ESPEJISMO: la ilusión del Mago aparece en el fondo, junto al árbol,
@@ -2964,13 +2958,13 @@ body.enPrueba .barra .mandos{margin-right:var(--anchoSalir, 70px)}
 #fantasmaInv.activo{opacity:.6}
 @keyframes fantFlota{0%,100%{transform:translateY(0);opacity:1}
   50%{transform:translateY(-7px);opacity:.78}}
-.accion.quieto{opacity:.45;pointer-events:none;}
+
 </style>
 <style>
 .est-mago{align-items:center;gap:4px}
 .mini-m.comodin-m{background-color:#2A1640}
 .mini-m.comodin-m.gastado{filter:grayscale(1) brightness(.55);opacity:.45}
-.accion.quieto{opacity:.45;pointer-events:none;}
+
 </style>
 <style>
 /* El Truco se da la vuelta: el dorso gira hasta ponerse de canto y aparece la cara. */
@@ -3002,7 +2996,7 @@ body.enPrueba .barra .mandos{margin-right:var(--anchoSalir, 70px)}
   100%{transform:perspective(800px) translateY(0) scale(1) rotateY(360deg)}}
 @keyframes dorsoAparece{0%,50%{opacity:0}50.1%,100%{opacity:1}}
 @keyframes dorsoSeVa{0%,50%{opacity:1}50.1%,100%{opacity:0}}
-.accion.quieto{opacity:.45;pointer-events:none;}
+
 
 /* 3-10-2026: página de Jugar y Tutorial: árbol sobre la roca en el mar, con el fruto de Gemini colgando de una rama.
    Orden: primero el dibujo con el fruto, luego el fruto empieza a brillar y al final el título y los botones. */
@@ -3786,42 +3780,9 @@ function idi(s){
   return (v === undefined) ? s : v;
 }
 
-function cambiarIdioma(){
-  IDIOMA = (IDIOMA === "es") ? "en" : "es";
-  try{ localStorage.setItem("islaIdioma", IDIOMA); }catch(e){}
-  const b = document.getElementById("botIdioma");
-  if(b) b.textContent = (IDIOMA === "es") ? "ES" : "EN";
-  /* las cartas ya pintadas están cacheadas: hay que invalidar la caché
-     o la mano se queda como estaba */
-  try{ if(typeof MANO_VISTA === "object" && MANO_VISTA){
-         MANO_VISTA.estructura = ""; MANO_VISTA.estado = ""; } }catch(e){}
-  try{ if(typeof TUTO === "object" && TUTO) TUTO.firma = ""; }catch(e){}
-  try{
-    if(document.body.classList.contains("enReglas") && typeof dibujarReglas === "function")
-      dibujarReglas();
-  }catch(e){}
-  try{
-    if(typeof pintar === "function" && typeof ESTADO === "object" &&
-       ESTADO && ESTADO.asientos && ESTADO.asientos.length) pintar();
-  }catch(e){}
-  try{ marcarIdioma(); }catch(e){}
-  try{ if(typeof reajustarTitulos === "function") reajustarTitulos(); }catch(e){}
-}
 
-function ponerBotonIdioma(){
-  if(document.getElementById("botIdioma")) return;
-  const b = document.createElement("button");
-  b.id = "botIdioma";
-  b.textContent = (IDIOMA === "es") ? "ES" : "EN";
-  b.setAttribute("style",
-    "position:fixed;left:6px;top:6px;z-index:9999;" +
-    "font:700 11px/1 system-ui,-apple-system,sans-serif;letter-spacing:.6px;" +
-    "color:#E8DCC0;background:rgba(18,14,10,.74);border:1px solid rgba(232,220,192,.32);" +
-    "border-radius:6px;padding:6px 9px;opacity:.7;-webkit-tap-highlight-color:transparent");
-  b.onclick = cambiarIdioma;
-  document.body.appendChild(b);
-  marcarIdioma();
-}
+
+
 if(document.readyState === "loading")
   document.addEventListener("DOMContentLoaded", marcarIdioma);
 else marcarIdioma();
@@ -5825,7 +5786,7 @@ function rikoGolpeCopiado(){
 }
 function rikoDanoImitar(){ const g = rikoGolpeCopiado(); return Math.max(RIKO_CFG.imitar.suelo, g ? g.d : 0); }
 function rikoNivelImitar(){ const g = rikoGolpeCopiado(); return g ? g.c.nivel : 1; }
-function rikoGastaImitar(){ const g = rikoGolpeCopiado(); return !!(RIKO_CFG.imitar.gasta && g && (g.c.efecto.gastaMejora || (RIKO_CFG.imitar.gastaDesde && g.c.nivel >= RIKO_CFG.imitar.gastaDesde))); }
+
 
 /* KENJI NUEVO (1-10-2026, EN PRUEBAS): el aprendiz, sin estilo propio. Cada carta tiene dos
    mitades, un golpe y una guardia, y cada mitad es la técnica de otro maestro. La primera vez
@@ -7437,45 +7398,7 @@ function elegirMitadEnPantalla(i){
     cerrarLupa();
   };
 }
-function jugarMitad(i, lado){
-  const m = modoActual(), yo = asientoLocal();
-  if(!indicesJugables().includes(i)) return;
-  /* 5-10-2026 (Artur): vuelve a la mano con la mitad elegida y desde ahí se juega sola, con su vuelo a la mesa */
-  const a = ESTADO.asientos[yo], etq = a.manoEtq[i];
-  elegirMitad(a, i, lado);
-  const carta = a.mano[i];
-  MANO_VISTA.estructura = "";
-  pintar();
-  tarde(lento(450), () => {
-    if(modoActual() !== m || a.manoEtq[i] !== etq || a.mano[i] !== carta) return;
-    const el = document.querySelector('#mano .carta[data-indice="' + i + '"]');
-    let clon = null;
-    if(el){
-      const r = el.getBoundingClientRect();
-      clon = el.cloneNode(true);
-      clon.className = "carta clon"; clon.id = "clonVuelo";
-      clon.style.zIndex = ""; clon.style.bottom = "";
-      clon.style.width = el.offsetWidth + "px";
-      clon.style.left = "0px"; clon.style.top = "0px";
-      clon.style.transform = "translate3d(" + (r.left + (r.width - el.offsetWidth) / 2) + "px," + (r.top + (r.height - el.offsetHeight) / 2) + "px,0)";
-      clon.dataset.anchoVisual = el.offsetWidth.toFixed(1);
-      capaCol("capaClon").appendChild(clon);
-      el.style.visibility = "hidden";
-    }
-    if(m === "miTurno")            accionJugarCarta(yo, i, lado);
-    else if(m === "trasRespuesta") accionJugarTrasRespuesta(yo, i, lado);
-    else if(m === "respondiendo")  usarRespuesta(yo, i);
-    if(!clon) return;
-    requestAnimationFrame(() => {
-      const destino = destinoDeJugada(carta);
-      if(destino && !a.manoEtq.includes(etq))
-        volarCarta(carta, destino, { ocultarDestino: true, desde: "clonVuelo",
-                                     sinGiro: true, desdeTamano: true, dura: 420, muelle: true });
-      else { if(el) el.style.visibility = ""; }
-      clon.remove();
-    });
-  });
-}
+var jugarMitad;   /* limpieza_v1: la versión vieja se sustituía entera más abajo */
 function jugableEnTurno(a, c){
   if(c.tipo === "dual") c = defCarta(c.golpe);            /* KENJI: en tu turno, la mitad que sirve es el golpe */
   if(c.tipo === "dualT") c = defCarta(c.ladoA);           /* KENJI: táctica de dos mitades (las dos son tácticas básicas) */
@@ -8648,36 +8571,7 @@ function enBerserker(i){
   const enfrente = ESTADO.asientos.filter((_, k) => !sonAliados(i, k) && vivo(k)).length;
   return enfrente >= 2;                      
 }
-function revisarBerserker(yaRecogido){
-  if(ESTADO.modo !== "equipos") return;
-  ESTADO.asientos.forEach((s, i) => {
-    const ahora = enBerserker(i);
-    if(ahora === !!s.berserker) return;      
-    s.berserker = ahora;
-    if(!ahora){
-      s.inicioBers = 0; s.marcaDesde = 0;
-      anotar(s.nombre + " ya no está en inferioridad: se acaba el berserker.", "hito");
-      return;
-    }
-    s.inicioBers = Date.now();
-    sonar("nivel");
-    if(navigator.vibrate) navigator.vibrate([25, 50, 25]);
-    const espera = yaRecogido ? 0 : RITMO.recoge + RITMO.barrido, LEE = 2400;
-    s.marcaDesde = Date.now() + espera + LEE;
-    PARADA_BERS = Date.now() + espera + LEE + 640 + 800;
-    congelarMesa(espera + LEE);
-    tarde(espera, () => {
-      if(!enBerserker(i)) return;            
-      cartel("Berserker", "berserk", LEE);
-    });
-    tarde(espera + LEE, () => {
-      if(!enBerserker(i)) return;
-      anotar(s.nombre + " se queda solo: BERSERKER. Hereda el turno de su compañero.", "hito");
-      evento(i, "berserker", "pelea por los dos");
-      pintar();
-    });
-  });
-}
+var revisarBerserker;   /* limpieza_v1: la versión vieja se sustituía entera más abajo */
 function ganadorAsalto(){
   const enPie = ESTADO.asientos.map((_, i) => i).filter(vivo);
   if(!enPie.length) return -2;
@@ -12486,10 +12380,7 @@ function abrirHojaReglas(mazoId){
     cerrarLupa();
   };
 }
-function cerrarHojaReglas(){
-  const l = document.getElementById("lupa");
-  if(l) l.classList.remove("reglas-pj");
-}
+
 function mazoDeReglas(el){
   if(el.dataset.reglas) return el.dataset.reglas;
   const l = el.dataset.lupa || "";
@@ -12553,7 +12444,7 @@ function reajustarTitulos(){
   window.addEventListener('resize', reajustarTitulos);
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(reajustarTitulos);
 })();
-const VERSION = "2.3.1";
+const VERSION = "2.3.2";
 document.title = "Sombras sobre Isla Negra · " + VERSION;
 function panelPortada(html, pie, bajoTitulo){
   const p = document.getElementById("portada");
@@ -13190,7 +13081,7 @@ const RUTAS_CAMPANA = {
   isla_negra:    ["nori", "nestor", "mailo", "hana", "okuma", "pirata", "vesna", "invisible", "mago", "minero", "riko", "mochi"]
 };
 const FASES_CAMPANA = ["entrenamiento", "campeonato", "isla_negra"];
-const NOMBRE_FASE = { entrenamiento:"Entrenamiento", campeonato:"Campeonato", isla_negra:"Isla Negra" };
+
 const CAMPANA = { datos:null, modo:null, enCurso:null, aviso:"", elegido:null };
 function datosCampana(){
   if(CAMPANA.datos) return CAMPANA.datos;
@@ -13516,52 +13407,7 @@ function reglasCampana(){
   const ter = r.querySelector("#cpTerminar");
   if(ter) ter.onclick = () => { try{ localStorage.setItem(CP_VISTA, "1"); }catch(e){} entrar(); };
 }
-function reglasCampanaVieja(){
-  const r = document.getElementById("reglas");
-  r.classList.toggle("entreno", true); r.classList.toggle("leer", true);
-  const d = datosCampana();
-  const fase = d.fase === "fin" ? null : d.fase;
-  r.innerHTML =
-    '<div class="cabecera"><h1>La campaña</h1></div>' +
-    '<div class="cuerpo"><div class="hojas"><div class="texto cp-reglas">' +
-      '<p class="cita">Un ser eterno, cuyas raíces se alimentan de sangre y cuyo fruto se alimenta de sombras, desencadena un torneo por su fruto sagrado: ' +
-      'quien lo coma recibirá poderes sobrenaturales. Los mejores luchadores, llegados de todos los rincones, ' +
-      'acuden a la isla para reclamar su premio.</p>' +   /* 6-10-2026: el texto de «Fruto, árbol, isla» */
-      '<h2>Cómo funciona</h2>' +
-      '<p>El modo campaña está dividido en 3 fases:</p>' +
-      '<p class="cp-fase-t"><b class="cp-e0">Fase 1 · Entrenamiento</b></p>' +
-      '<p>Comienzas la campaña con Roku, uno de los cuatro personajes clásicos del juego de ' +
-      'cartas físico original, <i>Sombras sobre Isla Negra</i>. Vence al siguiente personaje ' +
-      'para desbloquearlo. Una vez desbloqueas los cuatro personajes clásicos, ya puedes ' +
-      'jugarlos en el modo libre y en el modo online, y pasas a la siguiente fase.</p>' +
-      '<p class="cp-fase-t"><b class="cp-e1">Fase 2 · Campeonato</b></p>' +
-      '<p>Continúas en modo Campeonato con los cuatro personajes desbloqueados. Este modo es ' +
-      'más difícil que el anterior: requiere mejorar la estrategia y pensar más allá de un ' +
-      'turno. Combate para desbloquear el resto de personajes. Una vez estén todos ' +
-      'desbloqueados, ya puedes jugarlos en el modo libre y en el modo online, y pasas a la siguiente fase.</p>' +
-      '<p>Además, desbloquearás:</p>' +   /* 12-10-2026 (Artur) */
-      '<ul class="cp-lista"><li>Modo crea tu personaje</li><li>Nuevo dorso de cartas</li><li>Música del combate aleatoria o a elegir</li><li>Foto de perfil</li></ul>' +
-      '<p class="cp-fase-t"><b class="cp-e2">Fase 3 · Isla Negra</b></p>' +
-      '<p>Este modo te obliga a empezar de cero de nuevo, con Roku como primera opción. La ' +
-      'dificultad aumenta y cambia la manera de pensar de la máquina.</p>' +
-      '<p>Es más difícil que los modos anteriores, pero no imposible: requiere conocer las ' +
-      'cartas y entender las estrategias a seguir de cada uno. Una vez desbloquees a todos los ' +
-      'personajes, desbloquearás al jefe final que, si bien ya lo venciste en el modo ' +
-      'Campeonato, es el único que necesita ser desbloqueado en el modo Isla Negra para poder ' +
-      'jugarlo en el modo libre y en el modo online.</p>' +
-      '<p>Una vez completes la fase Isla Negra desbloquearás el resto del juego:</p>' +
-      '<ul class="cp-lista"><li>Jefe final</li><li>Cartas del jefe final en el modo crea tu personaje</li></ul>' +
-    '</div></div></div>' +
-    '<div class="pie cp-pie"><button class="cerrar-hoja" id="cerrarReglas">Volver</button>' +
-      (fase ? '<button class="cerrar-hoja" id="seguirCampana">' +
-              (d.vencidos[fase].length || fase !== "entrenamiento" ? 'Continuar' : 'Empezar') + '</button>' : '') +
-    '</div>';
-  traducirNodo(r);
-  r.classList.add("abierta");
-  r.querySelector("#cerrarReglas").onclick = cerrarReglas;
-  const s = r.querySelector("#seguirCampana");
-  if(s) s.onclick = () => { cerrarReglas(); abrirCampana(); };
-}
+
 function reglasInstrucciones(){
   const r = document.getElementById("reglas");
   r.classList.toggle("entreno", true); r.classList.toggle("leer", true);   /* 3-10-2026: fondo del sitio de entrenamiento */
@@ -13906,11 +13752,7 @@ function reglasBienvenida(){
               "tienes a medias.", arrancarTutorial, "Empezar");
   };
 }
-function abrirTutorial(){
-  REGLAS_VISTA = "bienvenida";
-  document.body.classList.add("enReglas");
-  dibujarReglas();
-}
+
 function arrancarTutorial(){
   cerrarReglas();
   TUTO.activo = true;
@@ -21861,14 +21703,7 @@ Object.assign(TRAD, {
 </script>
 <script>
 /* 7-10-2026 (Artur): SUMI JEFA, Daño = tu nivel */
-function sumiJefaVista(){
-  try{
-    const A = (typeof ESTADO !== "undefined" && ESTADO.asientos) || [];
-    const sumis = (typeof hayTablero === "function" && hayTablero()) ? A.filter(a => a && a.mazoId === "okuma") : [];
-    if(sumis.length) return sumis.every(a => a.jefe);              /* en la mesa: solo si la única Sumi es la jefa */
-    return typeof CARTAS_MAZO !== "undefined" && CARTAS_MAZO === "okumajefe";   /* «Las cartas» de Sumi jefa */
-  }catch(e){ return false; }
-}
+
 { const _idiSJ = idi;
   idi = function(t){
     if(typeof t === "string" && t.indexOf("Daño = nivel del rival") === 0 && sumiJefaVista())
@@ -21950,37 +21785,7 @@ function humoColores(H){
   return ["rgba(" + R + "," + G + "," + B + ",.85)", "rgba(" + o(R) + "," + o(G) + "," + o(B) + ",.55)", "rgba(" + o(R) + "," + o(G) + "," + o(B) + ",0)"];
 }
 /* Humo sobre unas cartas (en todas a la vez, o en cada una). Se mide antes de que desaparezcan. */
-function humoSobre(els, tipo, todas){
-  try{
-    const H = HUMOS[tipo]; els = (els || []).filter(e => e && e.getBoundingClientRect);
-    const rs = els.map(e => e.getBoundingClientRect()).filter(r => r.width > 0);
-    if(!rs.length) return;
-    const k = rs[0].width / 98, col = humoColores(H);
-    const zonas = (H.todo || todas)
-      ? [{ l: Math.min(...rs.map(r => r.left)), t: Math.min(...rs.map(r => r.top)),
-           w: Math.max(...rs.map(r => r.right)) - Math.min(...rs.map(r => r.left)),
-           h: Math.max(...rs.map(r => r.bottom)) - Math.min(...rs.map(r => r.top)), todo: true }]
-      : rs.map(r => ({ l: r.left, t: r.top, w: r.width, h: r.height }));
-    zonas.forEach(z => {
-      for(let j = 0; j < H.n; j++){
-        const d = document.createElement("div");
-        d.className = "humo-isla";
-        const x = z.todo ? z.l + z.w * (0.03 + Math.random() * 0.94) : z.l + z.w * (0.2 + Math.random() * 0.6);
-        const y = z.todo ? z.t + z.h * Math.random()                   : z.t + z.h * (0.15 + Math.random() * 0.7);
-        d.style.left = x.toFixed(1) + "px"; d.style.top = y.toFixed(1) + "px";
-        d.style.setProperty("--t", (H.tam * k * (0.65 + Math.random() * 0.7)).toFixed(1) + "px");
-        d.style.setProperty("--dx", ((Math.random() * 2 - 1) * H.lado * k).toFixed(1) + "px");
-        d.style.setProperty("--dy", (-H.subida * k * (0.45 + Math.random() * 1.1)).toFixed(1) + "px");
-        d.style.setProperty("--s", (H.crece * (0.75 + Math.random() * 0.5)).toFixed(2));
-        d.style.setProperty("--d", (H.dura * (0.85 + Math.random() * 0.3)).toFixed(2) + "s");
-        d.style.setProperty("--b", Math.max(1, H.borr * k).toFixed(1) + "px");
-        d.style.setProperty("--c1", col[0]); d.style.setProperty("--c2", col[1]); d.style.setProperty("--c3", col[2]);
-        document.body.appendChild(d);
-        setTimeout(() => d.remove(), H.dura * 1200 + 300);
-      }
-    });
-  }catch(e){}
-}
+
 /* Una carta de la mesa (la Carga, la destapada de la pólvora) desaparece entre humo. */
 function humoPaso(que, tipo){
   try{
@@ -22008,29 +21813,7 @@ function humoCargasMano(t){
   }catch(e){}
 }
 /* Las Cargas de tu mano que van a estallar se quedan a la vista (encima de su sitio) hasta su ¡BUM! */
-function cargasFantasma(t){
-  try{
-    if(t !== asientoLocal()) return;
-    const z = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--z")) || 1) * 1.1;
-    const an = 98 * z, al = an * 155 / 96;
-    document.querySelectorAll('#mano .carta[data-lupa="carga"]').forEach(src => {
-      if(src.style.visibility === "hidden") return;
-      const rs = src.getBoundingClientRect(); if(!rs.width) return;
-      const el = document.createElement("div");
-      el.className = "carga-auto";
-      el.style.setProperty("--z", z.toFixed(3)); el.style.setProperty("--carta-an", an.toFixed(1) + "px");
-      el.style.width = an + "px"; el.style.transition = "none";
-      el.innerHTML = '<div class="carta">' + htmlCarta(defCarta("carga")) + '</div>';
-      el.style.left = (rs.left + rs.width / 2 - an / 2) + "px";
-      el.style.top = (rs.top + rs.height / 2 - al / 2) + "px";
-      el.style.transform = "rotate(" + (src.style.getPropertyValue("--gi") || "0deg") + ") scale(" + (src.offsetWidth / an).toFixed(3) + ")";
-      el.style.opacity = "1";
-      document.body.appendChild(el);
-      CARGAS_AUTO.push(el);
-      setTimeout(() => el.remove(), 15000);
-    });
-  }catch(e){}
-}
+
 /* Tras pintar tu mano: las cartas de Vesna que cambian, y la que se vuelve Conejo. */
 function humoTrasMano(cont, a){
   try{
@@ -22235,32 +22018,8 @@ const DOHYO_VER = { hasta: 0 };
 }
 /* El indicador de puntos: con 2 jugadores, ninguno; con más, cada rival de Mochi lleva el suyo debajo de su losa. */
 function htmlEstadoDohyo(a, derecha){ return ""; }
-function htmlPuntosDohyo(f, espejo){
-  const B = REGLAS_MOCHI.dohyo.borde, puntos = [];
-  for(let x = -(B - 1); x <= B - 1; x++)
-    puntos.push('<i' + (x === f ? ' class="f' + (Math.abs(f) === B - 1 ? ' cuerda' : '') + '"' : '') + '></i>');
-  if(espejo) puntos.reverse();   /* 11-10-2026 (Artur): el rival, al revés: a la izquierda tu lado, a la derecha el suyo */
-  return '<div class="losa-dohyo" title="' + idi("Dohyō: por fuera, el borde de Mochi; hacia el centro, el del rival") + '"><b></b>' + puntos.join("") + '<b></b></div>';
-}
-function pintarDohyoLosas(){
-  let c = document.getElementById("dohyoLosas");
-  if(!c){ c = document.createElement("div"); c.id = "dohyoLosas"; document.body.appendChild(c); }
-  const z = document.getElementById("combate");
-  /* dohyō v3: con 3-4 jugadores y un Mochi en la mesa, cada luchador lleva sus casillas bajo su losa */
-  if(!dohyoHay() || !z || z.offsetParent === null || ESTADO.fase === "portada"){ c.innerHTML = ""; c.dataset.clave = ""; return; }
-  let h = "", clave = "";
-  ESTADO.asientos.forEach((a, i) => {
-    if(a.fuera) return;
-    const losa = document.getElementById("lu" + i); if(!losa) return;
-    const r = losa.getBoundingClientRect(); if(!r.width) return;
-    const f = Math.max(-(REGLAS_MOCHI.dohyo.borde - 1), Math.min(REGLAS_MOCHI.dohyo.borde - 1, a.ficha || 0));
-    const espejo = !sonAliados(asientoVista(), i);
-    clave += i + ":" + f + ":" + (espejo ? "e" : "") + Math.round(r.left) + ":" + Math.round(r.bottom) + "|";
-    const uno = ESTADO.asientos.length <= 2;   /* en 1 contra 1: a la altura del ojo del invisible y pegadas a él */
-    h += '<div class="dl" style="left:' + (uno ? (i === asientoVista() ? r.left + 74 : r.right - 74) : r.left + r.width / 2).toFixed(1) + 'px;top:' + (r.bottom + (uno ? 38 : 3)).toFixed(1) + 'px">' + htmlPuntosDohyo(f, espejo) + '</div>';
-  });
-  if(c.dataset.clave !== clave){ c.innerHTML = h; c.dataset.clave = clave; }
-}
+
+
 { const _pintarAsientosMV = pintarAsientos;
   pintarAsientos = function(){ const r = _pintarAsientosMV.apply(this, arguments); try{ pintarDohyoLosas(); }catch(e){} return r; };
 }
@@ -22400,7 +22159,7 @@ const MIM_DEFECTO = [
   { g:"mailo_astillar_tronco", r:"okuma_espejo" }, { g:"roku_palma_loto", r:"nestor_engano" }, { g:"vesna_colmillos", r:"roku_tortuga_ciega" }, { g:"okuma_manos", r:"hana_shiho_nage" },
   { g:"nori_patada_tornado", r:"roku_ola_gigante" }, { g:"roku_lengua_camaleon", r:"roku_vuelo_pelicano" }, { g:"mailo_romper_viento", r:"hana_sen_no_sen" }, { g:"vesna_nube", r:"mailo_detener_plaga" },
   { a:"nori_trillar_trigo", b:"roku_buscar_posicion" }, { a:"hana_invitar", b:"pirata_beber" } ];
-function mimonLibre(){ return datosCampana().fase === "fin"; }
+var mimonLibre;   /* limpieza_v1: la versión vieja se sustituía entera más abajo */
 function mimonLuchadores(){ return MAZOS.filter(m => !m.base && !m.mimon && m.id !== "riko"); }   /* de quién se cogen cartas (el Mimón repite las de otros) */
 function mimonCarta(id, tipo){ const c = typeof id === "string" ? defCarta(id) : null; return (c && c.tipo === tipo && c.copias > 0 && !c.mimon) ? c : null; }
 function mimonParBien(p, k){
@@ -22439,13 +22198,7 @@ function mimonAzar(){
 }
 function mimonDefecto(){ return MIM_DEFECTO.map(p => Object.assign({}, p)); }
 /* antes de empezar: la máquina siempre al azar; quien no tenga mazo, también */
-function mimonMaterializar(){
-  if(!RED.mimon || !RED.plazas) return;
-  RED.plazas.forEach(pl => {
-    if(pl.tipo === "ia"){ pl.mazo = pl.mazo || "riko"; pl.mim = { tipo:"azar", pares:mimonAzar() }; return; }
-    if(!pl.mim || !mimonCompleto(pl.mim.pares)) pl.mim = { tipo:"azar", pares:mimonAzar() };
-  });
-}
+var mimonMaterializar;   /* limpieza_v1: la versión vieja se sustituía entera más abajo */
 /* el mazo del mimo del asiento i: un «luchador» mimonN con el retrato elegido y sus cartas dobles */
 function mimonRegistrar(i, sitio){
   const id = "mimon" + i;
@@ -22620,19 +22373,8 @@ function mimonPonerMazo(i, pares){
   else { try{ RED.tubo.enviar({ t:"mim", mim, a:i }); }catch(e){} }
 }
 /* ── Crear mazo ── */
-function mimonGuardados(){
-  let l = null; try{ l = JSON.parse(localStorage.getItem(MIM_LLAVE) || "null"); }catch(e){ l = null; }
-  if(!Array.isArray(l)) l = [];
-  while(l.length < 5) l.push(null);
-  return l.slice(0, 5).map(x => { if(x && Array.isArray(x.pares)) x.pares = mimonEstirar(x.pares);
-                                  return (x && mimonCompleto(x.pares)) ? { f:String(x.f || ""), pares:x.pares } : null; });
-}
-function mimonGuardar(k, pares){
-  const l = mimonGuardados();
-  const d = new Date(); l[k] = { f: d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear(), pares };
-  try{ localStorage.setItem(MIM_LLAVE, JSON.stringify(l)); }catch(e){ return false; }
-  return true;
-}
+var mimonGuardados;   /* limpieza_v1: la versión vieja se sustituía entera más abajo */
+var mimonGuardar;   /* limpieza_v1: la versión vieja se sustituía entera más abajo */
 function mimonAbrirMazo(i){
   if(!MIM.borrador) MIM.borrador = mimonAzar();   /* la primera vez de cada sesión: uno al azar; luego se queda lo último */
   MIM.abierto = i;
@@ -22819,36 +22561,7 @@ function musicaLuchadores(){ return MAZOS.filter(m => !m.base && !m.mimon && MUS
     }
     return _mc.call(this, mazoId);
   }; }
-function mimonFilasAjustes(hoja, mando){
-  const libre = mimonLibre();
-  const d = ajustesDorso(), mus = ajustesMusica();
-  const lista = musicaLuchadores();
-  const act = lista.find(m => m.id === mus);
-  hoja.insertAdjacentHTML("beforeend",
-    '<h2 class="aparte">' + idi("Dorso de las cartas") + '</h2><div class="opciones dorsos">' +
-      '<button data-dorso="isla"' + (d === "isla" ? ' class="on"' : '') + '><i style="background-image:var(--dorso)"></i>Isla Negra</button>' +
-      (libre ? '<button data-dorso="loco"' + (d === "loco" ? ' class="on"' : '') + '><i style="background-image:var(--dorso-loco)"></i>' + "Mimón" + '</button>'
-             : '<button class="cerrada" disabled><i>?</i></button>') + '</div>' +
-    '<h2>' + idi("Música") + '</h2><div class="opciones aire">' +
-      '<button data-mus="rival"' + (mus === "rival" ? ' class="on"' : '') + '>' + idi("Del rival") + '</button>' +
-      (libre ? '<button data-mus="azar"' + (mus === "azar" ? ' class="on"' : '') + '>' + idi("Aleatoria") + '</button>' +
-               '<button data-mus="sig" class="cancion' + (act ? ' on' : '') + '">' + (act ? escapar(idi(act.corto)) : idi("Elegir")) + ' <em>›</em></button>'
-             : '<button class="cerrada" disabled>' + idi("Aleatoria") + '</button><button class="cerrada cancion" disabled>' + idi("Elegir") + ' <em>›</em></button>') + '</div>');
-  const otraVez = () => { ajustesGuardar(); pintarOpciones(mando); };
-  hoja.querySelectorAll("[data-dorso]").forEach(b => b.addEventListener("pointerdown", e => {
-    e.preventDefault(); AJ.dorso = b.dataset.dorso;
-    if(RED.papel === "anfitrion"){ ajustesMaterializar(); if(salaAbierta()) difundirSala(); }
-    else if(RED.tubo){ try{ RED.tubo.enviar({ t:"dorso", dorso:ajustesDorso() }); }catch(e){} }
-    otraVez();
-  }));
-  hoja.querySelectorAll("[data-mus]").forEach(b => b.addEventListener("pointerdown", e => {
-    e.preventDefault();
-    const v = b.dataset.mus;
-    if(v === "sig"){ const k = lista.findIndex(m => m.id === AJ.musica); AJ.musica = lista.length ? lista[(k + 1) % lista.length].id : "rival"; }
-    else AJ.musica = v;
-    otraVez();
-  }));
-}
+var mimonFilasAjustes;   /* limpieza_v1: la versión vieja se sustituía entera más abajo */
 Object.assign(TRAD, {
   "Dorso de las cartas": "Card back", "Loco": "Mimón", "Del rival": "Opponent's", "Aleatoria": "Random", "Elegir": "Choose",
   "Modo": "Mode", "Normal": "Normal", "retrato": "portrait",
@@ -22882,10 +22595,11 @@ Object.assign(TRAD, {
 </style>
 <script>/* 9-10-2026 (Artur): tarjeta de novedades */
 /* 10-10-2026 (Artur): novedades de la v2.1.1 (con título) */
-const NOVEDADES = { ver:"2.3", llave:"islanegra-version-vista",   /* 24-10-2026 (Artur): novedades de la v2.3 */
-  titulo:"Completa la fase 2 para desbloquear:",
-  lista:["2 nuevos personajes", "Nuevas habilidades y mecánicas", "4 nuevas canciones", "Nueva campaña", "Nuevos Sastrilegios"],
+const NOVEDADES = { ver:"2.3.2", llave:"islanegra-version-vista",   /* 29-10-2026 (Artur): novedades de la v2.3.2 */
+  titulo:"",
+  lista:["Cambios en los menús: reproducir el tutorial para más información"],
   sub:"", lista2:null, nota:"" };
+TRAD["Cambios en los menús: reproducir el tutorial para más información"] = "Menu changes: replay the tutorial for more information";
 Object.assign(TRAD, { "Completa la fase 2 para desbloquear:": "Complete stage 2 to unlock:", "2 nuevos personajes": "2 new characters",
   "Nuevas habilidades y mecánicas": "New abilities and mechanics", "4 nuevas canciones": "4 new songs", "Nueva campaña": "New campaign",
   "Nuevos Sastrilegios": "New Sastrilegios" });
@@ -23084,7 +22798,7 @@ Object.assign(TRAD, { "Mi foto": "My photo", "Cargar foto": "Load photo", "Quita
 <script>/* 11-10-2026 (Artur): barras del dohyō y textos en el centro */
 /* con 3 o 4: media cuerda con 3 casillas bajo cada losa; el aro es la ficha (segura a la derecha) */
 const DOHYO_X = [8, 42, 76];
-function htmlPuntosDohyo(){ return ""; }
+
 function pintarDohyoLosas(){
   let c = document.getElementById("dohyoLosas");
   if(!c){ c = document.createElement("div"); c.id = "dohyoLosas"; document.body.appendChild(c); }
@@ -23203,7 +22917,7 @@ body.mesa-grande:has(#mesa:not([hidden])) .franja{margin-top:40px}   /* el rodil
 #contadorDano.n3 b{color:#E8893C;text-shadow:0 2px 0 #000,0 0 18px rgba(232,137,60,.85)}
 #contadorDano.n4 b{color:#D9573F;text-shadow:0 2px 0 #000,0 0 22px rgba(217,87,63,1)}
 #contadorDano.n4{animation:contTiembla .14s linear infinite}
-#contadorDano.cgolpe b{animation:contGolpe .35s ease-out}
+
 #contadorDano{transform:none !important;width:84px;transition:opacity .15s}   /* 12-10-2026 (Artur): contador fijo dentro de la pantalla */
 @keyframes contGolpe{0%{transform:scale(1.6)}100%{transform:scale(1)}}
 @keyframes contTiembla{0%{margin-left:-2px}50%{margin-left:2px}100%{margin-left:-2px}}
@@ -23260,27 +22974,9 @@ function trianguloNivel(i, clase){
   }, 120);
 }
 /* contador de daños seguidos: solo el número, a la derecha bajo el rodillo (en todos los modos) */
-const CONT = { quien:-1, turno:-1, t:0, total:0, golpes:0, hasta:null };
-function contadorEl(){
-  let c = document.getElementById("contadorDano");
-  if(!c){ c = document.createElement("div"); c.id = "contadorDano"; c.innerHTML = "<b></b>"; document.body.appendChild(c); }
-  const f = document.getElementById("franja"), r = f ? f.getBoundingClientRect() : null;
-  if(r && r.width){ /* 12-10-2026 (Artur): contador fijo dentro de la pantalla */
-    const der = Math.min(r.right, window.innerWidth) - 6;
-    c.style.left = (der - 84).toFixed(1) + "px"; c.style.top = (r.bottom + 10).toFixed(1) + "px"; }
-  return c;
-}
-function contadorSuma(i, n){
-  const ahora = Date.now();
-  if(i !== CONT.quien || ESTADO.iniciativa !== CONT.turno || ahora - CONT.t > 4000){ CONT.total = 0; CONT.golpes = 0; }
-  CONT.quien = i; CONT.turno = ESTADO.iniciativa; CONT.t = ahora; CONT.total += n; CONT.golpes++;
-  if(CONT.golpes < 2) return;                                    /* el primer golpe ya lo dice su «−x PV» */
-  const c = contadorEl();
-  c.querySelector("b").textContent = "−" + CONT.total;
-  c.className = "ver n" + (CONT.total >= 8 ? 4 : CONT.total >= 6 ? 3 : CONT.total >= 4 ? 2 : 1);
-  void c.offsetWidth; c.classList.add("golpe");
-  clearTimeout(CONT.hasta); CONT.hasta = setTimeout(() => c.classList.remove("ver"), 3500);
-}
+
+
+var contadorSuma;   /* limpieza_v1: la versión vieja se sustituía entera más abajo */
 /* 12-10-2026 (Artur): contador quitado */
 try{ localStorage.removeItem("islanegra-ensayo-danos"); }catch(e){}
 </script>
@@ -23451,7 +23147,6 @@ body.eligeObj .ficha.nodisponible{opacity:.22;filter:grayscale(.6) brightness(.7
     try{
       if(!mesaGrande() || ESTADO.fase !== "apuntando") return null;
       if(typeof enLaSala === "function" && enLaSala()) return null;
-      if(typeof TUTO !== "undefined" && TUTO.activo) return null;
       const ap = ESTADO.apuntando; if(!ap || ap.asiento !== asientoLocal()) return null;
       if(!ESTADO.asientos[ap.asiento].mano[ap.indiceMano]) return null;
       return ap;
@@ -23542,7 +23237,7 @@ body.eligeObj .ficha.nodisponible{opacity:.22;filter:grayscale(.6) brightness(.7
       try{
         if(el){
           const sigue = ESTADO.fase === "apuntando" && ESTADO.apuntando;
-          if(sigue){ EO.yendo = false; EO.enviado = true; }   /* por internet: espera la respuesta */
+          if(sigue){ EO.yendo = false; EO.enviado = !(typeof TUTO !== "undefined" && TUTO.activo); }   /* por internet: espera la respuesta */
           else {
             EO.el = null; document.body.classList.remove("eligeObj"); if(EO.txt) EO.txt.remove();
             el.classList.add("suelta");
@@ -23559,7 +23254,7 @@ body.eligeObj .ficha.nodisponible{opacity:.22;filter:grayscale(.6) brightness(.7
   /* tocar la carta o fuera de las losas: la carta vuelve a la mano */
   document.addEventListener("click", (e) => {
     if(!EO.el || EO.yendo || EO.enviado || Date.now() - EO.desde < 350) return;
-    if(e.target.closest && e.target.closest(".ficha.blanco")) return;
+    if(e.target.closest && (e.target.closest(".ficha.blanco") || e.target.closest("#visita .globo") || e.target.closest("#visita .saltar"))) return;
     e.stopPropagation(); e.preventDefault();
     try{ cancelarObjetivo(); }catch(er){}
   }, true);
@@ -24084,13 +23779,7 @@ const LIB_HUECOS = [];
 LIB_MOLDE.forEach(([nom, n, c], g) => { for(let k = 0; k < c; k++) LIB_HUECOS.push({ n, g, mejora: n === 0 }); });
 function libreAbierto(){ return !CAMPANA.modo && mimonLibre(); }
 /* qué cartas caben en el hueco k (sin mirar copias) */
-function librePozo(k, mazo){
-  const h = LIB_HUECOS[k]; if(!h) return [];
-  const de = c => c.copias > 0 && !c.mimon && (!mazo || c.mazo === mazo) && mimonLuchadores().some(m => m.id === c.mazo);
-  if(h.mejora) return CARTAS.filter(c => c.tipo === "mejora" && de(c));
-  const orden = { ataque:0, respuesta:1, tactica:2 };
-  return CARTAS.filter(c => orden[c.tipo] !== undefined && c.nivel === h.n && de(c)).sort((a, b) => orden[a.tipo] - orden[b.tipo]);
-}
+var librePozo;   /* limpieza_v1: la versión vieja se sustituía entera más abajo */
 function libreUsos(cartas, menos){ const u = {}; (cartas || []).forEach((id, k) => { if(id && k !== menos) u[id] = (u[id] || 0) + 1; }); return u; }
 function libreQuedan(c, cartas, k){ return c.copias - (libreUsos(cartas, k)[c.id] || 0); }
 function libreHuecoBien(cartas, k){
@@ -24214,34 +23903,8 @@ function libreElegir(i, mazo, mim){
     return r;
   }; }
 /* «Crear mazo»: arriba, Libre o Mimón */
-function crearMazoAbrir(i){
-  const pl = RED.plazas[i];
-  if(pl && pl.mazo === "riko" && pl.mim && pl.mim.tipo === "propio") LIB.modo = "mimon";
-  else if(pl && pl.mazo === "libre") LIB.modo = "libre";
-  if(LIB.modo === "mimon"){
-    if(pl && pl.mim && pl.mim.tipo === "propio" && mimonCompleto(pl.mim.pares)) MIM.borrador = pl.mim.pares.map(x => Object.assign({}, x));
-    const L = document.getElementById("mimonMazo"); if(L) L.classList.remove("libre");
-    mimonAbrirMazo(i);
-  } else libreAbrir(i);
-}
-function crearMazoModos(modo){
-  const L = document.getElementById("mimonMazo"); if(!L || L.querySelector(".cm-modos")) return;
-  const h1 = L.querySelector("h1"); if(!h1) return;
-  const i = modo === "mimon" ? MIM.abierto : LIB.abierto;
-  h1.textContent = idi("Asiento") + " " + (i + 1) + " · " + idi("Crear mazo");
-  const d = document.createElement("div"); d.className = "opciones cm-modos";
-  d.innerHTML = '<button data-cm="libre"' + (modo === "libre" ? ' class="on"' : '') + '>' + idi("Libre") + '</button>' +
-                '<button data-cm="mimon"' + (modo === "mimon" ? ' class="on"' : '') + '>Mimón</button>';
-  h1.insertAdjacentElement("afterend", d);
-  const sub = L.querySelector(".sub");
-  if(sub) sub.textContent = modo === "mimon" ? idi("Elige un mazo doble de elección.")
-                                             : idi("Elige un mazo simple.");
-  d.querySelectorAll("[data-cm]").forEach(b => b.onclick = () => {
-    if(b.dataset.cm === modo) return;
-    LIB.modo = b.dataset.cm; LIB.scroll = 0; MIM.scroll = 0;
-    if(LIB.modo === "mimon"){ L.classList.remove("libre"); mimonAbrirMazo(i); } else libreAbrir(i);
-  });
-}
+var crearMazoAbrir;   /* limpieza_v1: la versión vieja se sustituía entera más abajo */
+var crearMazoModos;   /* limpieza_v1: la versión vieja se sustituía entera más abajo */
 /* la sala: el asiento con Mazo libre */
 { const _dibL = dibujarSala;
   dibujarSala = function(){
@@ -24269,18 +23932,8 @@ function crearMazoModos(modo){
   }; }
 RED.mimon = false;
 /* ── Crear el Mazo libre ── */
-function libreGuardados(){
-  let l = null; try{ l = JSON.parse(localStorage.getItem(LIB.llave) || "null"); }catch(e){ l = null; }
-  if(!Array.isArray(l)) l = [];
-  while(l.length < 5) l.push(null);
-  return l.slice(0, 5).map(x => (x && libreCompleto(x.cartas)) ? { f:String(x.f || ""), cartas:x.cartas } : null);
-}
-function libreGuardar(k, cartas){
-  const l = libreGuardados(), d = new Date();
-  l[k] = { f: d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear(), cartas };
-  try{ localStorage.setItem(LIB.llave, JSON.stringify(l)); }catch(e){ return false; }
-  return true;
-}
+var libreGuardados;   /* limpieza_v1: la versión vieja se sustituía entera más abajo */
+var libreGuardar;   /* limpieza_v1: la versión vieja se sustituía entera más abajo */
 function libreAbrir(i){
   const pl = RED.plazas[i];
   if(pl && pl.mim && pl.mim.tipo === "libre" && libreCompleto(pl.mim.cartas)) LIB.borrador = pl.mim.cartas.slice();
@@ -24508,21 +24161,9 @@ function premioCartel(cual, luego){
     }catch(e){}
     return r;
   }; }
-{ const _cmN = crearMazoAbrir; crearMazoAbrir = function(){ nuevoQuita("crear"); const r = _cmN.apply(this, arguments); crearBienvenida(); return r; }; }
+
 /* la primera vez que entras en Crear mazo: qué son los dos mazos */
-function crearBienvenida(){
-  let visto = false; try{ visto = localStorage.getItem("islanegra-crear-visto") === "1"; }catch(e){}
-  if(visto || document.getElementById("crearBienvenida")) return;
-  try{ localStorage.setItem("islanegra-crear-visto", "1"); }catch(e){}
-  const caja = document.createElement("div"); caja.id = "crearBienvenida"; caja.className = "pregunta-fondo";
-  caja.innerHTML = '<div class="pregunta"><p class="nv-t">' + idi("Crear mazo") + '</p>' +
-    '<p class="cb">' + idi("Crea tu propio mazo con cartas de todos los luchadores.") + '</p>' +
-    '<p class="cb"><b>' + idi("Libre") + ':</b> ' + idi("elige un mazo simple.") + '</p>' +
-    '<p class="cb"><b>Mimón:</b> ' + idi("elige un mazo doble.") + '</p>' +
-    '<div class="pregunta-botones"><button class="si">' + idi("Vale") + '</button></div></div>';
-  document.body.appendChild(caja);
-  caja.querySelector(".si").onclick = () => caja.remove();
-}
+var crearBienvenida;   /* limpieza_v1: la versión vieja se sustituía entera más abajo */
 { const _msN = menuSonido; menuSonido = function(){ nuevoQuita("musica"); document.querySelectorAll(".sl-altavoz > .nuevo-marca").forEach(e => e.remove()); return _msN.apply(this, arguments); }; }
 { const _aoN = abrirOpcionesSala; abrirOpcionesSala = function(){ const r = _aoN.apply(this, arguments);
     try{ if(nuevoHay("dorso")){ const h = [...document.querySelectorAll("#opcionesSala h2")].find(x => /dorso|back/i.test(x.textContent)); nuevoMarca(h); nuevoQuita("dorso"); } }catch(e){}
@@ -24624,11 +24265,7 @@ window.addEventListener("resize", () => { if(document.getElementById("mimonMazo"
 
 /* 13-10-2026 (Artur): 1 contra 1 con un mazo creado (Mazo libre o Mimón) que lleva cartas de Mochi:
    la cuerda es como en el Modo Mimón: −3 PV a los dos lados, sin calavera (no es Mochi) */
-function dohyoDeMimo(){
-  try{ if(ESTADO.asientos.length !== 2) return -1;
-       const k = ESTADO.asientos.findIndex(x => x && !x.fuera && esMochi(x));
-       return (k >= 0 && esMimo(ESTADO.asientos[k]) && !ESTADO.asientos.some(x => x && x.mazoId === "mochi")) ? k : -1; }catch(e){ return -1; }
-}
+var dohyoDeMimo;   /* limpieza_v1: la versión vieja se sustituía entera más abajo */
 { const _deM = dohyoEmpuja;
   dohyoEmpuja = function(){
     const k = dohyoDeMimo(); if(k < 0) return _deM.apply(this, arguments);
@@ -24861,13 +24498,7 @@ function cmNombrar(id, nom){
 { const _lrR = libreRegistrar;
   libreRegistrar = function(i){ const id = _lrR.apply(this, arguments); try{ cmRetratoAlias(i, id); cmNombrar(id, idi("Mazo simple")); }catch(e){} return id; }; }
 /* mantener pulsado un dibujo: se ve más grande */
-function cmLupa(r){
-  const v = document.createElement("div"); v.id = "cmLupa";
-  v.innerHTML = '<span style="background-image:var(--f-' + r + '_personaje)"></span>';
-  document.body.appendChild(v);
-  const fuera = () => { v.remove(); document.removeEventListener("pointerup", fuera); document.removeEventListener("pointercancel", fuera); };
-  document.addEventListener("pointerup", fuera); document.addEventListener("pointercancel", fuera);
-}
+var cmLupa;   /* limpieza_v1: la versión vieja se sustituía entera más abajo */
 document.addEventListener("pointerdown", e => {
   const b = e.target.closest && e.target.closest("#mimonMazo .cm-retratos [data-rt]"); if(!b) return;
   CM_RT.lupa = false;
@@ -25218,41 +24849,13 @@ function cmTapa(){
     const r = _lrT.apply(this, arguments); try{ cmTapa(); }catch(e){} return r; }; }
 { const _llT = libreLista; libreLista = function(){ const r = _llT.apply(this, arguments); try{ cmTapa(); }catch(e){} return r; }; }
 { const _plT = mimonPintaLista; mimonPintaLista = function(){ const r = _plT.apply(this, arguments); try{ cmTapa(); }catch(e){} return r; }; }
-function libreMejoras(k){
-  const L = document.getElementById("mimonMazo"); if(!L) return;
-  const lista = librePozo(k);
-  const w = window.innerWidth || 393, z = Math.max(1, Math.min(1.9, (Math.min(w, 420) * 0.44) / 98));
-  L.innerHTML = '<button class="aspa" data-cerrar="1" aria-label="' + idi("Cerrar") + '">×</button><h1>' + idi("Mejoras") + '</h1>' +
-    '<p class="sub">' + idi("Toca la carta que quieras en ese hueco") + '</p>' +
-    (lista.length ? '<div class="cartas">' + lista.map(c => { const q = libreQuedan(c, LIB.borrador, k);
-      return '<button class="elige' + (q > 0 ? '' : ' agotada') + '" data-id="' + c.id + '" aria-label="' + escapar(c.nombre) + '"' + (q > 0 ? '' : ' disabled') + '>' +
-        '<div class="lupa-vertical" style="--z:' + z.toFixed(3) + ';--carta-an:' + (98 * z).toFixed(1) + 'px"><div class="carta">' + htmlCarta(c) + '</div></div>' +
-        '<span class="quedan">' + escapar(mimonCorto(c.mazo)) + ' · ' + idi("Quedan") + ' ' + Math.max(0, q) + '/' + c.copias + '</span></button>'; }).join("") + '</div>'
-                 : '<p class="nada">' + idi("No tiene cartas de ese tipo.") + '</p>') +
-    '<div class="pie"><button class="sl-accion" data-volver="1">' + idi("Volver") + '</button></div>';
-  L.scrollTop = 0;
-  L.querySelector("[data-cerrar]").onclick = libreCerrar;
-  L.querySelector("[data-volver]").onclick = libreLista;
-  L.querySelectorAll("[data-id]:not([disabled])").forEach(b => b.onclick = () => { LIB.borrador[k] = b.dataset.id; libreLista(); });
-  try{ cmTapa(); if(typeof crearMazoCartas === "function") crearMazoCartas(); }catch(e){}
-}
+var libreMejoras;   /* limpieza_v1: la versión vieja se sustituía entera más abajo */
 
 </script>
 <script>/* 13-10-2026 (Artur): Mejora del Mimón, página de Mejoras pequeña y dibujo del Mimón por defecto */
 /* 13-10-2026 (Artur): Mazo simple — la Mejora del Mimón (Carcajada) también se puede elegir; la página de Mejoras, en pequeño como la de
    luchadores (todas a la vista, sin scroll); el dibujo por defecto del personaje creado es el del Mimón (no el disfrazado) */
-{ const _lpM = librePozo;
-  librePozo = function(k, mazo){
-    const r = _lpM.apply(this, arguments);
-    try{
-      const h = LIB_HUECOS[k];
-      if(h && h.mejora && (!mazo || mazo === "riko")){
-        const mj = CARTAS.find(c => c.mazo === "riko" && c.tipo === "mejora" && c.copias > 0);
-        if(mj && !r.some(c => c.id === mj.id)) r.push(mj);
-      }
-    }catch(e){}
-    return r;
-  }; }
+
 libreMejoras = function(k){
   const L = document.getElementById("mimonMazo"); if(!L) return;
   const lista = librePozo(k);
@@ -29003,7 +28606,7 @@ Object.assign(TRAD, {
 /* ── 4. LOS COMBATES DEL DEDAL (v4) ──
    Como la fase 2 (Campeonato), pero a 1 asalto y con rivales que cosen. Eliges con quién empezar; los que vences se suman a tus luchadores.
    Cada rival vencido desbloquea su dedal. Mochi, el último, solo si ya le venciste en Isla Negra. */
-const RUTA_DEDAL = ["roku", "nori", "nestor", "mailo", "hana", "okuma", "pirata", "vesna", "invisible", "mago", "minero", "riko", "ladron", "costurera", "mochi"];
+const RUTA_DEDAL = ["roku", "nori", "nestor", "mailo", "hana", "okuma", "pirata", "vesna", "invisible", "mago", "minero", "ladron", "costurera", "riko", "mochi"];
 function dd(){ const d = datosCampana(); d.dedal = d.dedal || { ini:null, lista:[], vencidos:[] }; return d.dedal; }
 const mochiListo = () => datosCampana().fase === "fin";
 function rutaDedal(yo){ const D = dd(), ini = D.ini || yo || null; return RUTA_DEDAL.filter(id => id !== ini && (id !== "mochi" || mochiListo())); }
@@ -30019,6 +29622,608 @@ TRAD["Evita tu nivel. Juega otra carta. Gasta una mejora."] = "Blocks your level
   };
 })();
 </script>
+<script>/* 28-10-2026 (Artur): con todas las campañas acabadas, botón «Animaciones» en la página de Campaña */
+(function(){
+const LISTA = [
+  ["Intro", "intro"],
+  ["Final Entrenamiento", "campeonato"],
+  ["El fruto", "fruto"],
+  ["La abuela", "abuela"],
+  ["Final Campeonato", "final"],
+  ["Final Isla Negra", "fin"]
+];
+Object.assign(TRAD, {
+  "Animaciones": "Animations", "Intro": "Intro", "Final Entrenamiento": "Training ending",
+  "Final Campeonato": "Championship ending", "Final Isla Negra": "Isla Negra ending",
+  "El fruto": "The fruit", "La abuela": "Grandma"
+});
+function paginaAnimaciones(){
+  const r = document.getElementById("reglas"); if(!r) return;
+  document.body.classList.add("enReglas");
+  r.classList.toggle("entreno", true); r.classList.toggle("leer", true); r.classList.add("cp-pasos");
+  r.classList.remove("cf-centro");
+  r.innerHTML =
+    '<div class="cabecera"><h1>' + idi("Animaciones") + '</h1></div>' +
+    '<div class="cuerpo"><div class="hojas"><div class="texto cp-reglas"><div class="cp-botones">' +
+      LISTA.map(([t, k]) => '<button class="cerrar-hoja" data-anim="' + k + '">' + idi(t) + '</button>').join("") +
+    '</div></div></div></div>' +
+    '<div class="pie cp-pie"><button class="cerrar-hoja" id="animVolver">' + idi("Volver") + '</button></div>';
+  r.classList.add("abierta");
+  r.querySelector("#animVolver").onclick = () => { if(window.paginaFases) window.paginaFases(); };
+  r.querySelectorAll("[data-anim]").forEach(b => b.onclick = () => {
+    const k = b.dataset.anim;
+    if(k === "intro") mostrarIntro(() => {}); else mostrarCine(k, () => {});
+  });
+}
+window.paginaAnimaciones = paginaAnimaciones;
+/* en la página de las fases: si las cuatro están con ✓, el botón «Animaciones» debajo */
+function ponerBoton(){
+  const caja = document.querySelector("#reglas .cp-botones");
+  if(!caja || caja.querySelector("#animBoton")) return;
+  const fases = caja.querySelectorAll("[data-fase]");
+  if(fases.length !== 4 || [...fases].some(b => !b.classList.contains("cp-hecha"))) return;
+  const b = document.createElement("button");
+  b.className = "cerrar-hoja"; b.id = "animBoton"; b.style.marginTop = "22px";
+  b.textContent = idi("Animaciones");
+  b.onclick = paginaAnimaciones;
+  caja.appendChild(b);
+}
+const reglas = document.getElementById("reglas");
+if(reglas) new MutationObserver(() => { try{ ponerBoton(); }catch(e){} }).observe(reglas, { childList:true, subtree:true });
+})();
+</script>
+
+<script>/* 28-10-2026 (Artur): tutorial nuevo — sus textos, final del 2 contra 2 y la sala */
+(function(){
+/* ---------- las escenas ---------- */
+const NORI_TXT = "<p>Nori es tu rival. Cada uno tiene <b>10 PV</b>. Si llegas a 0 PV, pierdes el asalto.</p><p>Gana el combate quien gana <b>2 asaltos</b>.</p>";
+const REMATE = "<p>Es tu momento, responde con una esquiva que te deja jugar otra carta y juega una patada para terminar el asalto.</p>";
+const NV = [0, 1, 2, 3, 4].map(n => svgNivel(n));
+const ENLACES = [
+  ["Nostr", "https://spoo.me/islanegra", "deja tus comentarios", "leave your comments"],
+  ["Itchio", "https://islanegra.itch.io/sombras-sobre-isla-negra", "android, escritorio, iPhone", "android, desktop, iPhone"],
+  ["Zapstore", "https://zapstore.dev/apps/com.islanegra.juego", "descarga android", "android download"],
+  ["TapTap", "https://www.taptap.io/app/34202650", "descarga android", "android download"],
+  ["Github", "https://github.com/IslaNegra/Isla-Negra.git", "repositorio oficial<br>escritorio, android, iPhone", "official repository<br>desktop, android, iPhone"]
+];
+const lista = en => '<div class="enl2">' + ENLACES.map(x => '<a href="' + x[1] + '" target="_blank" rel="noopener noreferrer"><b>' + x[0] + '</b><span>' + (en ? x[3] : x[2]) + '</span></a>').join('') + '</div>';
+const TXT_GRACIAS = '<p>Este juego ha sido desarrollado de manera totalmente altruista, sin beneficio personal alguno, bajo la vieja consigna «DIY-Non-profit» (hazlo tú mismo, sin ánimo de lucro). Si tienes un momento, visítanos en los distintos enlaces y deja tus comentarios:</p>' +
+  lista(false) + '<p>Juega, disfrútalo, compártelo y deja tus comentarios: es la mejor ayuda que puedes ofrecer a su desarrollo y mantenimiento. Muchas gracias.</p>';
+const TXT_GRACIAS_EN = '<p>This game has been developed completely altruistically, with no personal profit at all, under the old motto «DIY-Non-profit» (do it yourself, not for profit). If you have a moment, visit us at the links below and leave your comments:</p>' +
+  lista(true) + '<p>Play, enjoy it, share it and leave your comments: that is the best help you can give to its development and upkeep. Thank you very much.</p>';
+const NUEVAS = [
+  {titulo:"", texto:"<p>Bienvenido a Isla Negra. Este tutorial te guiará a través de una partida simulada para entender la mecánica de juego.</p>"},
+  {zona:"zonaTuya", titulo:"", texto:"<p>Esta es tu ficha de personaje. En ella verás la información necesaria para el combate: foto de personaje, cartas restantes del mazo, cartas en la mano, PV, número de mejoras en la mesa y nivel de personaje.</p>"},
+  {zona:"zonaRival", titulo:"", texto:NORI_TXT},
+  {zona:"mano", tocable:true, asoma:"roku_patada", titulo:"", texto:"<p>Empiezas el turno con 5 cartas. En cada turno podrás realizar una sola acción: jugar carta, descartar o ceder iniciativa. A cada nuevo turno robas una nueva carta.</p><p>Existen 4 tipos de cartas: ataque, respuesta, técnicas y mejoras. Las mejoras son necesarias para poder subir de nivel y poder jugar las cartas de nivel superior.</p><p>El icono en la esquina superior izquierda de las cartas indica el nivel necesario para poder jugarlas: " + NV[1] + " básico, " + NV[2] + " avanzado, " + NV[3] + " experto, " + NV[4] + " maestro. Todos los jugadores empiezan la partida en nivel básico. Para mayor facilidad, las cartas que sí puedes jugar se iluminan, mientras que las que no puedes jugar se mantienen apagadas.</p>"},
+  {cuando:"miTurno", zona:"mano", titulo:"", pide:{jugar:"roku_concentracion"}, texto:"<p>Es tu turno, arrastra y juega una mejora.</p>"},
+  {zona:"zonaTuya", titulo:"", texto:"<p>Cada mejora que juegues se queda en la mesa esperando a jugar la siguiente mejora para subir de nivel.</p>"},
+  {cuando:"miTurno", zona:"zonaTuya", titulo:"", traslaIA:true, texto:"<p>Fíjate en la cartita pequeña encima de tu retrato. Después de una sucesión larga de golpes es fácil perderse y no saber quién empezó atacando ese turno y a quién le tocará iniciar el ataque en el siguiente turno una vez finalice la sucesión de golpes. La iniciativa te ayuda a no perderte entre turnos.</p>"},
+  {cuando:"miTurno", zona:"mano", titulo:"", pide:{jugar:"roku_concentracion"}, texto:"<p>Juega una segunda mejora.</p>"},
+  {zona:"zonaTuya", titulo:"", texto:"<p>Al jugar la segunda mejora el nivel de personaje sube a avanzado. Ahora ya puedes jugar cartas de nivel avanzado. Las dos cartas de mejoras jugadas se retiran de la mesa y van directas al mazo de descartes.</p><p>Al llegar a maestro las cartas de mejora se quedan en la mesa. Para jugar una carta de nivel maestro necesitas tener al menos una mejora en la mesa; si no tienes, no podrás jugar cartas maestras. Jugar cartas maestras consume una mejora.</p><p>Una vez se acaba el mazo de técnicas, se baraja de nuevo y vuelves a coger las cartas en orden.</p>"},
+  {cuando:"respondiendo", zona:"combate", titulo:"", traslaIA:true, texto:"<p>Nori te ataca con un Golpe de puño: <b>1 Daño</b>.</p><p>Puedes <b>evitarlo</b> con una respuesta del mismo nivel o mayor, o <b>encajarlo</b> y perder −1 PV.</p>"},
+  {cuando:"respondiendo", zona:"mano", titulo:"", pide:{responder:"roku_esquiva"}, texto:"<p>Juega la <b>Esquiva</b>: evita ataques básicos.</p>"},
+  {cuando:"trasRespuesta", zona:"combate", titulo:"", texto:"<p>Conseguiste parar el golpe y te permite jugar otra carta.</p>"},
+  {cuando:"trasRespuesta", zona:"mano", titulo:"", pide:{trasRespuesta:"roku_patada"}, texto:"<p>Nori continúa en nivel básico. No podrá evitar una carta de nivel avanzado. Juega una patada: 2 daños, nivel avanzado.</p>"},
+  {cuando:"miTurno", zona:"botDescartar", titulo:"", pide:{boton:"descartar"}, texto:"<p>Te has quedado sin cartas que poder jugar. Descarta la mano y coge 5 nuevas cartas.</p>"},
+  {cuando:"miTurno", zona:"zonaRival", titulo:"", traslaIA:true, texto:"<p>Nori subió de nivel. Ya puede jugar cartas de nivel avanzado.</p>"},
+  {cuando:"miTurno", zona:"botCeder", titulo:"", pide:{boton:"ceder"}, texto:"<p>No es obligatorio jugar carta. Si consideras que es una mejor estrategia, puedes ceder iniciativa y pasar turno.</p>"},
+  {cuando:"respondiendo", zona:"mano", titulo:"", pide:{responder:"roku_contra"}, texto:"<p>Nori te ataca con una patada avanzada. Juega la carta Contra para devolverle el daño +1 sin perder PV.</p>"},
+  {cuando:"miTurno", zona:"mano", titulo:"", pide:{jugar:"roku_patada"}, texto:"<p>Tu turno de nuevo, tienes la iniciativa. Juega una patada.</p>"},
+  {cuando:"respondiendo", zona:"botEncajar", titulo:"", pide:{encajar:true}, texto:"<p>De nuevo Nori te ataca con un puñetazo básico. Puedes responder y esquivar o puedes encajar el golpe. A veces es mejor encajarlo y guardarse las cartas para otro momento.</p>"},
+  {cuando:"miTurno", zona:"mano", titulo:"", pide:{jugar:"roku_patada"}, texto:"<p>Tu turno, ya casi tienes la partida ganada. Juega una patada.</p>"},
+  {cuando:"respondiendo", zona:"mano", titulo:"", pide:{responder:"roku_esquiva"}, texto:REMATE},
+  {cuando:"trasRespuesta", zona:"mano", titulo:"", pide:{trasRespuesta:"roku_patada"}, texto:REMATE},
+  {cuando:"finCombate", zona:"acciones", titulo:"", texto:"<p>Conseguiste dejar a Nori con 0 PV. Esta vez ha sido fácil. En un combate real cada jugador tiene 22 PV.</p>"},
+  {zona:"franja", tocable:true, titulo:"", texto:"<p>Aquí podrás ver en todo momento el historial de la partida. Pincha sobre la información para revisar las jugadas pasadas.</p>"},
+  {zona:"jugadas", tocable:true, titulo:"", texto:"<p>Puedes consultar las cartas jugadas de tu mazo en este menú. Te ayudará a recordar qué cartas faltan por salir y cuáles jugaste ya.</p>"},
+  {arranca:"bandos", titulo:"", texto:"<p>El siguiente modo es multijugador. Aquí las cosas cambian un poco. Puedes jugar en modo equipos 2vs2 o modo libre todos contra todos. Entras en medio de una partida por equipos. Tú y Néstor vs Nori y Mai-lo.</p>"},
+  {cuando:"miTurno", zona:"mano", zonaApuntando:"mesa", titulo:"", pide:{jugar:"roku_patada", objetivo:1}, texto:"<p>En este modo debes indicar a quién va dirigido el ataque una vez juegas una carta. Juega una patada y selecciona el retrato de Nori.</p>"},
+  {cuando:"respondiendo", zona:"mano", titulo:"", pide:{responder:"roku_esquiva"}, texto:"<p>Nori decide atacar a Néstor. Cuando atacan a tu compañero puedes ayudarle y protegerle del ataque respondiendo por él. Tu compañero te pedirá ayuda y debes decidir si te metes en medio del ataque o no. Es muy útil en caso de no tener respuestas con las que parar el golpe. Juega una esquiva.</p>"},
+  {cuando:"trasRespuesta", zona:"mano", zonaApuntando:"mesa", titulo:"", pide:{trasRespuesta:"roku_golpe_puno", objetivo:3}, texto:"<p>La esquiva te permite jugar otra carta. Juega un golpe de puño y selecciona el retrato de Mai-lo.</p>"},
+  {cuando:"respondiendo", zona:"botAyuda", titulo:"", pide:{ayuda:true}, texto:"<p>Esta vez te atacan a ti. Igual que prestaste ayuda a tu compañero, puedes pedirle que te ayude a ti. Pulsa «¿Alguien me cubre?». Tu compañero decidirá si te ayuda o no. Si decide no ayudarte, deberás defenderte tú solo.</p>"},
+  {cuando:"miTurno", zona:"mano", zonaApuntando:"mesa", titulo:"", pide:{jugar:"roku_patada", objetivo:3}, texto:"<p>Néstor salió en tu ayuda. Juega una patada y selecciona a Mai-lo.</p>"},
+  {cuando:"respondiendo", zona:"botEncajar", titulo:"", pide:{encajar:true}, texto:"<p>Nori amenaza a Néstor con un ataque que le dejaría fuera de combate. Seamos malos, decide no ayudarle a ver qué pasa. Pulsa «No me meto».</p>"},
+  {cuando:"berserker", zona:"mesa", titulo:"", traslaIA:true,
+   meteIA:[{ t:"resp", de:"nori", a:3, id:"nori_contrarrestar" }],
+   texto:"<p>Néstor ha caído. Ahora estás solo contra los dos rivales y entras en modo berserker: ahora responderás a dos manos, primero a uno y luego a otro, jugando tu turno y el de tu compañero. Aumentan las posibilidades de resistir y vencer.</p>"},
+  {cuando:"miTurno", zona:"botDescartar", titulo:"", pide:{boton:"descartar"}, texto:"<p>No tienes una buena mano para hacer frente a los dos. Descarta tu mano para coger mejores cartas.</p>"},
+  {cuando:"miTurno", zona:"mano", zonaApuntando:"mesa", titulo:"", pide:{jugar:"roku_patada", objetivo:3},
+   meteIA:[{ t:"turno", de:"mailo", id:"mailo_patada", a:0 }], texto:"<p>Ataca a Mai-lo con una Patada.</p>"},
+  {cuando:"respondiendo", zona:"mano", titulo:"", pide:{responder:"roku_contra"}, texto:"<p>Nori cubre a Mai-lo con Contrarrestar. Responde con la Contra y devuelve el daño +1.</p>"},
+  {cuando:"respondiendo", zona:"mano", titulo:"", pide:{responder:"roku_contra"}, texto:"<p>Mai-lo te ataca con una Patada. Responde con la Contra.</p>"},
+  {cuando:"finCombate", zona:"acciones", titulo:"", arranca:"sala", texto:"<p>Enhorabuena, conseguiste vencer aun estando en desventaja. Ya solo te falta aprender a configurar una sala de espera.</p>"},
+  {sala:true, titulo:"", zonaSel:'#portada [data-camino="sala"]', pide:{toca:'#portada [data-camino="sala"]'}, texto:"<p>Pulsa en crear sala para configurar una sala de espera.</p>"},
+  {sala:true, titulo:"", zonaSel:"#opcionesSala [data-crear]", globoSobre:"#opcionesSala .hoja", pide:{toca:"#opcionesSala [data-crear]", en:"pointerdown"}, texto:"<p>Al entrar podrás configurar las opciones de sala a tu gusto. De momento déjalo como está y pulsa crear.</p>"},
+  {sala:true, titulo:"", zonaSel:'#portada .sl-silla[data-asiento="0"]', pide:{espera:"luchador", permite:['#portada .sl-silla[data-asiento="0"]', "#eligeL"]}, texto:"<p>Selecciona un personaje con el que quieres luchar.</p>"},
+  {sala:true, titulo:"", zonaSel:"#portada .clave", texto:"<p>Copia el código y envíaselo a tus amigos. Solo tendrán que escribirlo en el menú de partida rápida y entrarán en la sala.</p>"},
+  {sala:true, titulo:"", zonaSel:"#portada .lonja-sw", texto:"<p>Puedes mantener la sala privada para jugar con tus amigos o puedes hacerla pública para que otros jugadores se unan a ella. Cualquiera que esté buscando una partida con la misma configuración de sala podrá unirse.</p>"},
+  {sala:true, abre:"menu", titulo:"", zonaSel:'#portada [data-camino="solo"]', pide:{toca:'#portada [data-camino="solo"]'}, texto:"<p>Si prefieres jugar una partida rápida sin complicarte o jugar contra la máquina pulsa en partida rápida.</p>"},
+  {sala:true, titulo:"", zonaSel:"#portada .lonja-modos", texto:"<p>Selecciona el personaje con el que quieres jugar, pincha en 1 vs IA para jugar contra la máquina o pulsa en cualquier opción de multijugador para emparejarte online con otros jugadores que estén buscando partida. Si quieres entrar en una sala creada puedes hacerlo introduciendo el código de sala.</p>"},
+  {sala:true, titulo:"", texto:"<p>Recuerda, te espera un largo camino a través de 4 campañas de diferente dificultad en las que desbloquearás todas las funciones del juego. Podrás crear tu propio mazo, desbloquearás nuevas campañas, nuevos personajes, músicas, dorsos de cartas… Ten paciencia, es un camino largo donde aprenderás poco a poco a pelear como un auténtico maestro. De momento continúa este entrenamiento en la primera fase de la campaña. ¡Suerte!</p>"},
+  {sala:true, titulo:"", centrado:true, texto:TXT_GRACIAS}
+];
+ESCENAS.length = 0;
+NUEVAS.forEach(e => ESCENAS.push(e));
+
+/* ---------- la mesa del 2 contra 2: para que el final salga como está pensado ---------- */
+MESAS_TUTO.bandos.roku.mano = ["roku_patada","roku_esquiva","roku_golpe_puno","roku_parada","roku_golpe_puno"];
+MESAS_TUTO.bandos.roku.mazo = ["roku_patada","roku_esquiva","roku_contra","roku_patada","roku_contra",
+                               "roku_golpe_puno","roku_esquiva","roku_golpe_puno"];
+MESAS_TUTO.bandos.nori.mano = ["nori_golpe_puno","nori_patada","nori_esquiva","nori_golpe_puno","nori_contrarrestar"];
+MESAS_TUTO.bandos.mailo.pv = 6;
+
+/* ---------- inglés ---------- */
+Object.assign(TRAD, {
+  "<p>Nori es tu rival. Cada uno tiene <b>10 PV</b>. Si llegas a 0 PV, pierdes el asalto.</p><p>Gana el combate quien gana <b>2 asaltos</b>.</p>":
+    "<p>Nori is your opponent. You each have <b>10 HP</b>. If you reach 0 HP, you lose the round.</p><p>Whoever wins <b>2 rounds</b> wins the fight.</p>",
+  "<p>Nori te ataca con un Golpe de puño: <b>1 Daño</b>.</p><p>Puedes <b>evitarlo</b> con una respuesta del mismo nivel o mayor, o <b>encajarlo</b> y perder −1 PV.</p>":
+    "<p>Nori attacks you with a Fist Strike: <b>1 Damage</b>.</p><p>You can <b>avoid</b> it with a response of the same level or higher, or <b>take</b> it and lose −1 HP.</p>",
+  "<p>Juega la <b>Esquiva</b>: evita ataques básicos.</p>": "<p>Play <b>Dodge</b>: it avoids basic attacks.</p>",
+  "<p>Bienvenido a Isla Negra. Este tutorial te guiará a través de una partida simulada para entender la mecánica de juego.</p>":
+    "<p>Welcome to Isla Negra. This tutorial will guide you through a simulated match so you understand how the game works.</p>",
+  "<p>Esta es tu ficha de personaje. En ella verás la información necesaria para el combate: foto de personaje, cartas restantes del mazo, cartas en la mano, PV, número de mejoras en la mesa y nivel de personaje.</p>":
+    "<p>This is your character sheet. It shows what you need in combat: character picture, cards left in your deck, cards in your hand, HP, number of upgrades on the table and character level.</p>",
+  ["<p>Empiezas el turno con 5 cartas. En cada turno podrás realizar una sola acción: jugar carta, descartar o ceder iniciativa. A cada nuevo turno robas una nueva carta.</p><p>Existen 4 tipos de cartas: ataque, respuesta, técnicas y mejoras. Las mejoras son necesarias para poder subir de nivel y poder jugar las cartas de nivel superior.</p><p>El icono en la esquina superior izquierda de las cartas indica el nivel necesario para poder jugarlas: " + NV[1] + " básico, " + NV[2] + " avanzado, " + NV[3] + " experto, " + NV[4] + " maestro. Todos los jugadores empiezan la partida en nivel básico. Para mayor facilidad, las cartas que sí puedes jugar se iluminan, mientras que las que no puedes jugar se mantienen apagadas.</p>"]:
+    "<p>You start with 5 cards. Each turn you can take a single action: play a card, discard or give up the initiative. Every new turn you draw a new card.</p><p>There are 4 kinds of cards: attack, response, techniques and upgrades. Upgrades are needed to level up and play higher-level cards.</p><p>The icon in the top left corner of each card shows the level you need to play it: " + NV[1] + " basic, " + NV[2] + " advanced, " + NV[3] + " expert, " + NV[4] + " master. Every player starts the match at basic level. To make it easier, the cards you can play light up, while the ones you can't stay dimmed.</p>",
+  "<p>Es tu turno, arrastra y juega una mejora.</p>": "<p>It's your turn: drag and play an upgrade.</p>",
+  "<p>Cada mejora que juegues se queda en la mesa esperando a jugar la siguiente mejora para subir de nivel.</p>":
+    "<p>Every upgrade you play stays on the table, waiting for the next upgrade so you can level up.</p>",
+  "<p>Fíjate en la cartita pequeña encima de tu retrato. Después de una sucesión larga de golpes es fácil perderse y no saber quién empezó atacando ese turno y a quién le tocará iniciar el ataque en el siguiente turno una vez finalice la sucesión de golpes. La iniciativa te ayuda a no perderte entre turnos.</p>":
+    "<p>Look at the little card above your portrait. After a long chain of blows it's easy to get lost and not know who started attacking that turn, and who will start the attack next turn once the chain of blows is over. The initiative helps you not to get lost between turns.</p>",
+  "<p>Juega una segunda mejora.</p>": "<p>Play a second upgrade.</p>",
+  "<p>Al jugar la segunda mejora el nivel de personaje sube a avanzado. Ahora ya puedes jugar cartas de nivel avanzado. Las dos cartas de mejoras jugadas se retiran de la mesa y van directas al mazo de descartes.</p><p>Al llegar a maestro las cartas de mejora se quedan en la mesa. Para jugar una carta de nivel maestro necesitas tener al menos una mejora en la mesa; si no tienes, no podrás jugar cartas maestras. Jugar cartas maestras consume una mejora.</p><p>Una vez se acaba el mazo de técnicas, se baraja de nuevo y vuelves a coger las cartas en orden.</p>":
+    "<p>When you play the second upgrade your character goes up to advanced. Now you can play advanced cards. The two upgrade cards you played leave the table and go straight to the discard pile.</p><p>At master level the upgrade cards stay on the table. To play a master card you need at least one upgrade on the table; if you have none, you can't play master cards. Playing master cards uses up an upgrade.</p><p>Once the technique deck runs out, it's shuffled again and you go back to drawing cards in order.</p>",
+  "<p>Conseguiste parar el golpe y te permite jugar otra carta.</p>": "<p>You stopped the blow, and it lets you play another card.</p>",
+  "<p>Nori continúa en nivel básico. No podrá evitar una carta de nivel avanzado. Juega una patada: 2 daños, nivel avanzado.</p>":
+    "<p>Nori is still at basic level. She can't avoid an advanced card. Play a Kick: 2 damage, advanced level.</p>",
+  "<p>Te has quedado sin cartas que poder jugar. Descarta la mano y coge 5 nuevas cartas.</p>":
+    "<p>You have no cards you can play. Discard your hand and draw 5 new cards.</p>",
+  "<p>Nori subió de nivel. Ya puede jugar cartas de nivel avanzado.</p>": "<p>Nori levelled up. Now she can play advanced cards.</p>",
+  "<p>No es obligatorio jugar carta. Si consideras que es una mejor estrategia, puedes ceder iniciativa y pasar turno.</p>":
+    "<p>You don't have to play a card. If you think it's the better strategy, you can give up the initiative and pass the turn.</p>",
+  "<p>Nori te ataca con una patada avanzada. Juega la carta Contra para devolverle el daño +1 sin perder PV.</p>":
+    "<p>Nori attacks you with an advanced Kick. Play the Counter card to return the damage +1 without losing HP.</p>",
+  "<p>Tu turno de nuevo, tienes la iniciativa. Juega una patada.</p>": "<p>Your turn again, you have the initiative. Play a Kick.</p>",
+  "<p>De nuevo Nori te ataca con un puñetazo básico. Puedes responder y esquivar o puedes encajar el golpe. A veces es mejor encajarlo y guardarse las cartas para otro momento.</p>":
+    "<p>Nori attacks you again with a basic punch. You can respond and dodge, or you can take the blow. Sometimes it's better to take it and save your cards for later.</p>",
+  "<p>Tu turno, ya casi tienes la partida ganada. Juega una patada.</p>": "<p>Your turn, you've almost won the match. Play a Kick.</p>",
+  "<p>Es tu momento, responde con una esquiva que te deja jugar otra carta y juega una patada para terminar el asalto.</p>":
+    "<p>This is your moment: respond with a Dodge, which lets you play another card, and play a Kick to finish the round.</p>",
+  "<p>Conseguiste dejar a Nori con 0 PV. Esta vez ha sido fácil. En un combate real cada jugador tiene 22 PV.</p>":
+    "<p>You got Nori down to 0 HP. It was easy this time. In a real fight each player has 22 HP.</p>",
+  "<p>Aquí podrás ver en todo momento el historial de la partida. Pincha sobre la información para revisar las jugadas pasadas.</p>":
+    "<p>Here you can always see the match history. Tap the information to review past plays.</p>",
+  "<p>Puedes consultar las cartas jugadas de tu mazo en este menú. Te ayudará a recordar qué cartas faltan por salir y cuáles jugaste ya.</p>":
+    "<p>In this menu you can check the cards you've played from your deck. It helps you remember which cards are still to come and which ones you've already played.</p>",
+  "<p>El siguiente modo es multijugador. Aquí las cosas cambian un poco. Puedes jugar en modo equipos 2vs2 o modo libre todos contra todos. Entras en medio de una partida por equipos. Tú y Néstor vs Nori y Mai-lo.</p>":
+    "<p>The next mode is multiplayer. Here things change a bit. You can play in teams 2vs2 or free-for-all. You're joining a team match halfway through. You and Néstor vs Nori and Mai-lo.</p>",
+  "<p>En este modo debes indicar a quién va dirigido el ataque una vez juegas una carta. Juega una patada y selecciona el retrato de Nori.</p>":
+    "<p>In this mode, once you play a card you have to choose who the attack is aimed at. Play a Kick and select Nori's portrait.</p>",
+  "<p>Nori decide atacar a Néstor. Cuando atacan a tu compañero puedes ayudarle y protegerle del ataque respondiendo por él. Tu compañero te pedirá ayuda y debes decidir si te metes en medio del ataque o no. Es muy útil en caso de no tener respuestas con las que parar el golpe. Juega una esquiva.</p>":
+    "<p>Nori decides to attack Néstor. When your partner is attacked you can help and protect him by responding for him. Your partner will ask you for help and you must decide whether you step into the attack or not. It's very useful when he has no responses to stop the blow. Play a Dodge.</p>",
+  "<p>La esquiva te permite jugar otra carta. Juega un golpe de puño y selecciona el retrato de Mai-lo.</p>":
+    "<p>Dodge lets you play another card. Play a Fist Strike and select Mai-lo's portrait.</p>",
+  "<p>Esta vez te atacan a ti. Igual que prestaste ayuda a tu compañero, puedes pedirle que te ayude a ti. Pulsa «¿Alguien me cubre?». Tu compañero decidirá si te ayuda o no. Si decide no ayudarte, deberás defenderte tú solo.</p>":
+    "<p>This time you're the one being attacked. Just as you helped your partner, you can ask him to help you. Tap «Anyone cover me?». Your partner will decide whether to help you or not. If he decides not to, you'll have to defend yourself.</p>",
+  "<p>Néstor salió en tu ayuda. Juega una patada y selecciona a Mai-lo.</p>": "<p>Néstor came to your aid. Play a Kick and select Mai-lo.</p>",
+  "<p>Nori amenaza a Néstor con un ataque que le dejaría fuera de combate. Seamos malos, decide no ayudarle a ver qué pasa. Pulsa «No me meto».</p>":
+    "<p>Nori threatens Néstor with an attack that would knock him out. Let's be mean: decide not to help him and see what happens. Tap «I'll stay out».</p>",
+  "<p>Néstor ha caído. Ahora estás solo contra los dos rivales y entras en modo berserker: ahora responderás a dos manos, primero a uno y luego a otro, jugando tu turno y el de tu compañero. Aumentan las posibilidades de resistir y vencer.</p>":
+    "<p>Néstor is down. Now you're alone against both opponents and you go berserker: you'll fight with both hands, first one and then the other, playing your turn and your partner's. Your chances of holding out and winning go up.</p>",
+  "<p>No tienes una buena mano para hacer frente a los dos. Descarta tu mano para coger mejores cartas.</p>":
+    "<p>Your hand isn't good enough to face both of them. Discard your hand to draw better cards.</p>",
+  "<p>Ataca a Mai-lo con una Patada.</p>": "<p>Attack Mai-lo with a Kick.</p>",
+  "<p>Nori cubre a Mai-lo con Contrarrestar. Responde con la Contra y devuelve el daño +1.</p>":
+    "<p>Nori covers Mai-lo with a Counterstrike. Respond with Counter and return the damage +1.</p>",
+  "<p>Mai-lo te ataca con una Patada. Responde con la Contra.</p>": "<p>Mai-lo attacks you with a Kick. Respond with Counter.</p>",
+  "<p>Enhorabuena, conseguiste vencer aun estando en desventaja. Ya solo te falta aprender a configurar una sala de espera.</p>":
+    "<p>Congratulations, you won even though you were outnumbered. All that's left is learning how to set up a lobby.</p>",
+  "<p>Pulsa en crear sala para configurar una sala de espera.</p>": "<p>Tap «Create lobby» to set up a lobby.</p>",
+  "<p>Al entrar podrás configurar las opciones de sala a tu gusto. De momento déjalo como está y pulsa crear.</p>":
+    "<p>Here you can set the lobby options the way you like. For now leave it as it is and tap «Create».</p>",
+  "<p>Selecciona un personaje con el que quieres luchar.</p>": "<p>Select the character you want to fight with.</p>",
+  "<p>Copia el código y envíaselo a tus amigos. Solo tendrán que escribirlo en el menú de partida rápida y entrarán en la sala.</p>":
+    "<p>Copy the code and send it to your friends. They just have to type it in the quick match menu and they'll join the lobby.</p>",
+  "<p>Puedes mantener la sala privada para jugar con tus amigos o puedes hacerla pública para que otros jugadores se unan a ella. Cualquiera que esté buscando una partida con la misma configuración de sala podrá unirse.</p>":
+    "<p>You can keep the lobby private to play with your friends, or make it public so other players can join. Anyone looking for a match with the same lobby settings will be able to join.</p>",
+  "<p>Si prefieres jugar una partida rápida sin complicarte o jugar contra la máquina pulsa en partida rápida.</p>":
+    "<p>If you'd rather play a quick match without any fuss, or play against the computer, tap «Quick match».</p>",
+  "<p>Selecciona el personaje con el que quieres jugar, pincha en 1 vs IA para jugar contra la máquina o pulsa en cualquier opción de multijugador para emparejarte online con otros jugadores que estén buscando partida. Si quieres entrar en una sala creada puedes hacerlo introduciendo el código de sala.</p>":
+    "<p>Select the character you want to play with, tap «1 vs AI» to play against the computer, or tap any multiplayer option to be matched online with other players looking for a match. If you want to join an existing lobby, you can do it by entering the lobby code.</p>",
+  "<p>Recuerda, te espera un largo camino a través de 4 campañas de diferente dificultad en las que desbloquearás todas las funciones del juego. Podrás crear tu propio mazo, desbloquearás nuevas campañas, nuevos personajes, músicas, dorsos de cartas… Ten paciencia, es un camino largo donde aprenderás poco a poco a pelear como un auténtico maestro. De momento continúa este entrenamiento en la primera fase de la campaña. ¡Suerte!</p>":
+    "<p>Remember, a long road awaits you through 4 campaigns of different difficulty in which you'll unlock every feature of the game. You'll be able to build your own deck, and you'll unlock new campaigns, new characters, music, card backs… Be patient: it's a long road where you'll slowly learn to fight like a true master. For now, carry on with this training in the first phase of the campaign. Good luck!</p>"
+});
+
+TRAD[TXT_GRACIAS] = TXT_GRACIAS_EN;
+{ const st = document.createElement("style");
+  st.textContent =
+    "#visita .globo .enl2{display:flex;flex-direction:column;gap:6px;margin:10px 0 12px}" +
+    "#visita .globo .enl2 a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 12px;border:1px solid rgba(232,194,122,.45);" +
+      "border-radius:6px;background:rgba(232,194,122,.07);color:#F1E6D0;text-decoration:none}" +
+    "#visita .globo .enl2 a b{font-weight:600;color:#E8C27A;letter-spacing:.04em}" +
+    "#visita .globo .enl2 a span{font-size:11.5px;line-height:1.35;color:#BFB29A;text-align:right;flex:1}" +
+    "#visita .globo .enl2 a::after{content:'\u203A';color:#E8C27A;font-size:18px;margin-left:2px}" +
+    /* el último bocadillo: sin transparencia */
+    "#visita .globo.opaco{background:linear-gradient(180deg,#28231d,#0c0a08) !important}" +
+    "#visita .globo.opaco::after{display:none !important}";
+  document.head.appendChild(st); }
+/* los enlaces del bocadillo se abren fuera (también en la app) */
+document.addEventListener("click", ev => {
+  const a = ev.target && ev.target.closest && ev.target.closest("#visita .globo a[href^='http']");
+  if(!a) return;
+  ev.preventDefault(); ev.stopPropagation();
+  try{ window.open(a.href, "_blank", "noopener,noreferrer"); }catch(e){}
+}, true);
+/* ---------- la parte de la sala: páginas de verdad, sin internet ---------- */
+const S = { reloj:null };
+function escSala(){ const e = TUTO.activo ? tutoEscena() : null; return e && e.sala ? e : null; }
+function ponerZona(e){
+  if(!e.zonaSel){ e.zona = ""; return; }
+  const el = document.querySelector(e.zonaSel);
+  if(el){ if(!el.id) el.id = "tutoZona" + TUTO.paso; e.zona = el.id; }
+  else e.zona = "";
+}
+function pararReloj(){ if(S.reloj){ clearInterval(S.reloj); S.reloj = null; } }
+function arrancarReloj(){
+  pararReloj();
+  S.reloj = setInterval(() => {
+    const e = escSala();
+    if(!e){ if(!TUTO.activo) pararReloj(); return; }
+    if(e.pide && e.pide.espera === "luchador" && RED.plazas && RED.plazas[0] && RED.plazas[0].mazo &&
+       !document.getElementById("eligeL")){ salaSigue(); return; }
+    tutoRevisar();
+  }, 250);
+}
+function alEntrarPaso(){
+  const e = escSala(); if(!e) return;
+  if(e.abre === "menu" && TUTO.abierto !== TUTO.paso){
+    TUTO.abierto = TUTO.paso;
+    try{ cerrarRed(); }catch(x){}
+    try{ quitarFondo(); }catch(x){}
+    pasoCamino();
+  }
+}
+function salaSigue(){
+  TUTO.paso++; TUTO.firma = ""; TUTO.plegado = false;
+  if(TUTO.paso >= ESCENAS.length){ cerrarTutorial(); return; }
+  alEntrarPaso();
+  tutoRevisar();
+}
+/* como mostrarPortada, pero siempre al menú (nunca a la pantalla de título) */
+function irAlMenu(){
+  try{ if(RED.activa) cerrarRed(); }catch(x){}
+  try{ cerrarLupa(); }catch(x){}
+  try{ cerrarHistorial(); }catch(x){}
+  try{ vaciarRodillo(); }catch(x){}
+  try{ TITULO_VISTO = true; }catch(x){}
+  { const p = document.getElementById("portada"); if(p) p.classList.remove("titulo"); }   /* que la portada sea la del menú, no la del título */
+  ESTADO.selloPartida++;
+  ESTADO.selloAnuncio++;
+  pasoCamino();
+}
+function empezarSala(){
+  limpiarCartel();
+  irAlMenu();
+  ESTADO.fase = "salaTuto";
+  TUTO.abierto = -1; TUTO.firma = "";
+  arrancarReloj();
+  tutoRevisar();
+}
+/* en la sala del tutorial nadie entra: se abre solo en este aparato */
+{ const _abr = abrirRed;
+  abrirRed = function(via, papel, sala){
+    if(escSala()){
+      const r = _abr.call(this, "mismo", papel, sala);
+      try{ limpiarEstadoSala(); }catch(x){}
+      try{ dibujarSala(); }catch(x){}
+      return r;
+    }
+    return _abr.apply(this, arguments);
+  }; }
+/* solo se puede tocar lo que pide el paso */
+function permitido(e, t){
+  if(t.closest("#visita .globo") || t.closest("#visita .saltar")) return true;
+  const p = e.pide || {};
+  return [].concat(p.toca || [], p.permite || []).some(s => !!t.closest(s));
+}
+["pointerdown", "mousedown", "click"].forEach(tipo => window.addEventListener(tipo, ev => {
+  const e = escSala(); if(!e || !e.pide) return;
+  const t = ev.target; if(!t || !t.closest) return;
+  if(!permitido(e, t)){
+    ev.stopPropagation(); ev.preventDefault();
+    if(tipo === "click") tutoNo();
+    return;
+  }
+  const p = e.pide;
+  if(p.toca && t.closest(p.toca) && tipo === (p.en || "click")){
+    const paso = TUTO.paso;
+    setTimeout(() => { if(TUTO.activo && TUTO.paso === paso) salaSigue(); }, 0);
+  }
+}, true));
+/* el bocadillo sobre la portada: señala el botón y sin «Tu turno» */
+{ const _rev = tutoRevisar;
+  tutoRevisar = function(){
+    const e = escSala();
+    if(e){ ponerZona(e); TUTO.claveSitio = null; }
+    const r = _rev.apply(this, arguments);
+    const capa = document.getElementById("visita");
+    if(capa){
+      capa.classList.toggle("velo-sala", !!e && !e.zona);
+      capa.classList.toggle("oculta-sel", !!e && !!document.getElementById("eligeL"));
+      capa.classList.toggle("sin-globo", TUTO.activo && ESTADO.fase === "apuntando");
+      /* el último bocadillo: centrado y sin transparencia */
+      const gC = document.getElementById("globoV");
+      if(gC) gC.classList.toggle("opaco", !!(e && e.centrado));
+      if(gC && e && e.centrado) gC.style.top = Math.max(8, Math.round((window.innerHeight - gC.offsetHeight) / 2)) + "px";
+      /* bocadillo encima de una hoja (opciones de sala): arriba, para que no se confunda con lo de detrás */
+      const globo = document.getElementById("globoV"), hoja = e && e.globoSobre && document.querySelector(e.globoSobre);
+      if(globo && hoja){
+        const hr = hoja.getBoundingClientRect(), gh = globo.offsetHeight || 80;
+        const y = Math.max(8, hr.top - gh - 14);
+        globo.style.top = y + "px";
+        const z = e.zona && document.getElementById(e.zona);
+        if(z) tutoPico(globo, z.getBoundingClientRect(), y);
+      }
+      /* en la sala, SALIR a la izquierda, bajo el logo: a la derecha está «Privada» */
+      const sv = document.getElementById("saltarV"), po = document.getElementById("portada");
+      if(e && sv && po && po.classList.contains("abierta")){
+        const pr = po.getBoundingClientRect(), k = pr.width / 393;
+        sv.style.right = "auto"; sv.style.left = (pr.left + 8 * k) + "px"; sv.style.top = (pr.top + 58 * k) + "px";
+      }
+    }
+    if(e){ const t = document.querySelector("#visita .tetoca"); if(t) t.remove(); }
+    return r;
+  }; }
+{ const _col = tutoColocar;
+  tutoColocar = function(){
+    const r = _col.apply(this, arguments);
+    try{   /* la carta que hay que jugar brilla, pero cada una se queda en su sitio del abanico (antes saltaban todas delante) */
+      document.querySelectorAll("#mano .carta.brilla").forEach(c => { if(c.style.zIndex !== "") c.style.setProperty("z-index", c.style.zIndex, "important"); });
+    }catch(e){}
+    return r;
+  }; }
+{ const _av = tutoAvanza;
+  tutoAvanza = function(){
+    const e = tutoEscena();
+    if(e && e.meteIA) e.meteIA.forEach(x => TUTO.pendientes.push(Object.assign({}, x)));
+    if(e && e.arranca === "sala"){ TUTO.plegado = false; TUTO.iaHecho = false; TUTO.paso++; empezarSala(); return; }
+    const r = _av.apply(this, arguments);
+    if(TUTO.activo && escSala()){ alEntrarPaso(); TUTO.firma = ""; tutoRevisar(); }
+    return r;
+  }; }
+/* música: la de Mai-lo, en bucle, durante todo el tutorial (también en el 2 contra 2 y en la sala) */
+function soltarBucle(){
+  try{ musicaEl().loop = false; }catch(x){}
+  if(MUSICA.lista === "tutorial") MUSICA.lista = "";
+}
+{ const _mc = musicaCombate;
+  musicaCombate = function(){
+    if(TUTO.activo){
+      MUSICA.lista = "tutorial";
+      try{ musicaEl().loop = true; }catch(x){}
+      musicaPoner("mailo");
+      return;
+    }
+    return _mc.apply(this, arguments);
+  }; }
+{ const _mm = musicaMenu;
+  musicaMenu = function(){ if(TUTO.activo) return; return _mm.apply(this, arguments); }; }
+/* el cartel de «You win» del duelo no se queda encima del 2 contra 2 ni de la sala */
+function limpiarCartel(){ const c = document.getElementById("cartel"); if(c) c.innerHTML = ""; }
+{ const _cartel = cartel;
+  cartel = function(texto){
+    if(TUTO.activo && /^You (win|lose)/.test(String(texto)) && ESTADO.fase !== "finCombate") return;
+    return _cartel.apply(this, arguments);
+  }; }
+{ const _mb = tutoMontarBandos;
+  tutoMontarBandos = function(){ limpiarCartel(); return _mb.apply(this, arguments); }; }
+/* sin sitio que señalar, el fondo se oscurece igual (si no, el texto de detrás se lee a través) */
+{ const st = document.createElement("style");
+  st.textContent = ".visita.velo-sala{background:rgba(5,4,3,.82)}" +
+    /* sin el «–» de plegar en los bocadillos */
+    "#visita .plegar{display:none !important}" +
+    /* los símbolos de nivel dentro del bocadillo */
+    "#visita .globo svg.niv{display:inline-block;width:16px;height:14px;vertical-align:-2px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;margin:0 1px}" +
+    /* con el selector de luchador abierto, o eligiendo a quién atacas, no sale el bocadillo */
+    ".visita.oculta-sel .globo,.visita.oculta-sel .hueco,.visita.sin-globo .globo,.visita.sin-globo .hueco{display:none !important}";
+  document.head.appendChild(st); }
+{ const _tp = tutoPermite;
+  tutoPermite = function(){
+    const e = tutoEscena(), antes = TUTO.paso;
+    const r = _tp.apply(this, arguments);
+    if(r && TUTO.activo && TUTO.paso !== antes && e && e.meteIA) e.meteIA.forEach(x => TUTO.pendientes.push(Object.assign({}, x)));
+    return r;
+  }; }
+{ const _arr = arrancarTutorial;
+  arrancarTutorial = function(){ pararReloj(); TUTO.abierto = -1; return _arr.apply(this, arguments); }; }
+/* al terminar: al menú; con SALIR: como siempre */
+{ const _cer = cerrarTutorial;
+  cerrarTutorial = function(){
+    const fin = TUTO.paso >= ESCENAS.length;
+    pararReloj();
+    soltarBucle();
+    try{ if(RED.sala) cerrarRed(); }catch(x){}
+    try{ const el = document.getElementById("eligeL"); if(el) el.remove(); }catch(x){}
+    if(!fin) return _cer.apply(this, arguments);
+    TUTO.activo = false;
+    document.body.classList.remove("enPrueba");
+    REGLAS.pvIniciales = TUTO.pvAntes || 22;
+    REGLAS.asaltosParaGanar = TUTO.asaltosAntes || 2;
+    const v = document.getElementById("visita");
+    v.classList.remove("abierta"); v.innerHTML = ""; TUTO.firma = "";
+    try{ cerrarReglas(); }catch(x){}
+    document.body.classList.remove("enReglas");
+    irAlMenu();
+  }; }
+})();
+</script>
+
+<script>/* 28-10-2026 (Artur): logros del Dedal, título de Instrucciones, historia nueva y dedal en Partida rápida */
+(function(){
+/* ---------- 0. el estado del Dedal, al alcance de todos (en el móvil estaba encerrado y la página de Logros fallaba) ---------- */
+const dedalAbiertoT = () => { try{ const d = datosCampana();
+  return MODO_TODO || ((d.fase === "isla_negra" || d.fase === "fin") && d.libres.indexOf("ladron") !== -1 && d.libres.indexOf("costurera") !== -1); }catch(e){ return false; } };
+const dedalHechoT = () => { try{ const D = window.CAMPANA_DEDAL; return !!(D && D.dd && D.dd().fin); }catch(e){ return false; } };
+if(typeof window.dedalAbierto !== "function") window.dedalAbierto = dedalAbiertoT;
+if(typeof window.dedalHecho !== "function") window.dedalHecho = dedalHechoT;
+/* ---------- 1. LOGROS ---------- */
+try{
+  const E3 = [10, 25, 50];
+  /* «Completa la campaña Dedal», en Campaña; solo se ve con el Dedal abierto */
+  if(!LOGROS_DEF.some(x => x.id === "camp_dedal")){
+    let k = -1; LOGROS_DEF.forEach((x, j) => { if(x.s === "campana") k = j; });
+    LOGROS_DEF.splice(k + 1, 0, { id:"camp_dedal", c:"Dedal", s:"campana", t:"Completa la campaña Dedal",
+                                  unico:() => dedalHechoT(), ve:() => dedalAbiertoT() });
+  }
+  /* con cada luchador (menos Hilvana, que ya los tiene): tres más, tras el de «Cose X sastrilegios con …» */
+  MAZOS.filter(m => !m.base && !m.mimon && m.id !== "costurera").forEach(m => {
+    const nuevos = [
+      { id:m.id + "_menor", c:"{n} menores", s:"pj:" + m.id, t:"Crea {n} Sastrilegios menores", esc:E3, ve:() => dedalAbiertoT() },
+      { id:m.id + "_mayor", c:"{n} mayores", s:"pj:" + m.id, t:"Crea {n} Sastrilegios mayores", esc:E3, ve:() => dedalAbiertoT() },
+      { id:m.id + "_juega_mayor", c:"{n} mayores jugados", s:"pj:" + m.id, t:"Juega {n} Sastrilegios mayores", esc:E3, ve:() => dedalAbiertoT() }
+    ].filter(L => !LOGROS_DEF.some(x => x.id === L.id));
+    if(!nuevos.length) return;
+    let k = -1; LOGROS_DEF.forEach((x, j) => { if(x.s === "pj:" + m.id) k = j; });
+    if(k >= 0) LOGROS_DEF.splice(k + 1, 0, ...nuevos); else LOGROS_DEF.push(...nuevos);
+  });
+  /* en la página de Logros, los tres nuevos justo detrás del «Cose X sastrilegios con …» de cada uno */
+  { const _rl = reglasLogros;
+    reglasLogros = function(){
+      try{
+        MAZOS.filter(m => !m.base && !m.mimon && m.id !== "costurera").forEach(m => {
+          const ids = [m.id + "_menor", m.id + "_mayor", m.id + "_juega_mayor"];
+          const mios = ids.map(id => LOGROS_DEF.find(x => x.id === id)).filter(Boolean);
+          if(!mios.length || !LOGROS_DEF.some(x => x.id === m.id + "_cose")) return;
+          mios.forEach(L => LOGROS_DEF.splice(LOGROS_DEF.indexOf(L), 1));
+          LOGROS_DEF.splice(LOGROS_DEF.findIndex(x => x.id === m.id + "_cose") + 1, 0, ...mios);
+        });
+      }catch(e){}
+      return _rl.apply(this, arguments);
+    }; }
+  Object.assign(TRAD, {
+    "Completa la campaña Dedal": "Complete the Thimble campaign",
+    "Crea {n} Sastrilegios menores": "Create {n} minor Sewceries",
+    "Crea {n} Sastrilegios mayores": "Create {n} Greater Sewceries",
+    "Juega {n} Sastrilegios mayores": "Play {n} Greater Sewceries"
+  });
+  const nivelDe = nombre => ({ "Sastrilegio avanzado":2, "Sastrilegio experto":3, "Sastrilegio maestro":4, "Sastrilegio mayor":5 })[nombre] || 0;
+  const idLogro = a => (a.mazoId === "okumajefe") ? "okuma" : a.mazoId;
+  const mio = () => { try{ const k = logrosYo(); return (k >= 0 && logrosMio(k)) ? ESTADO.asientos[k] : null; }catch(e){ return null; } };
+  /* coser: lo dice el historial («X cose …: sale Sastrilegio …») */
+  { const _an = anotar;
+    anotar = function(texto){
+      try{
+        const t = String(texto || ""), a = mio();
+        if(a && a.mazoId !== "costurera" && !esMimo(a) && t.indexOf(a.nombre + " ") === 0){
+          const m = t.match(/ cose .+: sale (Sastrilegio \w+)\.$/);
+          if(m){
+            const nv = nivelDe(m[1]), id = idLogro(a);
+            if((nv === 2 || nv === 3) && LOGROS_DEF.some(x => x.id === id + "_menor")) logroCuenta(id + "_menor");
+            else if(nv === 5 && LOGROS_DEF.some(x => x.id === id + "_mayor")) logroCuenta(id + "_mayor");
+          }
+        }
+      }catch(e){}
+      return _an.apply(this, arguments);
+    }; }
+  /* jugar un Sastrilegio mayor */
+  { const _lt = lanzarTecnica;
+    lanzarTecnica = function(origen, objetivo, carta){
+      try{
+        const a = ESTADO.asientos[origen];
+        if(a && a.mazoId !== "costurera" && !esMimo(a) && logrosMio(origen) && carta &&
+           (/(^|_)h5_/.test(String(carta.id)) || carta.nombre === "Sastrilegio mayor" || carta.n === "Sastrilegio mayor")){
+          const id = idLogro(a);
+          if(LOGROS_DEF.some(x => x.id === id + "_juega_mayor")) logroCuenta(id + "_juega_mayor");
+        }
+      }catch(e){}
+      return _lt.apply(this, arguments);
+    }; }
+}catch(e){ console.error("logros del Dedal:", e); }
+
+/* ---------- 2. INSTRUCCIONES: con su título ---------- */
+{ const _ri = reglasInstrucciones;
+  reglasInstrucciones = function(){
+    const r = _ri.apply(this, arguments);
+    try{
+      const el = document.getElementById("reglas");
+      const cab = el && el.querySelector(":scope > .cabecera");
+      if(cab && !cab.querySelector("h1")) cab.insertAdjacentHTML("afterbegin", '<h1>' + idi("Instrucciones") + '</h1>');
+      else if(el && !cab) el.insertAdjacentHTML("afterbegin", '<div class="cabecera"><h1>' + idi("Instrucciones") + '</h1></div>');
+    }catch(e){}
+    return r;
+  }; }
+
+/* ---------- 3. LA HISTORIA (Instrucciones · La isla, el árbol y el fruto) ---------- */
+try{
+  const CITA = "«Organizaré un campeonato de lucha y al ganador le entregaré mi único fruto. A cambio, alimentaré mis raíces con la sangre derramada. Sus sombras, su fuerza y su poder nutrirán mi único fruto. La sangre como precio, las sombras como castigo. Solo así podré formar un nuevo fruto que tardará otros mil años en brotar.»";
+  const SER = "Un ser eterno, cuyas raíces se alimentan de sangre y cuyo fruto se alimenta de sombras, desencadenará un torneo despiadado por su fruto sagrado: quien lo coma recibirá poderes sobrenaturales. Los mejores luchadores, llegados de todos los rincones, acuden a la isla para reclamar su premio.";
+  const h = HOJAS_REGLAS[0];
+  h.cuerpo = h.cuerpo
+    .replace(/<p class="cita">«Organizaré[\s\S]*?»<\/p>/, '<p class="cita">' + CITA + '</p>')
+    .replace(/<p>Un ser eterno,[\s\S]*?su premio\.<\/p>/, '<p>' + SER + '</p>');
+  TRAD[CITA] = "“I shall hold a fighting championship, and to the winner I will give my one and only fruit. In return, I will feed my roots with the blood that is spilled. Their shadows, their strength and their power will nourish my one and only fruit. Blood as the price, shadows as the punishment. Only then can I form a new fruit, which will take another thousand years to sprout.”";
+  TRAD[SER] = "An eternal being whose roots feed on blood and whose fruit feeds on shadows will unleash a ruthless tournament for its sacred fruit: whoever eats it will gain supernatural powers. The finest fighters, from every corner of the world, come to the island to claim their prize.";
+}catch(e){ console.error("historia:", e); }
+
+/* ---------- 4. EL DEDAL EN «PARTIDA RÁPIDA» (como en la sala: apagado al empezar, solo si el dedal está ganado) ---------- */
+(function(){
+  const vale = id => { const m = MAZOS.find(x => x.id === id), D = window.CAMPANA_DEDAL;
+    return !!m && !m.base && !m.mimon && id !== "costurera" && !!D && !!D.dedalDe && D.dedalDe(id); };
+  const lleva = i => !!(PARTIDA.asientos[i] && PARTIDA.asientos[i].dd);
+  const poner = (i, v) => { if(PARTIDA.asientos[i]) PARTIDA.asientos[i].dd = v; };
+  function pintarDd(){
+    const caja = document.querySelector("#portada .lonja-rapida .lonja-losa");
+    if(!caja || !window.LONJA) return;
+    caja.querySelectorAll(".sl-silla[data-asiento]").forEach(silla => {
+      const i = parseInt(silla.dataset.asiento, 10), losa = silla.querySelector(".sl-losa");
+      if(!losa || (i !== 0 && i !== 1)) return;
+      const mazo = i === 0 ? LONJA.rapidaMazo : LONJA.iaMazo;
+      let b = losa.querySelector(".sl-dd");
+      if(!mazo || !vale(mazo)){ if(lleva(i)) poner(i, false); if(b) b.remove(); return; }
+      if(!b){
+        b = document.createElement("span");
+        b.className = "sl-dd";
+        b.setAttribute("role", "button"); b.setAttribute("aria-label", idi("Coser"));
+        ["pointerdown", "touchstart", "mousedown"].forEach(t => b.addEventListener(t, e => e.stopPropagation(), { passive:true }));
+        b.onclick = e => { e.stopPropagation(); e.preventDefault(); poner(i, !lleva(i)); pintarDd(); };
+        losa.appendChild(b);
+      }
+      b.classList.toggle("on", lleva(i));
+      b.setAttribute("aria-pressed", lleva(i) ? "true" : "false");
+    });
+  }
+  /* al entrar en Partida rápida, apagados */
+  { let antes = false;
+    const mira = () => {
+      const ahora = !!document.querySelector("#portada .lonja-rapida");
+      if(ahora && !antes && window.LONJA && !LONJA.rapidaMazo){ poner(0, false); poner(1, false); }
+      antes = ahora;
+      try{ pintarDd(); }catch(e){}
+    };
+    const p = document.getElementById("portada");
+    if(p) new MutationObserver(mira).observe(p, { childList:true, subtree:true });
+  }
+  /* partida rápida por internet: tu dedal pasa a tu asiento de la sala que te toque */
+  const ENV = { clave:"" };
+  { const _ds = dibujarSala;
+    dibujarSala = function(){
+      const r = _ds.apply(this, arguments);
+      try{
+        if(window.LONJA && (LONJA.rapidaModo || LONJA.enRapida) && lleva(0) && vale(LONJA.rapidaMazo) && RED.plazas && !RED.activa){
+          const k = RED.plazas.findIndex(q => q && q.tipo === "persona" && q.quien === RED.yo);
+          if(k >= 0 && !RED.plazas[k].dd){
+            if(RED.papel === "anfitrion"){ RED.plazas[k].dd = true; if(PARTIDA.asientos[k]) PARTIDA.asientos[k].dd = true; difundirSala(); }
+            else if(ENV.clave !== RED.sala + "|" + k){ ENV.clave = RED.sala + "|" + k; try{ RED.tubo.enviar({ t:"dd", a:k, v:true }); }catch(e){} }
+          }
+        }
+      }catch(e){}
+      return r;
+    }; }
+})();
+})();
+</script>
+
 </body>
 <!-- aligerar_v4: música, vídeos y dibujos fuera del archivo, precarga de dibujos, v2.2 -->
 <!-- ovacion_centro_v1: ovación y se aburre en el centro -->
@@ -30498,4 +30703,1370 @@ const _jiBase = jugarIndice;
 </script>
 <!-- varios_index_v1: Remendar con Cancelar, tic con placa, página del Dedal, hoja de Dr. When, sonido al coser y Mejoras de Dr. When -->
 <script>/* hilvana_ficha_v1 */ try{ Object.assign(TRAD, { "Maniquí de sastrería. Junta dos cartas y cose un sastrilegio que nadie ha visto.": "Tailor's mannequin. She joins two cards and sews a sastrilegio nobody has ever seen." }); }catch(e){}</script>
+<!-- 27-10-2026 (Artur): partida rápida, entrar en sala y salas públicas (como Left 4 Dead) -->
+<script>/* 27-10-2026 (Artur): partida rápida, entrar en sala y salas públicas */
+(function(){
+/* La «lonja» es un buzón común (los mismos servidores de siempre) donde cada
+   sala pública o cada partida rápida dice «soy 1vs1, somos 2, faltan 2».
+   - Partida rápida: entra en una sala pública con sitio o se junta con otro
+     que también busca partida rápida; al llenarse arranca sola.
+   - Entrar en sala: entra en una sala pública con sitio; empieza su creador.
+   - Portada: Partida rápida (eliges luchador y modo; busca partida directamente),
+     Crear sala (la sala de siempre, privada; el interruptor bajo el código la hace pública
+     para que entren los que buscan partida) y Campaña. */
+const LONJA = { publica:false, clientes:[], desde:0, reloj:null, vistas:{},
+                mudando:false, vistaPublica:false, grupos:{}, alSentar:null, tema:"",
+                busca:null,            /* null | "rapida" | "sala": lo que está buscando esta pantalla */
+                sinRed:false,
+                enRapida:false,        /* invitado dentro de una partida rápida ajena: sin ver la sala */
+                arrancando:false,
+                antes:null,            /* lo que había antes de buscar, para volver al cancelar */
+                rapidaMazo:null,       /* luchador elegido en «Partida rápida» */
+                rapidaModo:null,       /* "1v1" | "equipos" | "libre": lo que buscas en «Partida rápida» */
+                iaMazo:null,           /* 1 vs IA: luchador de la máquina */
+                listos:{},             /* anfitrión: quién ha pulsado «Listo» */
+                creando:false };       /* «Crear sala»: opciones abiertas con el botón Crear */
+
+
+window.LONJA = LONJA;
+Object.assign(TRAD, {
+  "Partida rápida": "Quick match", "Crear sala": "Create lobby", "Crear": "Create", "Volver": "Back",
+  "Unirse con código": "Join with code", "Elige tu luchador": "Choose your fighter",
+  "1 vs IA": "1 vs AI", "Libre": "Free", "Empezar partida": "Start", "Dificultad": "Difficulty", "Asaltos": "Rounds",
+  "Privada": "Private", "Pública": "Public",
+  "Buscando rival…": "Searching for opponent…", "Buscando jugadores…": "Searching for players…", "Cancelar": "Cancel",
+  "¡Rival encontrado!": "Opponent found!", "¡Equipos listos!": "Teams ready!",
+  "Elige tu luchador primero.": "Choose your fighter first.",
+    "Sin conexión: puedes jugar contra la IA.": "Offline: you can play vs AI.",
+  "sin conexión": "offline",
+  "Listo": "Ready", "Empezar combate": "Start", "no está listo": "is not ready", "está listo": "is ready", "Al azar": "Random",
+  "IA": "AI", "Ocupar asiento": "Take seat", "Controlar asiento": "Control seat", "Dejar asiento libre": "Leave seat",
+  "Eres el anfitrión": "You are the host", "anfitrión": "host", "Quitar foto": "Remove photo",
+  "1 vs 1": "1 vs 1", "2 vs 2 por equipos": "2 vs 2 teams", "3 jugadores": "3 players", "4 jugadores modo libre": "4 players free"
+});
+const temaLonja = () => "islanegra/lonja/" + String(VERSION).replace(/[^0-9a-z]/gi, "_");
+function salaPublica(){ return LONJA.publica && salaAbierta() && RED.papel === "anfitrion" && !RED.activa; }
+function soyRapida(){ return LONJA.busca === "rapida" && salaAbierta() && RED.papel === "anfitrion" && !RED.activa; }
+function huecosSala(){ return (RED.plazas || []).filter(p => p.tipo === "persona" && !p.quien).length; }
+function personasSala(){ return new Set((RED.plazas || []).filter(p => p.tipo === "persona" && p.quien).map(p => p.quien)).size; }
+function miMazoAhora(){ const k = plazaDe(RED.yo); return k >= 0 ? (RED.plazas[k].mazo || null) : null; }
+function todosConLuchador(){ return (RED.plazas || []).every(p => p.tipo !== "persona" || !p.quien || p.mazo); }
+function publicarLonja(m){
+  m.de = RED.yo; m.ver = VERSION;
+  const texto = JSON.stringify(m);
+  LONJA.clientes.forEach(c => { if(c.connected){ try{ c.publish(LONJA.tema, texto); }catch(e){} } });
+}
+function anunciar(){
+  if(!salaPublica() && !soyRapida()) return;
+  const huecos = huecosSala();
+  if(!huecos){ publicarLonja({ t:"quitada", codigo:SALA.codigo }); return; }
+  publicarLonja({ t:"anuncio", codigo:SALA.codigo, n:RED.n, modo:RED.modo, rapida:soyRapida(),
+                  personas:personasSala(), huecos, desde:LONJA.desde });
+}
+function encaja(m){
+  if(m.huecos < personasSala()) return false;
+  if(LONJA.busca === "rapida" && LONJA.rapidaModo === "libre" && !m.rapida)
+    return m.modo === "libre" && (m.n === 3 || m.n === 4);     /* libre: vale una sala pública de 3 o de 4 */
+  return m.n === RED.n && m.modo === RED.modo;
+}
+function lonjaEntra(m){
+  if(!m || m.de === RED.yo || m.ver !== VERSION) return;
+  if(m.t === "quitada"){ delete LONJA.vistas[m.codigo]; return; }
+  if(m.t !== "anuncio" || typeof m.codigo !== "string") return;
+  m.visto = Date.now();
+  LONJA.vistas[m.codigo] = m;
+  if(LONJA.mudando || RED.papel !== "anfitrion" || !salaAbierta() || RED.activa) return;
+  if(!encaja(m)) return;
+  if(LONJA.busca === "sala"){                       /* entrar en sala: cualquier sala pública con sitio */
+    if(!m.rapida) mudarse(m.codigo, false);
+    return;
+  }
+  if(LONJA.busca === "rapida"){                     /* partida rápida: una sala pública, o la rápida más antigua */
+    if(!m.rapida) mudarse(m.codigo, false);
+    else if(m.desde < LONJA.desde) mudarse(m.codigo, true);
+    return;
+  }
+  if(salaPublica()){                                /* sala pública: se funde con otra pública más antigua donde quepa */
+    if(!m.rapida && m.desde < LONJA.desde) mudarse(m.codigo, false);
+  }
+}
+function mudarse(codigo, rapida){
+  LONJA.mudando = true;
+  try{ RED.tubo.enviar({ t:"mudanza", codigo, grupo:RED.yo, rapida:!!rapida }); }catch(e){}
+  publicarLonja({ t:"quitada", codigo:SALA.codigo });
+  const yo = RED.yo;
+  setTimeout(() => irAInvitado(codigo, yo, rapida), 250);
+}
+function irAInvitado(codigo, grupo, rapida){
+  LONJA.alSentar = { mazo: miMazoAhora(), grupo };
+  lonjaParar();
+  LONJA.publica = false; LONJA.mudando = false;
+  const buscaba = LONJA.busca; LONJA.busca = null;
+  LONJA.enRapida = !!rapida;
+  cerrarRed();
+  /* si la sala se creó en este mismo navegador (dos ventanas), no hereda su identidad */
+  try{ localStorage.removeItem("islanegra-yo-" + codigo); }catch(e){}
+  SALA.via = "internet"; SALA.codigo = codigo; SALA.paso = "dentro";
+  abrirRed("internet", "invitado", codigo).then(() => {
+  });
+}
+function lonjaArrancar(){
+  if(LONJA.clientes.length) return;
+  if(!window.mqtt){ cargarBuzon().then(lonjaArrancar).catch(() => {}); return; }
+  LONJA.tema = temaLonja();
+  LONJA.desde = LONJA.desde || Date.now();
+  LONJA.vistas = {};
+  BUZONES.forEach((donde, k) => {
+    let c;
+    try{
+      c = window.mqtt.connect(donde, { clientId:"isla_lonja_" + RED.yo + "_" + k, clean:true,
+                                       connectTimeout:8000, reconnectPeriod:3000, keepalive:30 });
+    }catch(e){ return; }
+    LONJA.clientes.push(c);
+    c.on("connect", () => { try{ c.subscribe(LONJA.tema, { qos:0 }, () => anunciar()); }catch(e){} });
+    c.on("message", (t, carga) => { try{ lonjaEntra(JSON.parse(carga.toString())); }catch(e){} });
+    c.on("error", () => {});
+  });
+  clearInterval(LONJA.reloj);
+  LONJA.reloj = setInterval(() => {
+    const ahora = Date.now();
+    Object.keys(LONJA.vistas).forEach(k => { if(ahora - LONJA.vistas[k].visto > 8000) delete LONJA.vistas[k]; });
+    anunciar();
+  }, 2500);
+}
+function lonjaParar(){
+  clearInterval(LONJA.reloj); LONJA.reloj = null;
+  if(LONJA.clientes.length && salaAbierta()) try{ publicarLonja({ t:"quitada", codigo:SALA.codigo }); }catch(e){}
+  LONJA.clientes.forEach(c => { try{ c.end(true); }catch(e){} });
+  LONJA.clientes = []; LONJA.vistas = {}; LONJA.desde = 0;
+}
+const _est0 = estadoDeSala;
+const SIN_TEXTO = /Pásales el código|^Conectando|Buscando la sala|Sala abierta\. Abre otra pestaña|La mesa está llena/;
+const SIN_AVISO = /Las reglas las pone|En la campaña los combates|Elige tu luchador primero|No se ha podido leer la foto|Ese asiento ya está ocupado|Las plazas de la máquina|En un duelo las dos sillas/;
+{ const _est = estadoDeSala;
+  estadoDeSala = function(dicho){
+    if(SIN_TEXTO.test(String(dicho))) dicho = "";     /* sin textos de más en la sala */
+    return _est.call(this, dicho);
+  }; }
+{ const _avi = avisoDeSala;
+  avisoDeSala = function(dicho){
+    if(SIN_AVISO.test(String(dicho))) return;
+    return _avi.apply(this, arguments);
+  }; }
+{ const _apu = salaApunta;
+  salaApunta = function(texto){
+    if(/Ahora llevas tú la sala/.test(String(texto))) texto = idi("Eres el anfitrión");
+    return _apu.call(this, texto);
+  }; }
+{ const _suc = salaSuceso;
+  salaSuceso = function(texto){
+    if(/Ahora llevas tú la sala/.test(String(texto))) texto = idi("Eres el anfitrión");
+    return _suc.call(this, texto);
+  }; }
+function avisoPublica(){}
+function ponerPublica(si){
+  if(!salaAbierta() || RED.papel !== "anfitrion") return;
+  LONJA.publica = !!si;
+  if(si){ LONJA.desde = Date.now(); lonjaArrancar(); }
+  else lonjaParar();
+  try{ copiarCodigo(); SALA.copiado = Date.now(); }catch(e){}
+  avisoPublica();
+  difundirEstadoPublica();
+  dibujarSala();
+}
+function difundirEstadoPublica(){
+  if(RED.papel !== "anfitrion" || !RED.tubo || !salaAbierta()) return;
+  try{ RED.tubo.enviar({ t:"publica", si:!!LONJA.publica }); }catch(e){}
+}
+/* ---- partida rápida y entrar en sala, desde tu propia sala ---- */
+function empezarBusqueda(que){
+  if(!salaAbierta() || RED.papel !== "anfitrion") return;
+  if(!miMazoAhora()){ avisoDeSala(idi("Elige tu luchador primero.")); return; }
+  LONJA.busca = que;
+  LONJA.desde = Date.now();
+  mostrarBusca();
+  lonjaArrancar();
+}
+function cancelarBusqueda(){
+  LONJA.busca = null;
+  quitarBusca();
+  lonjaParar();
+  if(LONJA.rapidaModo || LONJA.enRapida){ LONJA.enRapida = false; LONJA.rapidaModo = null; cerrarRed(); pantallaRapida(true); return; }   /* el luchador elegido se queda */
+  avisoPublica(); dibujarSala();
+}
+/* «Jugar» te mete directo en tu sala online, privada; sin internet sirve igual contra la máquina */
+function entrarEnMiSala(){
+  const mazos = (PARTIDA.asientos || []).map(a => a && a.mazo);
+  const humanos = (PARTIDA.asientos || []).map(a => a && a.humano);
+  const n = PARTIDA.n || 2, equipos = !!PARTIDA.bandos, dif = mejorDifDisponible(PARTIDA.dif);
+  cerrarRed();
+  LONJA.sinRed = false; LONJA.busca = null; LONJA.enRapida = false; LONJA.publica = false;
+  quitarBusca();
+  CAMPANA.modo = null;
+  quitarFondo();
+  SALA.via = "internet"; SALA.codigo = codigoDeSala(); SALA.paso = "dentro"; SALA.armado = false;
+  const prom = abrirRed("internet", "anfitrion", SALA.codigo);
+  RED.dif = dif; IA_NIVEL = DIFICULTADES[RED.dif];
+  ajustarPlazas(n); RED.modo = equipos ? "equipos" : "libre";
+  RED.plazas.forEach((p, i) => {
+    if(i === 0){ p.tipo = "persona"; p.quien = RED.yo; p.mote = miMote(); p.mazo = mazos[0] || null; return; }
+    if(mazos[i] && humanos[i] === false){ p.tipo = "ia"; p.quien = null; p.mote = ""; p.mazo = mazos[i]; }
+    else { p.tipo = "persona"; p.quien = null; p.mote = ""; p.mazo = null; }
+    p.fuera = false;
+  });
+  RED.vistaMesa = true;
+  dibujarSala();
+  if(prom && prom.then) prom.then(() => { difundirSala(); dibujarSala(); });
+  return prom;
+}
+/* ---- Partida rápida: eliges luchador y modo, y se busca partida sin pasar por ninguna sala ---- */
+const VARITA_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+  '<path d="M4 20 14 10"/><path d="M17.5 2.3Q17.5 6.5 21.7 6.5Q17.5 6.5 17.5 10.7Q17.5 6.5 13.3 6.5Q17.5 6.5 17.5 2.3Z" fill="currentColor" stroke-width="1"/><path d="M21.2 10.7Q21.2 12.6 23.1 12.6Q21.2 12.6 21.2 14.5Q21.2 12.6 19.3 12.6Q21.2 12.6 21.2 10.7Z" fill="currentColor" stroke-width=".8"/><path d="M11.2 1.6Q11.2 3.2 12.8 3.2Q11.2 3.2 11.2 4.8Q11.2 3.2 9.6 3.2Q11.2 3.2 11.2 1.6Z" fill="currentColor" stroke-width=".8"/></svg>';   /* 28-10-2026 (Artur): varita con estrellas en la punta */
+function ponerVarita(losa, hacer){
+  if(!losa || losa.querySelector(".sl-varita")) return;
+  const v = document.createElement("span"); v.className = "sl-varita"; v.innerHTML = VARITA_SVG; v.setAttribute("aria-label", idi("Al azar"));
+  v.onclick = e => { e.stopPropagation(); e.preventDefault(); hacer(); };
+  losa.appendChild(v);
+}
+function flotante(texto){ salaSuceso(texto); }
+window.flotante = flotante;
+const WIFI_SVG = '<svg class="lonja-wifi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' +
+  '<path d="M2.5 8.5a14.5 14.5 0 0 1 19 0"/><path d="M6 12a9.5 9.5 0 0 1 12 0"/><path d="M9.5 15.5a4.5 4.5 0 0 1 5 0"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>';
+const X_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+/* la cámara de la losa: sin foto, carga una; con foto, la quita */
+const CAM_QUITAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-2.5h6L17 8h3v10H4z"/><circle cx="12" cy="13" r="3.2"/><path d="M3 3l18 18"/></svg>';
+function camaraEn(losa){
+  if(!losa || typeof avatarMio !== "function") return;
+  const hay = !!avatarMio();
+  let c = losa.querySelector(".sl-cam");
+  if(!c){ c = document.createElement("span"); c.className = "sl-cam"; losa.appendChild(c); }
+  c.innerHTML = hay ? CAM_QUITAR : AVATAR_CAM;
+  c.setAttribute("aria-label", idi(hay ? "Quitar foto" : "Mi foto"));
+  c.onclick = e => {
+    e.stopPropagation(); e.preventDefault();
+    if(avatarMio()){ AVATAR.img = ""; AVATAR.oculto = false; avatarGuardar(); dibujarSala(); try{ avatarMandar(); }catch(x){} }
+    else avatarCargar();
+  };
+}
+function pantallaRapida(seguir){
+  if(!seguir){
+    cerrarRed(); quitarBusca(); CAMPANA.modo = null; LONJA.rapidaModo = null; LONJA.enRapida = false;
+    LONJA.rapidaMazo = null; LONJA.iaMazo = null; LONJA.rapidaConIA = false;   /* cada vez que entras, sin selección */
+  }
+  LONJA.pantalla = "rapida";
+  quitarFondo();
+  const libres = MAZOS.filter(m => !m.base && desbloqueado(m.id));
+  if(LONJA.rapidaMazo && !libres.some(m => m.id === LONJA.rapidaMazo)) LONJA.rapidaMazo = null;
+  if(LONJA.iaMazo && !libres.some(m => m.id === LONJA.iaMazo)) LONJA.iaMazo = null;
+  const losas = () => filaDeAsientos({ n: LONJA.rapidaConIA ? 2 : 1, equipos:false,
+                                       mazo:i => i === 0 ? LONJA.rapidaMazo : LONJA.iaMazo, esIA:i => i === 1,
+                                       mudo:() => false, arriba:i => i === 0 ? (miMote() || "Tú") : idi("IA"), abajo:() => "" });
+  const h = '<div class="prep solo lonja-rapida"><h2>' + idi("Elige tu luchador") + '</h2>' +
+    '<div class="lonja-losa">' + losas() + '</div>' +
+    '<div class="opciones col lonja-modos">' +
+      '<button data-ia="1">' + idi("1 vs IA") + '</button>' +
+      '<button data-modo="1v1">1 vs 1</button>' +
+      '<button data-modo="equipos">2 vs 2</button>' +
+      '<button data-modo="libre">3-4 · ' + idi("Libre") + '</button>' +
+      '<button data-codigo="1">' + idi("Unirse con código") + '</button>' +
+    '</div></div>';
+  const pie = '<div class="pie-fila"><button class="volver-flecha" data-atras="1" aria-label="volver">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' +
+              '<path d="M20 12H5"/><path d="M12 19l-7-7 7-7"/></svg></button></div>';
+  const p = panelPortada(h, pie);
+  p.classList.add("solo-codigo");
+  const pinta = () => {
+    const caja = p.querySelector(".lonja-losa"); if(caja) caja.innerHTML = losas();
+    p.querySelectorAll("[data-modo],[data-ia]").forEach(b => b.disabled = !LONJA.rapidaMazo);
+    p.querySelectorAll("[data-asiento]").forEach(silla => {
+      const i = parseInt(silla.dataset.asiento, 10);
+      silla.onclick = () => elegir(i);
+      const losa = silla.querySelector(".sl-losa");
+      if(losa) ponerVarita(losa, () => alAzar(i));
+      if(i === 0 && losa){                                                        /* mi foto, como en la sala */
+        const f = (typeof avatarMio === "function") ? avatarMio() : "";
+        if(f){ losa.style.backgroundImage = "url(" + f + ")"; losa.style.backgroundSize = "cover"; losa.style.backgroundPosition = "center"; losa.classList.add("puesta"); }
+        if(typeof mimonLibre === "function" && mimonLibre()) camaraEn(losa);
+      }
+    });
+  };
+  const elegir = cual => {                         /* el selector de luchador de siempre; cual = 0 tú, 1 la máquina */
+    const anterior = document.getElementById("eligeL"); if(anterior) anterior.remove();
+    const caja = document.createElement("div"); caja.id = "eligeL"; caja.classList.add("de-asiento");
+    const puesto = cual === 0 ? LONJA.rapidaMazo : LONJA.iaMazo;
+    let hh = '<div class="hoja-asiento"><button class="cerrar-x" aria-label="cerrar">' + X_SVG + '</button>' +
+      '<p class="rotulo-asiento">' + (cual === 0 ? idi("Elige tu luchador") : idi("IA")) + '</p>' +
+      '<p class="pista-reglas">' + idi("Mantén pulsado para ver sus reglas.") + '</p>' +
+      '<div class="fila">' + MAZOS.filter(m => !m.base).map(m => !desbloqueado(m.id)
+        ? '<button class="luchador-b bloqueado" disabled aria-label="' + idi("Personaje bloqueado") + '"><span class="retrato"><b>?</b>' +
+          '<i class="bloq-txt">' + idi("Desbloquéalo en el modo campaña") + '</i></span></button>'
+        : '<button class="luchador-b' + (m.id === puesto ? " puesto" : "") + '" data-pon="' + m.id + '" data-reglas="' + m.id +
+          '" aria-label="' + m.nombre + '"><span class="retrato" style="background-image:var(--f-' + m.id + '_personaje)"></span></button>').join("") +
+      (cual === 1 ? '<button class="luchador-b lonja-azar" data-azar="1" aria-label="' + idi("Al azar") + '"><span class="retrato">' + VARITA_SVG + '</span></button>' : '') +
+      '</div>';
+    if(cual === 1){
+      hh += '<h2 class="lonja-h">' + idi("Dificultad") + '</h2><div class="opciones lonja-fila">' +
+        DIFICULTADES.map((d, k) => d.oculta ? '' : (!difDisponible(k)
+          ? '<button class="cerrada" disabled>' + idi(d.nombre) + '</button>'
+          : '<button data-rd="' + k + '" class="' + d.clase + (PARTIDA.dif === k ? ' on' : '') + '">' + idi(d.nombre) + '</button>')).join("") + '</div>';
+      hh += '<h2 class="lonja-h">' + idi("Asaltos") + '</h2><div class="opciones lonja-fila">' +
+        '<button data-ra="1"' + ((PARTIDA.asaltos || 1) === 1 ? ' class="on"' : '') + '>1</button>' +
+        '<button data-ra="2"' + ((PARTIDA.asaltos || 1) !== 1 ? ' class="on"' : '') + '>3</button></div>';
+      hh += '<button class="sl-accion lonja-empezar" data-empezar="1"' + (LONJA.iaMazo ? '' : ' disabled') + '>' + idi("Empezar partida") + '</button>';
+    }
+    hh += '</div>';
+    caja.innerHTML = hh;
+    document.body.appendChild(caja);
+    const marca = () => {
+      caja.querySelectorAll("[data-pon]").forEach(b => b.classList.toggle("puesto", b.dataset.pon === (cual === 0 ? LONJA.rapidaMazo : LONJA.iaMazo)));
+      caja.querySelectorAll("[data-rd]").forEach(b => b.classList.toggle("on", parseInt(b.dataset.rd, 10) === PARTIDA.dif));
+      caja.querySelectorAll("[data-ra]").forEach(b => b.classList.toggle("on", (parseInt(b.dataset.ra, 10) === 1) === ((PARTIDA.asaltos || 1) === 1)));
+      const e = caja.querySelector("[data-empezar]"); if(e) e.disabled = !LONJA.iaMazo;
+    };
+    caja.querySelectorAll("[data-pon]").forEach(b => b.onclick = () => {
+      if(cual === 0){ LONJA.rapidaMazo = b.dataset.pon; caja.remove(); pinta(); }
+      else { LONJA.iaMazo = b.dataset.pon; marca(); pinta(); }
+    });
+    const az = caja.querySelector("[data-azar]"); if(az) az.onclick = () => { alAzar(1); marca(); };
+    caja.querySelectorAll("[data-rd]").forEach(b => b.onclick = () => { PARTIDA.dif = parseInt(b.dataset.rd, 10); marca(); });
+    caja.querySelectorAll("[data-ra]").forEach(b => b.onclick = () => { PARTIDA.asaltos = parseInt(b.dataset.ra, 10); marca(); });
+    const emp = caja.querySelector("[data-empezar]"); if(emp) emp.onclick = () => { caja.remove(); jugarContraIA(); };
+    caja.querySelector(".cerrar-x").onclick = () => caja.remove();
+    caja.onclick = e => { if(e.target === caja) caja.remove(); };
+    try{ rejillaLuchadores(); }catch(e){}
+  };
+  function alAzar(cual){                           /* la varita: un luchador al azar */
+    const otro = cual === 0 ? LONJA.iaMazo : LONJA.rapidaMazo;
+    let bolsa = libres.map(m => m.id).filter(id => id !== otro);
+    if(!bolsa.length) bolsa = libres.map(m => m.id);
+    if(!bolsa.length) return;
+    const id = bolsa[Math.floor(Math.random() * bolsa.length)];
+    if(cual === 0) LONJA.rapidaMazo = id; else LONJA.iaMazo = id;
+    pinta();
+  }
+  pinta();
+  p.querySelector("[data-ia]").onclick = () => { LONJA.rapidaConIA = true; pinta(); elegir(1); };
+  p.querySelectorAll("[data-modo]").forEach(b => b.onclick = () => buscarRapida(b.dataset.modo));
+  p.querySelector("[data-codigo]").onclick = () => { LONJA.pantalla = null; LONJA.desdeRapida = true; SALA.via = "internet"; SALA.paso = "entrar"; dibujarSala(); };
+  p.querySelector("[data-atras]").onclick = () => { LONJA.pantalla = null; pasoCamino(); };
+}
+function buscarRapida(modo){
+  if(!LONJA.rapidaMazo) return;
+  LONJA.pantalla = null;
+  LONJA.rapidaModo = modo;
+  PARTIDA.n = (modo === "1v1") ? 2 : 4; PARTIDA.bandos = (modo === "equipos");
+  PARTIDA.asientos.forEach((a, i) => { a.mazo = (i === 0) ? LONJA.rapidaMazo : null; a.humano = (i === 0); });
+  entrarEnMiSala();
+  LONJA.rapidaModo = modo;
+  empezarBusqueda("rapida");
+}
+window.pantallaRapida = pantallaRapida; window.jugarContraIA = jugarContraIA;
+window.entrarEnMiSala = entrarEnMiSala;
+function textoBusca(){
+  return (LONJA.busca === "rapida" && RED.n > 2) || LONJA.enRapida ? "Buscando jugadores…" : "Buscando rival…";
+}
+function mostrarBusca(){
+  let c = document.getElementById("capaBusca");
+  if(!c){
+    c = document.createElement("div"); c.id = "capaBusca";
+    c.innerHTML = '<div class="bus-centro"><div class="bus-anillo"></div><p class="bus-texto"></p>' +
+                  '<button class="sl-accion bus-cancelar">' + idi("Cancelar") + '</button></div>';
+    document.body.appendChild(c);
+    c.querySelector(".bus-cancelar").onclick = cancelarBusqueda;
+  }
+  c.querySelector(".bus-texto").textContent = idi(textoBusca());
+}
+function quitarBusca(){ const c = document.getElementById("capaBusca"); if(c) c.remove(); }
+/* la pantalla de retratos (X vs X) antes de empezar; se quita sola */
+function retrato(i){
+  const p = RED.plazas[i] || {};
+  const im = p.mazo && IMAGENES[p.mazo + "_personaje"];
+  const nombre = (p.tipo === "ia") ? "" : moteDePlaza(i);
+  return '<div class="pre-uno"><div class="pre-losa" style="' + (im ? 'background-image:url(' + im.src + ')' : '') + '"></div>' +
+         '<div class="pre-nombre">' + escapar(nombre) + '</div></div>';
+}
+function mostrarPresentacion(){
+  quitarBusca();
+  let c = document.getElementById("capaPresenta"); if(c) c.remove();
+  c = document.createElement("div"); c.id = "capaPresenta";
+  let h = '<div class="pre-centro">';
+  const n = RED.plazas.length;
+  if(RED.modo === "equipos" && n === 4)
+    h += '<div class="pre-lado">' + retrato(0) + retrato(2) + '</div><div class="pre-vs">VS</div><div class="pre-lado">' + retrato(1) + retrato(3) + '</div>';
+  else if(n === 2)
+    h += '<div class="pre-lado">' + retrato(0) + '</div><div class="pre-vs">VS</div><div class="pre-lado">' + retrato(1) + '</div>';
+  else
+    h += '<div class="pre-lado todos">' + RED.plazas.map((_, i) => retrato(i)).join('<div class="pre-vs chico">VS</div>') + '</div>';
+  h += '<p class="pre-texto">' + idi(RED.modo === "equipos" && n === 4 ? "¡Equipos listos!" : "¡Rival encontrado!") + '</p></div>';
+  c.innerHTML = h;
+  document.body.appendChild(c);
+  setTimeout(() => c.classList.add("se-va"), 3200);
+  setTimeout(() => c.remove(), 3900);
+}
+/* el que lleva la partida rápida la arranca solo en cuanto están todos */
+function comprobarRapida(){
+  if(!soyRapida() || LONJA.arrancando) return;
+  if(huecosSala() > 0 || !todosConLuchador()) return;
+  LONJA.arrancando = true;
+  lonjaParar();
+  mostrarPresentacion();
+  setTimeout(() => {
+    LONJA.arrancando = false;
+    if(!salaAbierta() || RED.papel !== "anfitrion" || RED.activa || huecosSala() > 0) return;
+    LONJA.busca = null; LONJA.rapidaModo = null;
+    cerrarOpcionesSala();
+    mimonMaterializar(); ajustesMaterializar();
+    const semilla = (Date.now() ^ Math.floor(performance.now() * 1000)) >>> 0;
+    RED.tubo.enviar({ t:"empezar", mimon:!!RED.mimon, semilla, n:RED.n, modo:RED.modo, jefe:RED.yo,
+                      dif:RED.dif, asaltos:RED.asaltos, plazas:RED.plazas, rapida:true });
+    SEMILLA.v = semilla;
+    arrancarEnRed();
+  }, 2600);
+}
+window.ponerPublica = ponerPublica; window.salaPublica = salaPublica; window.empezarBusqueda = empezarBusqueda;
+{ const _mando = mandoDeSala;
+  mandoDeSala = function(){
+    const m = _mando.apply(this, arguments);
+    const extra = m.extra, enganchar = m.engancharExtra;
+    m.extra = () => (extra ? extra() : "") + (LONJA.creando ? '<div class="opc-aparte lonja-crear"><button class="sl-accion" data-crear="1">' + idi("Crear") + '</button></div>' : "");
+    m.engancharExtra = hoja => {
+      if(enganchar) enganchar(hoja);
+      const b = hoja.querySelector("[data-crear]");
+      if(b) b.addEventListener("pointerdown", e => { e.preventDefault(); LONJA.creando = false; cerrarOpcionesSala(); });
+    };
+    return m;
+  }; }
+{ const _cop = cerrarOpcionesSala;
+  cerrarOpcionesSala = function(){
+    const sinCrear = LONJA.creando; LONJA.creando = false;
+    { const p = document.getElementById("portada"); if(p) p.classList.remove("lonja-creando"); }
+    const r = _cop.apply(this, arguments);
+    if(sinCrear){ cerrarRed(); quitarFondo(); pasoCamino(); }     /* has cerrado las opciones sin «Crear»: no hay sala */
+    return r;
+  }; }
+{ const _preg = preguntar;
+  preguntar = function(texto){
+    if(/^¿Salir del combate\?/.test(String(texto))){ arguments[0] = "¿Salir del combate?"; if(arguments.length > 2) arguments[2] = "Salir"; }
+    return _preg.apply(this, arguments);
+  }; }
+/* avisos del chat con el nombre del modo */
+{ const _reg = reglasQueCambian;
+  reglasQueCambian = function(antes, ahora){
+    if(!antes) return;
+    const nombre = r => r.n === 2 ? "1 vs 1" : r.n === 3 ? "3 jugadores" : (r.modo === "equipos" ? "2 vs 2 por equipos" : "4 jugadores modo libre");
+    if(antes.n !== ahora.n || (ahora.n === 4 && antes.modo !== ahora.modo)) salaApunta(idi(nombre(ahora)));
+    const resto = Object.assign({}, antes, { n:ahora.n, modo:ahora.modo });
+    return _reg.call(this, resto, ahora);
+  }; }
+/* el menú del asiento: IA · Ocupar asiento · Controlar asiento; X para cerrar; al poner IA se abre el selector */
+{ const _abrir = abrirAsiento;
+  abrirAsiento = function(i){
+    const r = _abrir.apply(this, arguments);
+    try{
+      const caja = document.getElementById("eligeL"); if(!caja) return r;
+      const hoja = caja.querySelector(".hoja-asiento"); if(!hoja) return r;
+      const pl = RED.plazas[i];
+      const bIA = hoja.querySelector("[data-ia]"), bMudar = hoja.querySelector("[data-mudar]"), bLlevo = hoja.querySelector("[data-llevo]"),
+            bSuelto = hoja.querySelector("[data-suelto]"), cerrar = hoja.querySelector(".cerrar");
+      if(bIA){
+        bIA.textContent = idi(pl.tipo === "ia" ? "Dejar asiento libre" : "IA");
+        const orig = bIA.onclick;
+        bIA.onclick = ev => { const era = pl.tipo; if(orig) orig(ev); if(era !== "ia" && RED.plazas[i] && RED.plazas[i].tipo === "ia") abrirAsiento(i); };
+      }
+      if(bMudar) bMudar.textContent = idi("Ocupar asiento");
+      if(bLlevo) bLlevo.textContent = idi("Controlar asiento");
+      if(bSuelto) bSuelto.textContent = idi("Dejar asiento libre");
+      const fila = hoja.querySelector(".fila");
+      [bIA, bMudar, bLlevo, bSuelto].filter(Boolean).forEach(b => { if(fila) fila.insertAdjacentElement("afterend", b); else hoja.appendChild(b); });
+      /* el orden: IA, Ocupar asiento, Controlar asiento, Dejar asiento libre (insertados al revés) */
+      [bSuelto, bLlevo, bMudar, bIA].filter(Boolean).forEach(b => { if(fila) fila.insertAdjacentElement("afterend", b); });
+      if(cerrar){
+        const x = document.createElement("button"); x.className = "cerrar-x"; x.setAttribute("aria-label", "cerrar"); x.innerHTML = X_SVG;
+        x.onclick = cerrar.onclick; hoja.insertBefore(x, hoja.firstChild); cerrar.remove();
+      }
+    }catch(e){}
+    return r;
+  }; }
+/* ---- enganches ---- */
+{ const _al = alLlegarMensaje;
+  alLlegarMensaje = function(m){
+    if(m && m.t === "hola") m.mimon = true;                     /* sin restricciones de Modo Mimón: entra quien sea */
+    if(m && m.t === "sinMimon") return;
+    const eraAnf = RED.papel === "anfitrion", veiaPublica = LONJA.vistaPublica;
+    const r0 = (function(){
+    if(m && m.t === "mudanza"){
+      if(RED.papel === "anfitrion" || m.de !== RED.jefe || typeof m.codigo !== "string") return;
+      irAInvitado(m.codigo, m.grupo, !!m.rapida); return;
+    }
+    if(m && m.t === "publica"){
+      if(RED.papel === "anfitrion") return;
+      LONJA.vistaPublica = !!m.si;
+      dibujarSala(); return;
+    }
+    if(m && m.t === "listo"){
+      if(RED.papel !== "anfitrion") return;
+      LONJA.listos[m.de] = !!m.si;
+      const k = plazaDe(m.de);
+      difundirListos(moteDePlaza(k >= 0 ? k : -1) + " " + idi(m.si ? "está listo" : "no está listo"), m.de); dibujarSala(); return;
+    }
+    if(m && m.t === "listos"){
+      if(RED.papel === "anfitrion") return;
+      LONJA.listos = (m.l && typeof m.l === "object") ? m.l : {};
+      if(typeof m.aviso === "string" && m.aviso && m.quien !== RED.yo) flotante(m.aviso);
+      dibujarSala(); return;
+    }
+    if(m && m.t === "mazo" && RED.papel === "anfitrion" && m.de !== RED.yo && LONJA.listos[m.de]){
+      LONJA.listos[m.de] = false;                       /* cambia de luchador: tiene que volver a pulsar Listo */
+      const k = plazaDe(m.de); difundirListos(moteDePlaza(k >= 0 ? k : -1) + " " + idi("no está listo"), m.de);
+    }
+    if(m && m.t === "grupo"){
+      if(RED.papel !== "anfitrion" || typeof m.grupo !== "string") return;
+      LONJA.grupos[m.de] = m.grupo;
+      sentarConLosSuyos(m.de);
+      comprobarRapida();
+      return;
+    }
+    if(m && m.t === "empezar" && m.rapida && RED.papel !== "anfitrion"){
+      const mesa = plazasSanas(m.plazas);
+      if(mesa && plazaDe(RED.yo) >= 0){ const guardadas = RED.plazas; RED.plazas = mesa; RED.modo = m.modo; mostrarPresentacion(); RED.plazas = guardadas; }
+      LONJA.enRapida = false;
+    }
+    const r = _al.call(this, m);
+    if(m && m.t === "sala" && LONJA.alSentar && plazaDe(RED.yo) >= 0 && RED.tubo){
+      const a = LONJA.alSentar; LONJA.alSentar = null;
+      try{ if(a.grupo) RED.tubo.enviar({ t:"grupo", grupo:a.grupo }); }catch(e){}
+      try{ if(a.mazo) RED.tubo.enviar({ t:"mazo", mazo:a.mazo, a:plazaDe(RED.yo) }); }catch(e){}
+    }
+    if(m && m.t === "sala" && RED.papel !== "anfitrion" && plazaDe(RED.yo) >= 0 && !LONJA.enRapida) quitarBusca();
+    if(m && m.t === "sala" && RED.papel !== "anfitrion" && LONJA.enRapida) mostrarBusca();
+    if(m && (m.t === "hola" || m.t === "adios" || m.t === "mazo") && RED.papel === "anfitrion" && !RED.activa){ anunciar(); comprobarRapida(); }
+    return r;
+    }).call(this);
+    if(!eraAnf && RED.papel === "anfitrion" && veiaPublica && salaAbierta() && !RED.activa && !LONJA.publica){
+      LONJA.publica = true; LONJA.desde = Date.now(); lonjaArrancar(); difundirEstadoPublica(); dibujarSala();   /* la sala sigue pública con el nuevo anfitrión */
+    }
+    return r0;
+  }; }
+/* en «por equipos», los que vienen juntos juegan juntos: cada pareja en su equipo */
+function difundirListos(aviso, quien){
+  if(RED.papel !== "anfitrion" || !RED.tubo) return;
+  if(aviso) flotante(aviso);
+  try{ RED.tubo.enviar({ t:"listos", l:LONJA.listos, aviso:aviso || "", quien:quien || "" }); }catch(e){}
+}
+function quienNoEstaListo(){
+  for(let k = 0; k < RED.plazas.length; k++){
+    const p = RED.plazas[k];
+    if(p.tipo === "persona" && p.quien && p.quien !== RED.yo && !LONJA.listos[p.quien]) return moteDePlaza(k);
+  }
+  return null;
+}
+function sentarConLosSuyos(quien){
+  if(RED.modo !== "equipos" || RED.activa || RED.n !== 4) return;
+  const g = LONJA.grupos[quien]; if(!g) return;
+  const sentados = RED.plazas.map((p, i) => (p.tipo === "persona" && p.quien) ? i : -1).filter(i => i >= 0);
+  const delGrupo = sentados.filter(i => LONJA.grupos[RED.plazas[i].quien] === g);
+  const resto = sentados.filter(i => LONJA.grupos[RED.plazas[i].quien] !== g);
+  if(delGrupo.length !== 2) return;
+  if(delGrupo[0] % 2 === delGrupo[1] % 2) return;
+  if(resto.length > 2) return;
+  const copia = RED.plazas.map(p => Object.assign({}, p));
+  const orden = [resto[0], delGrupo[0], resto[1], delGrupo[1]];
+  const vacio = () => ({ tipo:"persona", quien:null, mote:"", mazo:null, fuera:false });
+  for(let k = 0; k < 4; k++) RED.plazas[k] = (typeof orden[k] === "number") ? copia[orden[k]] : vacio();
+  RED.mio = plazaDe(RED.yo);
+  difundirSala(); dibujarSala();
+}
+{ const _dif = difundirSala;
+  difundirSala = function(){ const r = _dif.apply(this, arguments); difundirEstadoPublica(); return r; }; }
+{ const _arr = arrancarEnRed;
+  arrancarEnRed = function(){ lonjaParar(); LONJA.busca = null; quitarBusca(); return _arr.apply(this, arguments); }; }
+{ const _cer = cerrarRed;
+  cerrarRed = function(){ lonjaParar(); LONJA.publica = false; LONJA.vistaPublica = false; LONJA.grupos = {}; LONJA.rapidaModo = null; LONJA.listos = {}; LONJA.creando = false; return _cer.apply(this, arguments); }; }
+{ const _mesa = mesaSinCable;
+  mesaSinCable = function(){
+    LONJA.publica = false; LONJA.busca = null; LONJA.enRapida = false; quitarBusca();
+    return _mesa.apply(this, arguments);
+  }; }
+/* 1 vs IA desde «Partida rápida»: mesa local y al combate directamente */
+function jugarContraIA(){
+  if(!LONJA.rapidaMazo || !LONJA.iaMazo) return;
+  LONJA.pantalla = null;
+  cerrarRed(); CAMPANA.modo = null;
+  PARTIDA.n = 2; PARTIDA.bandos = false;
+  PARTIDA.asientos.forEach((a, i) => { a.mazo = (i === 0) ? LONJA.rapidaMazo : (i === 1 ? LONJA.iaMazo : null); a.humano = (i === 0); });
+  mesaSinCable();
+  const arranca = () => { const b = document.querySelector("#portada .pie-fila .empezar"); if(b && !b.disabled && b.onclick) b.click(); else setTimeout(arranca, 120); };
+  setTimeout(arranca, 60);
+}
+/* sin internet: se sigue pudiendo jugar contra la máquina */
+{ const _err = errorDeSala;
+  errorDeSala = function(dicho){
+    if(RED.papel === "anfitrion" && /arrancar el juego en red|llegar al buzón/.test(String(dicho))){
+      LONJA.sinRed = true; LONJA.publica = false; lonjaParar(); limpiarEstadoSala();
+      const viejo = document.querySelector("#portada .lonja-sw"); if(viejo) viejo.remove();
+      if(LONJA.rapidaModo){ LONJA.busca = null; quitarBusca(); LONJA.rapidaModo = null; cerrarRed(); pantallaRapida(true);
+        return _est0.call(this, idi("Sin conexión: puedes jugar contra la IA.")); }
+      return _est0.call(this, idi("Sin conexión: puedes jugar contra la IA."));
+    }
+    return _err.call(this, dicho);
+  }; }
+{ const _paso = pasoCamino;
+  pasoCamino = function(){
+    const r = _paso.apply(this, arguments);
+    try{
+      const p = document.getElementById("portada");
+      LONJA.pantalla = null;
+      const b = p.querySelector('[data-camino="solo"]');
+      const instr = p.querySelector('.opciones button[data-reglas]');
+      const enlace = p.querySelector('.pie-reglas [data-camino="codigo"]');
+      if(b){
+        b.textContent = idi("Partida rápida");
+        b.onclick = () => pantallaRapida();
+        const c = document.createElement("button"); c.setAttribute("data-camino", "sala"); c.textContent = idi("Crear sala");
+        c.onclick = () => {
+          CAMPANA.modo = null;
+          PARTIDA.n = 2; PARTIDA.bandos = false;
+          PARTIDA.asientos.forEach((a, i) => { a.mazo = null; a.humano = (i === 0); });
+          entrarEnMiSala();
+          LONJA.creando = true; SALA.opcionesDesdeChat = false; document.getElementById("portada").classList.add("lonja-creando"); abrirOpcionesSala();
+        };
+        b.insertAdjacentElement("afterend", c);
+      }
+      if(instr && enlace){
+        enlace.textContent = idi("Instrucciones"); enlace.removeAttribute("data-camino");
+        enlace.onclick = ev => { ev.preventDefault(); instr.onclick(ev); };
+        instr.remove();
+      }
+    }catch(e){}
+    return r;
+  }; }
+/* ---- lo que se ve ---- */
+{ const st = document.createElement("style"); st.textContent = `
+.portada.en-sala .cabecera{position:relative}
+/* mientras eliges las opciones de la sala nueva, la sala no está operativa: sin chat ni botones */
+.portada.lonja-creando .chat,.portada.lonja-creando .pie,.portada.lonja-creando .cuerpo,.portada.lonja-creando .cabecera{visibility:hidden;pointer-events:none}
+.portada.en-sala .clave{transition:none}
+.sl-quien.lonja-anf{color:#D8CDB8}
+.sl-quien .lonja-wifi{display:inline-block;width:13px;height:13px;vertical-align:-2px}
+.sl-quien .lonja-wifi.fuera{color:#D96F67}
+.portada.en-sala .cabecera.lonja-cab .clave-fila{position:static}
+.portada.en-sala .cabecera.lonja-cab .clave-fila .clave{position:absolute;left:50%;top:20px;transform:translateX(-50%);text-align:center;font-size:13.5px;letter-spacing:.26em}
+#portada .clave-fila .clave.mono,#portada .clave-fila .clave.mono:active,#portada .clave-fila .clave.mono:focus,#portada .clave-fila .clave.mono:focus-visible,#portada .clave-fila .clave.mono:hover,
+#portada:active .clave-fila .clave.mono,#portada .cabecera:active .clave-fila .clave.mono{color:#B7AFA1 !important;background:none !important;border-color:transparent !important;box-shadow:none !important;transition:none !important;animation:none !important;outline:none !important;opacity:1 !important;filter:none !important}
+#portada .clave-fila .clave.mono.copiado{color:#CDEBD3 !important}
+#portada .clave-fila .clave.mono .copia,#portada .clave-fila .clave.mono:active .copia,#portada .clave-fila .clave.mono:hover .copia{color:#544C40 !important;opacity:1 !important;transition:none !important;animation:none !important}
+#portada .clave-fila .clave.mono.copiado .copia{color:#9BD6A7 !important}
+/* al pulsar un icono de la losa (dedal, cámara, varita) la losa no se oscurece */
+.sl-silla:active:has(.sl-dd:active,.sl-cam:active,.sl-varita:active) .sl-losa{opacity:1}
+.portada.en-sala .cabecera.lonja-cab > .sl-altavoz{position:absolute;margin:0;z-index:3}
+.portada.en-sala .lonja-sw{position:absolute;right:20px;top:22px;z-index:3;margin:0;padding:0;background:none;border:0;display:flex;align-items:center;
+  justify-content:flex-end;gap:7px;font-family:inherit;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#B7AFA1;text-indent:0;cursor:pointer}
+.portada.en-sala .lonja-sw .pista{position:relative;width:32px;height:16px;border-radius:9px;background:#3A332A;border:1px solid #6A5E4C;transition:background .2s,border-color .2s;flex:0 0 auto}
+.portada.en-sala .lonja-sw .bola{position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:#B7AFA1;transition:left .2s,background .2s}
+.portada.en-sala .lonja-sw.es-publica{color:#8FD8A4}
+.portada.en-sala .lonja-sw.es-publica .pista{background:#2E5A3A;border-color:#5D8A68}
+.portada.en-sala .lonja-sw.es-publica .bola{left:18px;background:#8FD8A4}
+.portada.en-sala .lonja-sw.mirando{pointer-events:none}
+.lonja-rapida .lonja-losa .sitios{display:flex;justify-content:center;gap:9px;margin:4px 0 18px;border-top:0;padding:0}
+#eligeL.de-asiento .hoja-asiento{position:relative;padding-top:22px}
+#eligeL.de-asiento .cerrar-x{position:absolute;top:0;right:0;width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  padding:0 !important;background:none !important;border:0 !important;box-shadow:none !important;border-radius:0;line-height:0;color:var(--madera-viva);cursor:pointer;margin:0}
+#eligeL.de-asiento .cerrar-x svg{width:15px;height:15px;display:block}
+#eligeL.de-asiento .lonja-h{margin:6px 0 0;font-size:10.5px;font-weight:400;letter-spacing:.24em;text-transform:uppercase;color:#A99E88}
+#eligeL.de-asiento .lonja-fila{display:flex;gap:6px;justify-content:center;flex-wrap:nowrap;width:100%;max-width:310px}
+#eligeL.de-asiento .lonja-fila button{flex:1 1 0;min-width:0;max-width:110px;padding:8px 2px !important;font-size:10px !important;letter-spacing:0 !important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0}
+#eligeL.de-asiento .lonja-empezar{margin-top:6px}
+#eligeL.de-asiento .lonja-empezar:disabled{opacity:.4}
+#eligeL .luchador-b.lonja-azar .retrato{display:flex;align-items:center;justify-content:center;background:#1A1510;color:#D8CDB8}
+#eligeL .luchador-b.lonja-azar .retrato svg{width:45%;height:45%}
+.sl-losa .sl-varita{position:absolute;right:4px;top:4px;z-index:3;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  background:rgba(10,8,6,.62);color:#E6DCC6;border:1px solid rgba(239,231,210,.25)}
+.sl-losa .sl-varita svg{width:15px;height:15px;display:block}
+#opcionesSala .lonja-crear{display:flex;justify-content:center;margin-top:14px}
+#opcionesSala .lonja-crear .sl-accion{width:250px;min-height:42px}
+.lonja-rapida .lonja-modos{display:flex;flex-direction:column;gap:8px;align-items:center}
+.lonja-rapida .lonja-modos button{display:flex;align-items:center;justify-content:center;width:250px;min-height:44px;padding:11px 16px;
+  font-family:inherit;font-size:13.5px;letter-spacing:.10em;text-transform:uppercase;color:#ECDCC0;background:rgba(14,12,10,.35);
+  border:1px solid rgba(239,231,210,.35);border-radius:6px;text-indent:0;margin:0}
+.lonja-rapida .lonja-modos button:disabled{opacity:.4}
+.lonja-rapida .lonja-modos button:active{background:rgba(40,32,22,.66)}
+@keyframes lonjaGira{to{transform:rotate(360deg)}}
+#capaBusca,#capaPresenta{position:fixed;inset:0;z-index:99000;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 35%,rgba(40,30,20,.96),rgba(6,5,4,.98));color:#D8CDB8;font-family:inherit}
+#capaBusca .bus-centro{display:flex;flex-direction:column;align-items:center;gap:22px}
+#capaBusca .bus-anillo{width:30px;height:30px;border-radius:50%;border:2px solid #CDEBD3;border-right-color:transparent;animation:lonjaGira 1.1s linear infinite}
+#capaBusca .bus-texto{margin:0;font-size:12px;letter-spacing:.12em}
+#capaBusca .bus-cancelar{margin-top:10px;width:250px;min-height:42px}
+#capaPresenta{transition:opacity .7s ease}
+#capaPresenta.se-va{opacity:0}
+#capaPresenta .pre-centro{display:flex;flex-direction:column;align-items:center;gap:18px;width:100%}
+#capaPresenta .pre-centro > .pre-lado,#capaPresenta .pre-vs{display:inline-flex}
+#capaPresenta .pre-centro{flex-direction:row;flex-wrap:wrap;justify-content:center}
+#capaPresenta .pre-lado{display:flex;gap:14px;align-items:flex-end;justify-content:center}
+#capaPresenta .pre-uno{display:flex;flex-direction:column;align-items:center;gap:8px;animation:preSube .6s ease-out both}
+#capaPresenta .pre-losa{width:118px;height:176px;border-radius:9px;background-size:cover;background-position:center top;
+  box-shadow:0 10px 30px rgba(0,0,0,.7),0 0 0 1px rgba(255,235,200,.18)}
+#capaPresenta .pre-nombre{font-size:13px;letter-spacing:.08em;color:#EADFC8;max-width:118px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#capaPresenta .pre-vs{font-size:34px;letter-spacing:.14em;color:#C74A3C;margin:0 14px;align-self:center;text-shadow:0 0 18px rgba(199,74,60,.6);animation:preSube .6s .2s ease-out both}
+#capaPresenta .pre-vs.chico{font-size:20px;margin:0 4px}
+#capaPresenta .pre-texto{flex:1 0 100%;text-align:center;margin:8px 0 0;font-size:15px;letter-spacing:.14em;color:#CDEBD3;animation:preSube .6s .35s ease-out both}
+@keyframes preSube{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@media (max-width:420px){ #capaPresenta .pre-losa{width:96px;height:143px} #capaPresenta .pre-vs{font-size:26px;margin:0 8px} }
+`; document.head.appendChild(st); }
+{ const _dib = dibujarSala;
+  dibujarSala = function(){
+    if(LONJA.pantalla === "rapida" && !RED.activa){ pantallaRapida(true); return; }   /* en Partida rápida se redibuja esa pantalla, no la sala */
+    const r = _dib.apply(this, arguments);
+    try{
+      /* la cámara de la sala: carga o quita la foto */
+      document.querySelectorAll("#portada .sl-losa .sl-cam").forEach(c => camaraEn(c.parentElement));
+      /* mi foto, siempre en mi primera losa */
+      try{
+        const f = (typeof avatarMio === "function") ? avatarMio() : "";
+        const k = (RED.plazas || []).findIndex(q => q.tipo === "persona" && q.quien === RED.yo);
+        const losa = (f && k >= 0) ? document.querySelector('#portada .sl-silla[data-asiento="' + k + '"] .sl-losa') : null;
+        if(losa && !(losa.style.backgroundImage || "").includes("data:image")){
+          losa.style.backgroundImage = "url(" + f + ")"; losa.style.backgroundSize = "cover"; losa.style.backgroundPosition = "center"; losa.classList.add("puesta");
+        }
+      }catch(e){}
+      if(!RED.activa && SALA.paso === "entrar" && LONJA.desdeRapida){
+        const atras = document.querySelector('#portada [data-atras]');
+        if(atras) atras.onclick = () => { LONJA.desdeRapida = false; cerrarRed(); pantallaRapida(); };
+      }
+      if(RED.activa || SALA.paso !== "dentro") return r;
+      LONJA.desdeRapida = false;
+      const p = document.getElementById("portada");
+      if(!p) return r;
+      const fila = p.querySelector(".clave-fila");
+      if(!fila || !salaAbierta()) return r;
+      const anf = RED.papel === "anfitrion";
+      const publica = anf ? LONJA.publica : LONJA.vistaPublica;
+      const cerrarIc = p.querySelector("[data-cerrarsala]"); if(cerrarIc) cerrarIc.style.display = "none";
+      const cab = fila.closest(".cabecera") || fila.parentElement, clave = fila.querySelector(".clave");
+      cab && cab.querySelectorAll(".lonja-sw").forEach(e => e.remove());
+      if(cab && clave){
+        cab.classList.add("lonja-cab");
+        const alt = fila.querySelector(".sl-altavoz"), h1 = cab.querySelector("h1");
+        if(alt && h1){ cab.appendChild(alt); alt.style.left = h1.offsetLeft + "px"; alt.style.top = (h1.offsetTop + h1.offsetHeight + 2) + "px"; }
+      }
+      if(cab && clave && !LONJA.sinRed && !LONJA.rapidaModo){
+        const b = document.createElement("button");
+        b.className = "lonja-sw" + (publica ? " es-publica" : "") + (anf ? "" : " mirando");
+        b.innerHTML = '<span class="txt">' + idi(publica ? "Pública" : "Privada") + '</span><span class="pista"><span class="bola"></span></span>';
+        b.setAttribute("aria-label", idi(publica ? "Pública" : "Privada"));
+        b.onclick = ev => { ev.stopPropagation(); if(anf) ponerPublica(!LONJA.publica); };
+        cab.appendChild(b);
+      }
+      /* fuera «rellenar asientos» y el icono de cerrar sala; la fila «Partida rápida · Entrar en sala» bajo el botón grande */
+      if(LONJA.sinRed){
+        if(clave){ clave.innerHTML = '<span class="copia">' + idi("sin conexión") + '</span>'; clave.onclick = null; }
+      }
+      /* 2 vs 2: los azules a un lado y los rojos al otro */
+      if(RED.modo === "equipos" && RED.n === 4){
+        const sitios = p.querySelector(".sitios");
+        const sillas = sitios ? [...sitios.querySelectorAll(".sl-silla")] : [];
+        if(sillas.length === 4) [0, 2, 1, 3].forEach(k => sitios.appendChild(sillas[k]));
+      }
+      /* conectado / desconectado: icono de wifi */
+      p.querySelectorAll(".sl-quien").forEach(q => {
+        const t = q.textContent.trim();
+        if(t === idi("conectado")) q.innerHTML = WIFI_SVG;
+        else if(t === idi("desconectado")) q.innerHTML = WIFI_SVG.replace('class="lonja-wifi"', 'class="lonja-wifi fuera"').replace('</svg>', '<path d="M3 3l18 18"/></svg>');
+      });
+      /* quién es el anfitrión, bajo su losa */
+      if(salaAbierta()){
+        const kj = RED.plazas.findIndex(q => q.tipo === "persona" && q.quien === RED.jefe);
+        const silla = kj >= 0 ? p.querySelector('.sl-silla[data-asiento="' + kj + '"]') : null;
+        if(silla){
+          let q = silla.querySelector(".sl-quien");
+          if(!q){ q = document.createElement("div"); q.className = "sl-quien"; silla.appendChild(q); }
+          q.textContent = idi("anfitrión"); q.classList.add("lonja-anf");
+        }
+      }
+      /* la varita en las losas donde puedo elegir luchador */
+      p.querySelectorAll(".sl-silla").forEach(silla => {
+        const i = parseInt(silla.dataset.asiento, 10); const pl = RED.plazas[i]; if(!pl) return;
+        const puedo = (pl.tipo === "persona" && pl.quien === RED.yo) || (pl.tipo === "ia" && RED.papel === "anfitrion");
+        if(!puedo || CAMPANA.modo) return;
+        const losa = silla.querySelector(".sl-losa"); if(!losa) return;
+        ponerVarita(losa, () => {
+          const usados = new Set(RED.plazas.filter((x, k) => k !== i && x.mazo).map(x => x.mazo));
+          const libres = (CAMPANA.modo ? luchadoresCampana(CAMPANA.modo) : MAZOS.filter(m => !m.base && desbloqueado(m.id)).map(m => m.id));
+          let bolsa = libres.filter(id => !usados.has(id)); if(!bolsa.length) bolsa = libres; if(!bolsa.length) return;
+          const id = bolsa[Math.floor(Math.random() * bolsa.length)];
+          PARTIDA.asientos[i].mazo = id;
+          if(RED.papel === "anfitrion"){ RED.plazas[i].mazo = id; difundirSala(); dibujarSala(); }
+          else { try{ RED.tubo.enviar({ t:"mazo", mazo:id, a:i }); }catch(e){} }
+        });
+      });
+      /* Listo (invitados) y Empezar combate (anfitrión) */
+      const grande = p.querySelector(".pie-fila .empezar");
+      if(grande && !LONJA.rapidaModo && !LONJA.enRapida){
+        if(anf){
+          if(/Empezar el combate/.test(grande.textContent)) grande.textContent = idi("Empezar combate");
+          const orig = grande.onclick;
+          if(orig && !grande.disabled) grande.onclick = ev => {
+            const falta = quienNoEstaListo();
+            if(falta){ flotante(falta + " " + idi("no está listo")); return; }
+            return orig.call(grande, ev);
+          };
+        }else{
+          const mios = asientosDe(RED.yo);
+          const conLuchador = mios.length && mios.every(k => RED.plazas[k].mazo);
+          const listo = !!LONJA.listos[RED.yo];
+          if(conLuchador){
+            grande.disabled = false; grande.classList.toggle("listo", !listo);
+            grande.textContent = idi(listo ? "Cancelar" : "Listo");
+            grande.onclick = () => { try{ RED.tubo.enviar({ t:"listo", si:!listo }); }catch(e){} };
+          }
+        }
+      }
+    }catch(e){}
+    return r;
+  }; }
+})();
+</script>
+<!-- 28-10-2026 (Artur): página de la campaña con sus fases (Entrenamiento · Campeonato · Isla Negra · Dedal) -->
+<script>/* 28-10-2026 (Artur): página de la campaña con sus fases */
+(function(){
+Object.assign(TRAD, { "Instrucciones de campaña": "Campaign guide", "Entrenamiento": "Training", "Campeonato": "Championship", "La campaña": "Campaign" });
+const CF = { desde:false };
+const DEDAL_VISTO = CAMPANA_LLAVE + "-dedal-explicado";
+function dedalExplicado(){ try{ return localStorage.getItem(DEDAL_VISTO) === "1"; }catch(e){ return false; } }
+function marcarDedal(){ try{ localStorage.setItem(DEDAL_VISTO, "1"); }catch(e){} }
+function empezarDedalYa(){ const D = window.CAMPANA_DEDAL; if(!D) return; marcarDedal(); CAMPANA.elegido = (D.dd().yo || null); salirCamp(); D.abrirDedal(); }
+const IZQ_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>';
+const DER_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
+/* la página de la campaña Dedal dentro de las instrucciones (la cuarta, cuando el Dedal está desbloqueado) */
+function paginaDedalInfo(){
+  const r = paginaCamp(
+    '<p class="cita">' + idi("Hilo, aguja y dedal") + '</p>' +
+    '<div class="cp-bocadillo">' +
+      '<p class="cp-fase-t"><b class="cp-e1">' + idi("Campaña Dedal") + '</b></p>' +
+      '<p>' + idi("Todos los personajes poseen la habilidad de coser y crear Sastrilegios de todos los niveles.") + '</p>' +
+      '<p>' + idi("Gana combates con el personaje que quieras para desbloquear la habilidad en el modo «Crear mazo».") + '</p>' +
+      '<p>' + idi("Una vez desbloquees todos los mazos, podrás coser cartas de cualquier personaje en el modo «Crear mazo».") + '</p>' +
+    '</div>' +
+    '<div class="cp-flechas">' +
+      '<button class="cerrar-hoja" id="cpAtras" aria-label="Anterior">' + IZQ_SVG + '</button>' +
+      '<span class="cp-medio"><button class="cerrar-hoja" id="cpTerminar">' + idi("Terminar") + '</button></span>' +
+      '<button class="cerrar-hoja cp-oculta" aria-label="Siguiente">' + DER_SVG + '</button>' +
+    '</div>',
+    '<button class="cerrar-hoja" id="cerrarReglas">' + idi("Volver") + '</button>');
+  r.classList.toggle("cf-centro", !!CF.desde);
+  r.querySelector("#cpAtras").onclick = () => { CP_PASO = 2; reglasCampana(); };
+  r.querySelector("#cpTerminar").onclick = () => { try{ localStorage.setItem(CP_VISTA, "1"); }catch(e){} marcarDedal(); paginaFases(); };
+  r.querySelector("#cerrarReglas").onclick = () => paginaFases();
+}
+function dCamp(){ return datosCampana(); }
+function campEmpezada(){
+  const d = dCamp();
+  return campanaExplicada() || d.fase !== "entrenamiento" || (d.libres || []).length > 1 ||
+         ((d.vencidos && d.vencidos.entrenamiento) || []).length > 0;
+}
+function dedalAbierto(){ const d = dCamp(); return MODO_TODO || ((d.fase === "isla_negra" || d.fase === "fin") && d.libres.indexOf("ladron") !== -1 && d.libres.indexOf("costurera") !== -1); }
+function islaHecha(){ const d = dCamp(); if(d.fase !== "fin") return false; const N = window.CAMPANA_NUEVOS; return !(N && N.pendiente && N.pendiente()); }
+function dedalHecho(){ const D = window.CAMPANA_DEDAL; return !!(D && D.dd && D.dd().fin); }
+function paginaCamp(cuerpo, pie){
+  const r = document.getElementById("reglas");
+  document.body.classList.add("enReglas"); REGLAS_VISTA = "campana";
+  r.classList.toggle("entreno", true); r.classList.toggle("leer", true); r.classList.add("cp-pasos");
+  r.innerHTML = '<div class="cabecera"><h1>' + idi("La campaña") + '</h1></div>' +
+    '<div class="cuerpo"><div class="hojas"><div class="texto cp-reglas">' + cuerpo + '</div></div></div>' +
+    '<div class="pie cp-pie">' + pie + '</div>';
+  traducirNodo(r); r.classList.add("abierta");
+  return r;
+}
+function salirCamp(){ const r = document.getElementById("reglas"); if(r){ r.classList.remove("cp-pasos"); r.classList.remove("cf-centro"); } cerrarReglas(); }
+/* la página de las fases */
+function paginaFases(){
+  CF.desde = false; CP_PASO = 0;
+  { const rg = document.getElementById("reglas"); if(rg) rg.classList.remove("cf-centro"); }
+  const d = dCamp();
+  const idx = d.fase === "fin" ? 3 : FASES_CAMPANA.indexOf(d.fase);
+  const fases = [
+    { id:"entrenamiento", nombre:"Entrenamiento", hecha: idx > 0, toca: idx === 0 },
+    { id:"campeonato", nombre:"Campeonato", hecha: idx > 1, toca: idx === 1 },
+    { id:"isla_negra", nombre:"Isla Negra", hecha: islaHecha(), toca: idx >= 2 && !islaHecha() },
+    { id:"dedal", nombre:"Dedal", hecha: dedalHecho(), toca: dedalAbierto() && !dedalHecho() }
+  ];
+  const boton = f => '<button class="cerrar-hoja' + (f.hecha ? ' cp-hecha' : '') + '" data-fase="' + f.id + '"' +
+    ((f.hecha || !f.toca) ? ' disabled' : '') + (!f.hecha && !f.toca ? ' style="opacity:.45"' : '') + '>' +
+    idi(f.nombre) + (f.hecha ? '<span class="cp-tic">✓</span>' : '') + '</button>';
+  const r = paginaCamp(
+    '<div class="cp-botones">' + fases.filter(f => f.hecha || f.toca).map(boton).join("") + '</div>',
+    '<div class="pie-reglas cf-link"><button class="rellenar mono ver-reglas" id="cfInstr">' + idi("Instrucciones de campaña") + '</button></div>' +
+    '<button class="cerrar-hoja" id="cerrarReglas">' + idi("Volver") + '</button>');
+  r.querySelector("#cerrarReglas").onclick = () => salirCamp();
+  r.querySelector("#cfInstr").onclick = () => { CF.desde = true; CP_PASO = 0; reglasCampana(); };
+  r.querySelectorAll("[data-fase]").forEach(b => b.onclick = () => {
+    const f = b.dataset.fase;
+    if(f === "dedal"){
+      const D = window.CAMPANA_DEDAL; if(!D) return;
+      if(dedalExplicado()){ empezarDedalYa(); return; }        /* ya vista la explicación: directo */
+      D.reglasDedal();
+      const v = document.getElementById("cpVolverElegir"); if(v) v.onclick = () => paginaFases();
+      const e = document.getElementById("cpEmpezarDedal"); if(e) e.onclick = () => empezarDedalYa();
+      return;
+    }
+    CAMPANA.dedal = false; if(f === "isla_negra") CAMPANA.irIsla = true;
+    salirCamp(); abrirCampana();
+  });
+}
+window.paginaFases = paginaFases;
+/* las instrucciones: al acabarlas (o saltarlas, o volver) se va a la página de las fases */
+{ const _rc = reglasCampana;
+  reglasCampana = function(){
+    if(CP_PASO >= 3 && dedalAbierto()){ paginaDedalInfo(); return; }     /* cuarta página: el Dedal */
+    const r = _rc.apply(this, arguments);
+    try{
+      const rg = document.getElementById("reglas"); if(rg) rg.classList.toggle("cf-centro", !!CF.desde);
+      const ter = document.getElementById("cpTerminar"), sal = document.getElementById("cpSaltar"), vol = document.getElementById("cerrarReglas"), sig = document.getElementById("cpSigue");
+      if(CP_PASO === 2 && dedalAbierto() && sig){                        /* con Dedal, la fase 3 no es la última */
+        sig.classList.remove("cp-oculta"); sig.onclick = () => { CP_PASO = 3; reglasCampana(); };
+        if(ter){
+          if(campanaExplicada()){ ter.id = "cpSaltar"; ter.textContent = idi("Saltar"); ter.onclick = () => paginaFases(); }
+          else ter.remove();
+        }
+      }else{
+        if(ter) ter.onclick = () => { try{ localStorage.setItem(CP_VISTA, "1"); }catch(e){} paginaFases(); };
+      }
+      if(sal) sal.onclick = () => paginaFases();
+      if(vol && CF.desde) vol.onclick = () => paginaFases();
+    }catch(e){}
+    return r;
+  }; }
+/* instrucciones: al abrir un apartado se cierra el que estuviera abierto */
+{ const _ri = reglasInstrucciones;
+  reglasInstrucciones = function(){
+    const r = _ri.apply(this, arguments);
+    try{
+      const todos = [...document.querySelectorAll("#reglas .hojas details")];
+      todos.forEach(d => d.addEventListener("toggle", () => { if(d.open) todos.forEach(o => { if(o !== d && o.open) o.open = false; }); }));
+    }catch(e){}
+    return r;
+  }; }
+/* orden de los personajes: … Minero, Dr. When, Hilvana, Mimón, Mochi (en las listas y en las rutas de la campaña) */
+try{
+  { const k = MAZOS.findIndex(m => m.id === "riko");
+    if(k >= 0){ const [r] = MAZOS.splice(k, 1); const j = MAZOS.findIndex(m => m.id === "mochi"); MAZOS.splice(j < 0 ? MAZOS.length : j, 0, r); } }
+  ["campeonato", "isla_negra"].forEach(f => {
+    const R = RUTAS_CAMPANA[f]; const k = R.indexOf("riko"); if(k < 0) return;
+    R.splice(k, 1);
+    const c = R.indexOf("costurera");
+    R.splice(c >= 0 ? c + 1 : Math.max(0, R.length - 1), 0, "riko");
+  });
+}catch(e){}
+/* ── LOGROS de Dr. When, Hilvana y «cose con cada luchador» (28-10-2026, Artur) ── */
+try{
+  const E3 = [10, 25, 50], E1 = [1, 10, 25];
+  const pon = L => { if(LOGROS_DEF.some(x => x.id === L.id)) return; const k = LOGROS_DEF.findIndex(x => x.s === "misc"); LOGROS_DEF.splice(k < 0 ? LOGROS_DEF.length : k, 0, L); };
+  pon({ id:"ladron_gana", c:"{n} con Dr. When", s:"pj:ladron", t:"Gana {n} partidas con Dr. When", esc:E3 });
+  pon({ id:"ladron_viaja", c:"{n} viajes", s:"pj:ladron", t:"Viaja al pasado {n} veces", esc:E3 });
+  pon({ id:"ladron_rebobina", c:"{n} rebobinados", s:"pj:ladron", t:"Rebobina {n} veces", esc:E3 });
+  pon({ id:"ladron_altera", c:"{n} alteraciones", s:"pj:ladron", t:"Altera la línea temporal {n} veces", esc:E3 });
+  pon({ id:"ladron_asalto", c:"{n} en el pasado", c1:"En el pasado", s:"pj:ladron", t:"Gana {n} asaltos estando en el pasado", t1:"Gana 1 asalto estando en el pasado", esc:E1 });
+  pon({ id:"ladron_ko", c:"{n} KO al volver", c1:"KO al volver", s:"pj:ladron", t:"Altera la línea temporal y deja al rival a 0 PV al volver {n} veces", t1:"Altera la línea temporal y deja al rival a 0 PV al volver", esc:[1, 5, 10] });
+  pon({ id:"costurera_gana", c:"{n} con Hilvana", s:"pj:costurera", t:"Gana {n} partidas con Hilvana", esc:E3 });
+  pon({ id:"costurera_menor", c:"{n} menores", s:"pj:costurera", t:"Cose {n} Sastrilegios avanzados o expertos", esc:E3 });
+  pon({ id:"costurera_maestro", c:"{n} maestros", s:"pj:costurera", t:"Cose {n} Sastrilegios maestros", esc:[5, 10, 25] });
+  pon({ id:"costurera_mayor", c:"{n} mayores", s:"pj:costurera", t:"Cose {n} Sastrilegios mayores", esc:E3 });
+  pon({ id:"costurera_juega_mayor", c:"{n} mayores jugados", s:"pj:costurera", t:"Juega {n} Sastrilegios mayores", esc:E3 });
+  /* con cada luchador: cose sastrilegios (solo con la campaña Dedal abierta) */
+  MAZOS.filter(m => !m.base && !m.mimon && m.id !== "costurera").forEach(m => {
+    const n = m.corto || m.nombre;
+    const L = { id:m.id + "_cose", c:"{n} cosidos", s:"pj:" + m.id, t:"Cose {n} sastrilegios con " + n, esc:E3, ve:() => dedalAbierto() };
+    if(LOGROS_DEF.some(x => x.id === L.id)) return;
+    let k = -1; LOGROS_DEF.forEach((x, j) => { if(x.s === "pj:" + m.id) k = j; });
+    if(k >= 0) LOGROS_DEF.splice(k + 1, 0, L); else pon(L);
+  });
+  Object.assign(TRAD, {
+    "Gana {n} partidas con Dr. When": "Win {n} games with Dr. When", "{n} con Dr. When": "{n} with Dr. When",
+    "Viaja al pasado {n} veces": "Travel to the past {n} times", "{n} viajes": "{n} trips",
+    "Rebobina {n} veces": "Rewind {n} times", "{n} rebobinados": "{n} rewinds",
+    "Altera la línea temporal {n} veces": "Alter the timeline {n} times", "{n} alteraciones": "{n} alterations",
+    "Gana {n} asaltos estando en el pasado": "Win {n} rounds while in the past", "Gana 1 asalto estando en el pasado": "Win 1 round while in the past",
+    "{n} en el pasado": "{n} in the past", "En el pasado": "In the past",
+    "Altera la línea temporal y deja al rival a 0 PV al volver {n} veces": "Alter the timeline and leave the rival at 0 HP on return {n} times",
+    "Altera la línea temporal y deja al rival a 0 PV al volver": "Alter the timeline and leave the rival at 0 HP on return",
+    "{n} KO al volver": "{n} KO on return", "KO al volver": "KO on return",
+    "Gana {n} partidas con Hilvana": "Win {n} games with Hilvana", "{n} con Hilvana": "{n} with Hilvana",
+    "Cose {n} Sastrilegios avanzados o expertos": "Sew {n} Advanced or Expert Sewceries", "{n} menores": "{n} minor",
+    "Cose {n} Sastrilegios maestros": "Sew {n} Master Sewceries", "{n} maestros": "{n} master",
+    "Cose {n} Sastrilegios mayores": "Sew {n} Greater Sewceries", "{n} mayores": "{n} greater",
+    "Juega {n} Sastrilegios mayores": "Play {n} Greater Sewceries", "{n} mayores jugados": "{n} greater played",
+    "{n} cosidos": "{n} sewn"
+  });
+  MAZOS.filter(m => !m.base && !m.mimon && m.id !== "costurera").forEach(m => { const n = m.corto || m.nombre; TRAD["Cose {n} sastrilegios con " + n] = "Sew {n} Sewceries with " + n; });
+  /* lo que pasa en la partida, leído de los avisos del juego */
+  const LG = { enPasado:false, alterada:false };
+  const miSeat = () => { try{ return logrosYo(); }catch(e){ return -1; } };
+  const mio = () => { const k = miSeat(); return (k >= 0 && typeof logrosMio === "function" && logrosMio(k)) ? ESTADO.asientos[k] : null; };
+  const esMiNombre = (texto, a) => !!a && String(texto).indexOf(a.nombre + " ") === 0;
+  const nivelDe = nombre => ({ "Sastrilegio avanzado":2, "Sastrilegio experto":3, "Sastrilegio maestro":4, "Sastrilegio mayor":5 })[nombre] || 0;
+  { const _an = anotar;
+    anotar = function(texto, clase){
+      try{
+        const t = String(texto || ""), a = mio();
+        if(a && a.mazoId === "ladron" && esMiNombre(t, a)){
+          if(/ altera el pasado: vuelve a la marca/.test(t)){ logroCuenta("ladron_viaja"); LG.enPasado = true; LG.alterada = false; }
+          else if(/ rebobina: todo vuelve a la marca/.test(t)) logroCuenta("ladron_rebobina");
+        }
+        if(a && a.mazoId === "ladron" && LG.enPasado && /^Línea temporal alterada \(/.test(t)){ logroCuenta("ladron_altera"); LG.alterada = true; }
+        if(t === "Vuelta al presente."){
+          const sim = LG.alterada, yo = miSeat(); LG.enPasado = false; LG.alterada = false;
+          if(a && a.mazoId === "ladron" && sim) setTimeout(() => {
+            try{ if(ESTADO.asientos.some((s, k) => k !== yo && !sonAliados(yo, k) && !s.fuera && s.pv <= 0)) logroCuenta("ladron_ko"); }catch(e){}
+          }, 0);
+        }
+        if(a && esMiNombre(t, a)){
+          const m = t.match(/ cose .+: sale (Sastrilegio \w+)\.$/);
+          if(m){
+            const nv = nivelDe(m[1]);
+            if(a.mazoId === "costurera"){
+              if(nv === 2 || nv === 3) logroCuenta("costurera_menor"); else if(nv === 4) logroCuenta("costurera_maestro"); else if(nv === 5) logroCuenta("costurera_mayor");
+            }else if(a.mazoId && !esMimo(a)){
+              const id = (a.mazoId === "okumajefe") ? "okuma" : a.mazoId;
+              if(LOGROS_DEF.some(x => x.id === id + "_cose")) logroCuenta(id + "_cose");
+            }
+          }
+        }
+      }catch(e){}
+      return _an.apply(this, arguments);
+    }; }
+  { const _fa = finAsalto;
+    finAsalto = function(ganador){
+      try{
+        const a = mio(), yo = miSeat();
+        if(a && a.mazoId === "ladron" && LG.enPasado && typeof ganador === "number" && ganador >= 0 && (ganador === yo || sonAliados(yo, ganador))) logroCuenta("ladron_asalto");
+      }catch(e){}
+      return _fa.apply(this, arguments);
+    }; }
+  { const _lt = lanzarTecnica;
+    lanzarTecnica = function(origen, objetivo, carta){
+      try{ if(typeof logrosSoy === "function" && logrosSoy(origen, "costurera") && carta && (/(^|_)h5_/.test(String(carta.id)) || carta.nombre === "Sastrilegio mayor" || carta.n === "Sastrilegio mayor")) logroCuenta("costurera_juega_mayor"); }catch(e){}
+      return _lt.apply(this, arguments);
+    }; }
+  { const _lfc = logrosFinCombate;
+    logrosFinCombate = function(equipo){
+      let gane = false, a = null;
+      try{ if(LOGRO.p && !TUTO.activo){ const yo = logrosYo(); a = ESTADO.asientos[yo]; gane = !!a && equipo.indexOf(yo) !== -1; } }catch(e){}
+      const r = _lfc.apply(this, arguments);
+      try{ if(gane && a && !esMimo(a) && (a.mazoId === "ladron" || a.mazoId === "costurera")) logroCuenta(a.mazoId + "_gana"); }catch(e){}
+      return r;
+    }; }
+}catch(e){ console.error("logros nuevos:", e); }
+/* «Cómo se juega»: Versión iPhone (GitHub) y Versión escritorio (itch.io) */
+Object.assign(TRAD, { "Versión iPhone": "iPhone version", "Versión escritorio": "Desktop version" });
+{ const _rp = reglasPuertas;
+  reglasPuertas = function(){
+    const r = _rp.apply(this, arguments);
+    try{
+      const rec = document.querySelector("#reglas .recado");
+      if(rec){
+        rec.innerHTML =
+          '<p class="nostr rotulo-nostr">' + idi("Versión iPhone") + '</p>' +
+          '<p class="nostr"><a href="https://islanegra.github.io/Isla-Negra/" target="_blank" rel="noopener noreferrer">islanegra.github.io/Isla-Negra</a></p>' +
+          '<p class="nostr rotulo-nostr nostr-atajo2">' + idi("Versión escritorio") + '</p>' +
+          '<p class="nostr"><a href="https://islanegra.itch.io/sombras-sobre-isla-negra" target="_blank" rel="noopener noreferrer">islanegra.itch.io/sombras-sobre-isla-negra</a></p>';
+        rec.querySelectorAll("a[href^='http']").forEach(a => a.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); window.open(a.href, "_blank", "noopener,noreferrer"); }));
+      }
+    }catch(e){}
+    return r;
+  }; }
+/* el botón «Campaña» de la portada */
+{ const _paso = pasoCamino;
+  pasoCamino = function(){
+    const r = _paso.apply(this, arguments);
+    try{
+      const b = document.querySelector('#portada [data-camino="campana"]');
+      if(b) b.onclick = () => { if(campEmpezada()) paginaFases(); else { CF.desde = false; abrirReglasCampana(); } };
+    }catch(e){}
+    return r;
+  }; }
+{ const st = document.createElement("style"); st.textContent =
+  /* el mismo enlace que «Instrucciones» en la portada */
+  ".reglas .pie.cp-pie{flex-wrap:wrap}" +
+  ".nostr.rotulo-nostr.nostr-atajo2{margin-top:12px}" +
+  /* las instrucciones desde la página de campaña: el recuadro centrado en la pantalla */
+  ".reglas.cp-pasos .cp-bocadillo::before{display:none}" +
+  ".reglas.cp-pasos.cf-centro .cuerpo{display:flex;flex-direction:column}" +
+  ".reglas.cp-pasos.cf-centro .cuerpo .hojas{flex:1 1 auto;display:flex;flex-direction:column;width:100%}" +
+  ".reglas.cp-pasos.cf-centro .cuerpo .hojas .cp-reglas{flex:1 1 auto;display:flex;flex-direction:column}" +
+  ".reglas.cp-pasos.cf-centro .cp-reglas .cp-bocadillo{margin-top:auto}" +
+  ".reglas.cp-pasos.cf-centro .cp-reglas .cp-flechas{margin-bottom:auto}" +
+  ".reglas .cp-pie .cf-link{flex:1 0 100%;margin:0 0 12px;padding:0;text-align:center}" +
+  ".reglas .cp-pie .cf-link .ver-reglas{display:table;width:auto;margin:5px auto;padding:0;" +
+    "font-family:\"Isla Serif\",\"Iowan Old Style\",Georgia,serif;font-size:12px;letter-spacing:.10em;" +
+    "text-transform:none;color:#9A9080;text-decoration:none;background:none;border:0;opacity:1;cursor:pointer}" +
+  ".reglas .cp-pie .cf-link .ver-reglas::after{content:'';display:block;width:40px;height:1px;" +
+    "margin:5px auto 0;background:linear-gradient(90deg,transparent,#5E4A33,transparent)}";
+  document.head.appendChild(st); }
+})();
+</script>
+<script>/* rapida_crear_v1 (29-10-2026, Artur): «Crea tu personaje» en Partida rápida, en los dos menús (el tuyo y el de la IA),
+   igual que en la sala: el Mimón sale de la rejilla y va debajo, con su rótulo; al tocarlo se abre Crear mazo
+   y el mazo creado (Mazo simple o Mazo doble) llega al combate (1 vs IA) y a la sala (1 vs 1, 2 vs 2, 3-4). */
+(function(){
+"use strict";
+if(typeof LONJA === "undefined" || typeof pantallaRapida !== "function") return;
+LONJA.rapidaMim = LONJA.rapidaMim || null;   /* el mazo creado para mí */
+LONJA.iaMim = LONJA.iaMim || null;           /* el mazo creado para la máquina */
+const esCreado = m => m === "libre" || m === "riko";
+function mimDe(cual){ return cual === 0 ? LONJA.rapidaMim : LONJA.iaMim; }
+function ponMim(cual, mim){ if(cual === 0) LONJA.rapidaMim = mim; else LONJA.iaMim = mim; }
+/* los asientos de la sala, preparados para que Crear mazo trabaje sobre ellos */
+function plazasRapida(){
+  if(!RED.plazas || RED.plazas.length < 2){ RED.plazas = []; ajustarPlazas(2); }
+  RED.papel = "anfitrion"; RED.yo = RED.yo || "yo"; RED.jefe = RED.yo; RED.mio = 0; RED.modo = "libre";
+  RED.plazas.forEach((p, i) => {
+    const mazoDe = (m, mim) => (mim && mim.tipo === "libre") ? "libre" : (m || null);
+    if(i === 0){ p.tipo = "persona"; p.quien = RED.yo; p.mote = miMote() || "Tú"; p.mazo = mazoDe(LONJA.rapidaMazo, LONJA.rapidaMim); p.mim = LONJA.rapidaMim || null; }
+    else { p.tipo = "ia"; p.quien = null; p.mote = ""; p.mazo = mazoDe(LONJA.iaMazo, LONJA.iaMim); p.mim = LONJA.iaMim || null; }
+    p.fuera = false;
+  });
+}
+/* mientras se está en Partida rápida, todo «dibujar la sala» (lo llama Crear mazo al aceptar o al volver) se convierte en:
+   recoger lo elegido de los asientos y volver a pintar la pantalla de Partida rápida */
+const mimCreado = mim => !!(mim && (mim.tipo === "libre" || mim.tipo === "propio" || mim.tipo === "hecho"));
+{ const _ds = dibujarSala;
+  dibujarSala = function(){
+    if(LONJA.pantalla === "rapida"){
+      try{
+        [0, 1].forEach(i => { const pl = RED.plazas && RED.plazas[i]; if(!pl) return;
+          const mim = mimCreado(pl.mim) ? pl.mim : null;
+          const mazo = pl.mazo === "libre" ? "riko" : (pl.mazo || (mim ? "riko" : null));   /* el Mazo simple se guarda como Mimón + su mazo; al empezar vuelve a ser «libre» */
+          if(i === 0){ if(mazo) LONJA.rapidaMazo = mazo; LONJA.rapidaMim = mim; }
+          else { if(mazo) LONJA.iaMazo = mazo; LONJA.iaMim = mim; } });
+      }catch(e){ console.error(e); }
+      const L = document.getElementById("mimonMazo"); if(L) L.remove();
+      pantallaRapida(true);
+      return;
+    }
+    return _ds.apply(this, arguments);
+  }; }
+/* el menú de luchador de Partida rápida: como el de la sala */
+{ const _pr = pantallaRapida;
+  pantallaRapida = function(seguir){
+    if(!seguir){ LONJA.rapidaMim = null; LONJA.iaMim = null; }
+    return _pr.apply(this, arguments);
+  }; }
+const _cualDe = () => { const r = document.querySelector("#eligeL .rotulo-asiento"); return r && r.textContent.trim() === idi("IA") ? 1 : 0; };
+const arreglar = () => {
+  const caja = document.getElementById("eligeL"); if(!caja || caja.dataset.crear) return;
+  if(LONJA.pantalla !== "rapida") return;
+  const fila = caja.querySelector(".hoja-asiento > .fila"); if(!fila) return;
+  const riko = fila.querySelector('[data-pon="riko"]'); if(!riko) return;
+  if(!libreAbierto() || RED.mimon) return;
+  caja.dataset.crear = "1";
+  const cual = _cualDe();
+  const puesto = cual === 0 ? LONJA.rapidaMazo : LONJA.iaMazo;
+  riko.classList.toggle("puesto", esCreado(puesto));
+  riko.onclick = () => { caja.remove(); plazasRapida(); crearMazoAbrir(cual); };
+  if(typeof nuevoHay === "function" && nuevoHay("crear")) nuevoMarca(riko);
+  const t = document.createElement("p"); t.className = "cm-titulo"; t.textContent = idi("Crea tu personaje");
+  const f2 = document.createElement("div"); f2.className = "fila cm-fila"; f2.appendChild(riko);
+  fila.insertAdjacentElement("afterend", t); t.insertAdjacentElement("afterend", f2);
+  try{ rejillaLuchadores(); }catch(e){}
+};
+new MutationObserver(ms => { for(const m of ms) for(const n of m.addedNodes) if(n.nodeType === 1 && n.id === "eligeL"){ arreglar(); return; } })
+  .observe(document.body, { childList:true });
+/* al elegir otro personaje normal, el mazo creado de ese asiento se olvida */
+{ const _pr2 = pantallaRapida;
+  pantallaRapida = function(){
+    const r = _pr2.apply(this, arguments);
+    try{
+      if(LONJA.rapidaMazo && !esCreado(LONJA.rapidaMazo)) LONJA.rapidaMim = null;
+      if(LONJA.iaMazo && !esCreado(LONJA.iaMazo)) LONJA.iaMim = null;
+    }catch(e){}
+    return r;
+  }; }
+/* el mazo creado llega al combate contra la máquina y a la sala de internet */
+{ const _msc = mesaSinCable;
+  mesaSinCable = function(){
+    const r = _msc.apply(this, arguments);
+    try{ if(LONJA.rapidaConIA && RED.plazas) [LONJA.rapidaMim, LONJA.iaMim].forEach((mim, i) => { const pl = RED.plazas[i]; if(!pl) return;
+      pl.mim = mim || null; if(mim && mim.tipo === "libre"){ pl.mazo = "libre"; if(PARTIDA.asientos[i]) PARTIDA.asientos[i].mazo = "libre"; } }); }catch(e){ console.error(e); }
+    return r;
+  }; }
+/* 1 vs 1, 2 vs 2, 3-4: al entrar en la sala de internet desde Partida rápida, mi mazo creado va a mi asiento */
+{ const _ds2 = dibujarSala;
+  dibujarSala = function(){
+    try{
+      if(LONJA.rapidaModo && LONJA.rapidaMim && RED.plazas && RED.plazas[0] && !RED.plazas[0].mim){
+        const mim = LONJA.rapidaMim; RED.plazas[0].mim = mim;
+        if(mim.tipo === "libre"){ RED.plazas[0].mazo = "libre"; if(PARTIDA.asientos[0]) PARTIDA.asientos[0].mazo = "libre"; }
+        difundirSala();
+      }
+    }catch(e){ console.error(e); }
+    return _ds2.apply(this, arguments);
+  }; }
+})();
+</script>
+<script>/* rejilla5_v6 (29-10-2026, Artur): los menús de elegir luchador (el tuyo, el de la IA y los asientos de la sala),
+   todos iguales: rejilla de 5 columnas (3 filas), panel a todo lo ancho y menos aire entre las cosas,
+   para que los retratos salgan más grandes en móviles bajos. Nada cambia de sitio. */
+(function(){
+"use strict";
+if(typeof rejillaLuchadores !== "function") return;
+const st = document.createElement("style");
+st.textContent =
+  "#eligeL.rejilla .fila{grid-template-columns:repeat(5,var(--anR,84px))}" +
+  "#eligeL.rejilla .hoja-asiento{width:393px;max-width:none;box-sizing:border-box;gap:10px;padding:16px 12px 14px;border-radius:0}" +   /* todo el ancho del lienzo del juego (393); se escala con él */
+  "#eligeL.rejilla .rotulo-asiento{margin:0}" +
+  "#eligeL.rejilla .fila{gap:9px}" +
+  "#eligeL.rejilla .pista-reglas{margin:0 0 2px}" +
+  "#eligeL.rejilla .lonja-h{margin:6px 0 0;font-size:10.5px}" +
+  "#eligeL.rejilla .lonja-fila button{min-height:36px;height:36px;padding:0 6px;font-size:11.5px}" +
+  "#eligeL.rejilla .lonja-empezar{min-height:40px;height:40px;margin-top:4px}" +
+  "#eligeL.de-asiento.rejilla{background:rgba(5,4,3,.97)}" +   /* solo en los menús de luchador: el fondo de la página de detrás, casi tapado */
+  "#eligeL.rejilla .cm-titulo{margin:0 0 4px}" +
+  "#eligeL.rejilla .hoja-asiento > .sl-accion{min-height:40px;height:40px;margin:0;padding:0 6px;font-size:11.5px}";
+document.head.appendChild(st);
+rejillaLuchadores = function(){
+  const caja = document.getElementById("eligeL"); if(!caja) return;
+  const hoja = caja.querySelector(".hoja-asiento"); if(!hoja) return;
+  const botones = caja.querySelectorAll(".luchador-b");
+  if(!botones.length) return;
+  caja.classList.add("rejilla");
+  const W = 393 - 24;                                           /* lo que mide la hoja por dentro, en medidas del lienzo (393) */
+  let an = Math.floor((W - 4 * 9) / 5);
+  caja.style.setProperty("--anR", an + "px");
+  while(an > 40 && hoja.scrollHeight > hoja.clientHeight + 1){ an -= 2; caja.style.setProperty("--anR", an + "px"); }   /* hasta que quepa sin scroll */
+};
+})();
+</script>
+<script>/* selectores_v6 (29-10-2026, Artur): en el menú de la IA de Partida rápida y en los asientos de la sala, Dificultad y Asaltos son un solo botón
+   con flechas cada uno (como el de las canciones), los dos en la misma línea, uno al lado del otro, y más pequeños. */
+(function(){
+"use strict";
+if(typeof DIFICULTADES === "undefined" || typeof PARTIDA === "undefined") return;
+const st = document.createElement("style");
+st.textContent =
+  "#eligeL.rejilla .sel-fila{display:flex;gap:14px;width:100%;max-width:369px;margin:4px auto 0}" +
+  "#eligeL.rejilla .sel-fila .sel{flex:1;min-width:0}" +
+  "#eligeL.rejilla .sel-fila .lonja-h{margin:0 0 3px;font-size:9.5px;letter-spacing:.16em;text-align:center}" +
+  "#eligeL.rejilla .sel-fila .sel-ctl{display:grid !important;grid-template-columns:28px minmax(0,1fr) 28px;gap:3px}" +
+  "#eligeL.rejilla .sel-fila .sel-ctl button{min-width:0;min-height:34px;height:34px;padding:0 4px;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0}" +
+  "#eligeL.rejilla .sel-fila .sel-ctl .flecha{font-size:17px;line-height:1;padding:0}" +
+  "#eligeL.rejilla .sel-fila .sel-ctl .nombre{pointer-events:none}" +
+  "#eligeL.rejilla .hoja-asiento > .sl-accion.lonja-empezar{margin-top:18px}" +
+  /* sala: los botones del asiento (Dejar asiento libre, Controlar asiento, Lo llevo yo…) en una línea, uno al lado del otro */
+  "#eligeL.rejilla .fila-acciones{display:flex;gap:14px;width:100%;max-width:369px;margin:6px auto 0}" +
+  "#eligeL.rejilla .fila-acciones .sl-accion{flex:1;min-width:0;width:auto;min-height:34px;height:34px;margin:0;padding:0 6px;font-size:11px;letter-spacing:.06em}";
+document.head.appendChild(st);
+function montarSala(caja){
+  const hoja = caja.querySelector(".hoja-asiento"); if(!hoja || hoja.querySelector(".fila-acciones")) return;
+  if(!hoja.querySelector(".luchador-b")) return;   /* el panel chico (IA / Controlar asiento) se queda como está */
+  const acc = [...hoja.children].filter(c => c.classList.contains("sl-accion") && !c.classList.contains("lonja-empezar"));
+  if(acc.length < 2) return;
+  const fila = document.createElement("div"); fila.className = "fila-acciones";
+  const cm = hoja.querySelector(".cm-fila");   /* debajo de «Crea tu personaje» */
+  if(cm) cm.insertAdjacentElement("afterend", fila); else acc[0].parentNode.insertBefore(fila, acc[0]);
+  acc.forEach(b => fila.appendChild(b));
+  try{ rejillaLuchadores(); }catch(e){}
+}
+function montar(caja){
+  montarSala(caja);
+  const hoja = caja.querySelector(".hoja-asiento"); if(!hoja || hoja.querySelector(".sel-fila")) return;
+  const filas = [...hoja.querySelectorAll(".lonja-fila")];
+  const fDif = filas.find(f => f.querySelector("[data-rd]")), fAs = filas.find(f => f.querySelector("[data-ra]"));
+  if(!fDif || !fAs) return;
+  const hDif = fDif.previousElementSibling, hAs = fAs.previousElementSibling;
+  const fila = document.createElement("div"); fila.className = "sel-fila";
+  /* Dificultad: solo las que se pueden elegir (las cerradas no entran en la rueda) */
+  const difs = [...fDif.querySelectorAll("[data-rd]")].map(b => parseInt(b.dataset.rd, 10));
+  const selD = document.createElement("div"); selD.className = "sel";
+  selD.innerHTML = '<div class="opciones sel-ctl"><button class="flecha" data-dir="-1" aria-label="‹">‹</button><button class="nombre"></button><button class="flecha" data-dir="1" aria-label="›">›</button></div>';
+  if(hDif && hDif.classList.contains("lonja-h")) selD.insertBefore(hDif, selD.firstChild);
+  const pintaD = () => { const k = difs.indexOf(PARTIDA.dif); const d = DIFICULTADES[PARTIDA.dif] || DIFICULTADES[difs[0]];
+    const n = selD.querySelector(".nombre"); n.textContent = idi(d.nombre); n.className = "nombre " + (d.clase || "") + " on";
+    selD.querySelectorAll(".flecha").forEach(b => b.disabled = difs.length < 2); void k; };
+  selD.querySelectorAll(".flecha").forEach(b => b.onclick = () => {
+    if(difs.length < 2) return;
+    let k = difs.indexOf(PARTIDA.dif); if(k < 0) k = 0;
+    k = (k + parseInt(b.dataset.dir, 10) + difs.length) % difs.length;
+    PARTIDA.dif = difs[k]; const viejo = fDif.querySelector('[data-rd="' + PARTIDA.dif + '"]'); if(viejo) viejo.click(); pintaD(); });
+  /* Asaltos: 1 o 3 */
+  const selA = document.createElement("div"); selA.className = "sel";
+  selA.innerHTML = '<div class="opciones sel-ctl"><button class="flecha" data-dir="-1" aria-label="‹">‹</button><button class="nombre"></button><button class="flecha" data-dir="1" aria-label="›">›</button></div>';
+  if(hAs && hAs.classList.contains("lonja-h")) selA.insertBefore(hAs, selA.firstChild);
+  const pintaA = () => { const n = selA.querySelector(".nombre"); n.textContent = (PARTIDA.asaltos || 1) === 1 ? "1" : "3"; n.className = "nombre on"; };
+  selA.querySelectorAll(".flecha").forEach(b => b.onclick = () => {
+    const uno = (PARTIDA.asaltos || 1) === 1;
+    const viejo = fAs.querySelector(uno ? '[data-ra="2"]' : '[data-ra="1"]'); if(viejo) viejo.click(); else PARTIDA.asaltos = uno ? 2 : 1;
+    pintaA(); });
+  fila.appendChild(selD); fila.appendChild(selA);
+  fDif.insertAdjacentElement("beforebegin", fila);
+  fDif.style.display = "none"; fAs.style.display = "none";   /* los botones de antes siguen ahí, escondidos: son los que guardan la elección */
+  pintaD(); pintaA();
+  try{ rejillaLuchadores(); }catch(e){}
+}
+new MutationObserver(ms => { for(const m of ms) for(const n of m.addedNodes) if(n.nodeType === 1 && n.id === "eligeL"){ try{ montar(n); }catch(e){ console.error(e); } return; } })
+  .observe(document.body, { childList:true });
+})();
+</script>
+<script>/* sonido_v1 (29-10-2026, Artur): el menú del altavoz (Sonido) se queda siempre dentro de la columna del juego
+   y dentro de la pantalla (en la sala salía por fuera, pegado al altavoz de la izquierda). */
+(function(){
+"use strict";
+if(typeof menuSonido !== "function") return;
+const _ms = menuSonido;
+menuSonido = function(boton){
+  const r = _ms.apply(this, arguments);
+  try{
+    const fondo = document.getElementById("menuSonido"), caja = fondo && fondo.querySelector(".ms-caja");
+    if(!caja || !boton || !boton.getBoundingClientRect) return r;
+    const b = document.body.getBoundingClientRect();
+    const col = (b.width > 0 && b.width < window.innerWidth - 4) ? b : { left:0, right:window.innerWidth };
+    const an = caja.offsetWidth, al = caja.offsetHeight, rb = boton.getBoundingClientRect();
+    let x = Math.round(rb.right - an);                              /* como siempre: alineado al borde derecho del altavoz */
+    x = Math.max(Math.round(col.left) + 8, Math.min(x, Math.round(col.right) - 8 - an));
+    let y = Math.round(rb.bottom + 8);
+    y = Math.max(8, Math.min(y, window.innerHeight - 8 - al));
+    caja.style.left = x + "px"; caja.style.right = "auto"; caja.style.top = y + "px";
+  }catch(e){ console.error(e); }
+  return r;
+};
+})();
+</script>
+<script>/* jefes_v1 (29-10-2026, Artur): los jefes (Sumi jefa, Mochi jefe) NUNCA salen en los menús de elegir luchador,
+   tampoco en el modo de pruebas «Desbloqueado». Para probarlos hay un interruptor aparte en el menú principal
+   (solo en los index de pruebas, junto a Bloqueado/Desbloqueado): «Jefes ocultos» / «Jefes visibles». */
+(function(){
+"use strict";
+if(typeof MAZOS === "undefined") return;
+const LLAVE = "islanegra_pruebas_jefes";
+const JEFES = (() => { try{ return localStorage.getItem(LLAVE) === "1"; }catch(e){ return false; } })();
+const base = MAZOS.filter(m => m.base).map(m => m.id);
+function quitarJefes(caja){
+  if(JEFES || !caja) return;
+  let quitados = 0;
+  caja.querySelectorAll(".luchador-b[data-pon]").forEach(b => { if(base.indexOf(b.dataset.pon) !== -1){ b.parentNode.removeChild(b); quitados++; } });
+  if(quitados && typeof rejillaLuchadores === "function") try{ rejillaLuchadores(); }catch(e){}
+}
+new MutationObserver(ms => { for(const m of ms) for(const n of m.addedNodes) if(n.nodeType === 1 && n.id === "eligeL"){ quitarJefes(n); return; } })
+  .observe(document.body, { childList:true });
+/* el interruptor, solo donde está el botón de pruebas */
+const poner = () => {
+  const pie = document.querySelector(".pie-reglas"); if(!pie || pie.querySelector(".boton-jefes")) return;
+  if(!pie.querySelector(".boton-pruebas")) return;
+  const b = document.createElement("button");
+  b.className = "rellenar mono ver-reglas boton-jefes";
+  b.textContent = JEFES ? "👹 Jefes visibles" : "👹 Jefes ocultos";
+  b.title = "Pruebas: enseñar o esconder a Sumi jefa y Mochi jefe en los menús";
+  b.style.cssText = "margin-left:10px";
+  b.onclick = e => { e.stopPropagation(); try{ localStorage.setItem(LLAVE, JEFES ? "0" : "1"); }catch(x){} location.reload(); };
+  pie.appendChild(b);
+};
+if(typeof pasoCamino === "function"){ const _pc = pasoCamino; pasoCamino = function(){ const r = _pc.apply(this, arguments); try{ setTimeout(poner, 0); }catch(e){} return r; }; }
+})();
+</script>
+<script>/* interrogante_v1 (29-10-2026, Artur): fuera el «?» del chat de sala y su aviso (no se veía y no servía). */
+(function(){
+  const st = document.createElement("style");
+  st.textContent = ".chat-que,[data-chatque],.chat-texto{display:none !important}";
+  document.head.appendChild(st);
+})();
+</script>
 </html>
