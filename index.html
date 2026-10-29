@@ -14631,7 +14631,7 @@ const CARAS = ["\u{1F44D}", "\u{1F631}", "\u{1F602}", "\u{1F525}", "\u{1F62D}", 
 const CHAT = { abierto:false, cola:[], soltando:false, ultimo:0 };
 const CHAT_FRENO = 1000;   
 function hayEmoticonos(){
-  return !!(RED.activa && RED.via === "internet");
+  return !!(RED.activa && RED.via === "internet" && RED.caras);
 }
 function capaDeCaras(){
   let c = document.getElementById("capaCaras");
@@ -15186,6 +15186,8 @@ function arrancarEnRed(foto){
   for(let i = 0; i < RED.n; i++)
     PARTIDA.asientos[i] = { mazo:RED.plazas[i].mazo, humano:RED.plazas[i].tipo === "persona", mim:RED.plazas[i].mim || null, dorso:RED.plazas[i].dorso || "isla" };
   RED.activa = true;
+  { const gente = new Set(); (RED.plazas || []).slice(0, RED.n).forEach(p => { if(p && p.tipo === "persona" && p.quien) gente.add(p.quien); });
+    RED.caras = gente.size >= 2; }   /* 29-10-2026 (Artur): emoticonos solo con 2 o más personas */
   quitarFondo();               
   vigilarCola(true);
   RED.cola = []; RED.orden = 0; RED.siguiente = 1; RED.descartes = null;
@@ -29734,12 +29736,12 @@ const NUEVAS = [
   {cuando:"respondiendo", zona:"mano", titulo:"", pide:{responder:"roku_contra"}, texto:"<p>Mai-lo te ataca con una Patada. Responde con la Contra.</p>"},
   {cuando:"finCombate", zona:"acciones", titulo:"", arranca:"sala", texto:"<p>Enhorabuena, conseguiste vencer aun estando en desventaja. Ya solo te falta aprender a configurar una sala de espera.</p>"},
   {sala:true, titulo:"", zonaSel:'#portada [data-camino="sala"]', pide:{toca:'#portada [data-camino="sala"]'}, texto:"<p>Pulsa en crear sala para configurar una sala de espera.</p>"},
-  {sala:true, titulo:"", zonaSel:"#opcionesSala [data-crear]", globoSobre:"#opcionesSala .hoja", pide:{toca:"#opcionesSala [data-crear]", en:"pointerdown"}, texto:"<p>Al entrar podrás configurar las opciones de sala a tu gusto. De momento déjalo como está y pulsa crear.</p>"},
+  {sala:true, titulo:"", zonaSel:"#opcionesSala [data-crear]", globoSobre:"#opcionesSala .hoja", pide:{toca:"#opcionesSala [data-crear]", en:"pointerdown"}, texto:"<p>Al entrar podrás configurar las opciones de sala a tu gusto. Puedes cambiarlas en cualquier momento pulsando el icono de opciones de la sala de espera (engranaje, abajo a la derecha). De momento déjalo como está y pulsa crear.</p>"},
   {sala:true, titulo:"", zonaSel:'#portada .sl-silla[data-asiento="0"]', pide:{espera:"luchador", permite:['#portada .sl-silla[data-asiento="0"]', "#eligeL"]}, texto:"<p>Selecciona un personaje con el que quieres luchar.</p>"},
   {sala:true, titulo:"", zonaSel:"#portada .clave", texto:"<p>Copia el código y envíaselo a tus amigos. Solo tendrán que escribirlo en el menú de partida rápida y entrarán en la sala.</p>"},
-  {sala:true, titulo:"", zonaSel:"#portada .lonja-sw", texto:"<p>Puedes mantener la sala privada para jugar con tus amigos o puedes hacerla pública para que otros jugadores se unan a ella. Cualquiera que esté buscando una partida con la misma configuración de sala podrá unirse.</p>"},
-  {sala:true, abre:"menu", titulo:"", zonaSel:'#portada [data-camino="solo"]', pide:{toca:'#portada [data-camino="solo"]'}, texto:"<p>Si prefieres jugar una partida rápida sin complicarte o jugar contra la máquina pulsa en partida rápida.</p>"},
-  {sala:true, titulo:"", zonaSel:"#portada .lonja-modos", texto:"<p>Selecciona el personaje con el que quieres jugar, pincha en 1 vs IA para jugar contra la máquina o pulsa en cualquier opción de multijugador para emparejarte online con otros jugadores que estén buscando partida. Si quieres entrar en una sala creada puedes hacerlo introduciendo el código de sala.</p>"},
+  {sala:true, titulo:"", zonaSel:"#portada .lonja-sw", texto:"<p>Puedes mantener la sala privada para jugar con tus amigos o contra la IA o puedes hacerla pública para que otros jugadores se unan a ella. Cualquiera que esté buscando una partida con la misma configuración de sala podrá unirse.</p>"},
+  {sala:true, abre:"menu", titulo:"", zonaSel:'#portada [data-camino="solo"]', pide:{toca:'#portada [data-camino="solo"]'}, texto:"<p>Si prefieres jugar una partida rápida online sin complicarte, pulsa en partida rápida.</p>"},
+  {sala:true, titulo:"", zonaSel:"#portada .lonja-modos", texto:"<p>Selecciona el personaje con el que quieres jugar y pulsa en cualquier opción de multijugador para emparejarte online con otros jugadores que estén buscando partida. Si quieres entrar en una sala creada puedes hacerlo introduciendo el código de sala.</p>"},
   {sala:true, titulo:"", texto:"<p>Recuerda, te espera un largo camino a través de 4 campañas de diferente dificultad en las que desbloquearás todas las funciones del juego. Podrás crear tu propio mazo, desbloquearás nuevas campañas, nuevos personajes, músicas, dorsos de cartas… Ten paciencia, es un camino largo donde aprenderás poco a poco a pelear como un auténtico maestro. De momento continúa este entrenamiento en la primera fase de la campaña. ¡Suerte!</p>"},
   {sala:true, titulo:"", centrado:true, texto:TXT_GRACIAS}
 ];
@@ -29820,17 +29822,17 @@ Object.assign(TRAD, {
   "<p>Enhorabuena, conseguiste vencer aun estando en desventaja. Ya solo te falta aprender a configurar una sala de espera.</p>":
     "<p>Congratulations, you won even though you were outnumbered. All that's left is learning how to set up a lobby.</p>",
   "<p>Pulsa en crear sala para configurar una sala de espera.</p>": "<p>Tap «Create lobby» to set up a lobby.</p>",
-  "<p>Al entrar podrás configurar las opciones de sala a tu gusto. De momento déjalo como está y pulsa crear.</p>":
-    "<p>Here you can set the lobby options the way you like. For now leave it as it is and tap «Create».</p>",
+  "<p>Al entrar podrás configurar las opciones de sala a tu gusto. Puedes cambiarlas en cualquier momento pulsando el icono de opciones de la sala de espera (engranaje, abajo a la derecha). De momento déjalo como está y pulsa crear.</p>":
+    "<p>Here you can set the lobby options the way you like. You can change them at any time by tapping the lobby options icon in the waiting room (the gear, bottom right). For now leave it as it is and tap «Create».</p>",
   "<p>Selecciona un personaje con el que quieres luchar.</p>": "<p>Select the character you want to fight with.</p>",
   "<p>Copia el código y envíaselo a tus amigos. Solo tendrán que escribirlo en el menú de partida rápida y entrarán en la sala.</p>":
     "<p>Copy the code and send it to your friends. They just have to type it in the quick match menu and they'll join the lobby.</p>",
-  "<p>Puedes mantener la sala privada para jugar con tus amigos o puedes hacerla pública para que otros jugadores se unan a ella. Cualquiera que esté buscando una partida con la misma configuración de sala podrá unirse.</p>":
-    "<p>You can keep the lobby private to play with your friends, or make it public so other players can join. Anyone looking for a match with the same lobby settings will be able to join.</p>",
-  "<p>Si prefieres jugar una partida rápida sin complicarte o jugar contra la máquina pulsa en partida rápida.</p>":
-    "<p>If you'd rather play a quick match without any fuss, or play against the computer, tap «Quick match».</p>",
-  "<p>Selecciona el personaje con el que quieres jugar, pincha en 1 vs IA para jugar contra la máquina o pulsa en cualquier opción de multijugador para emparejarte online con otros jugadores que estén buscando partida. Si quieres entrar en una sala creada puedes hacerlo introduciendo el código de sala.</p>":
-    "<p>Select the character you want to play with, tap «1 vs AI» to play against the computer, or tap any multiplayer option to be matched online with other players looking for a match. If you want to join an existing lobby, you can do it by entering the lobby code.</p>",
+  "<p>Puedes mantener la sala privada para jugar con tus amigos o contra la IA o puedes hacerla pública para que otros jugadores se unan a ella. Cualquiera que esté buscando una partida con la misma configuración de sala podrá unirse.</p>":
+    "<p>You can keep the lobby private to play with your friends or against the AI, or make it public so other players can join. Anyone looking for a match with the same lobby settings will be able to join.</p>",
+  "<p>Si prefieres jugar una partida rápida online sin complicarte, pulsa en partida rápida.</p>":
+    "<p>If you'd rather play a quick online match without any fuss, tap «Quick match».</p>",
+  "<p>Selecciona el personaje con el que quieres jugar y pulsa en cualquier opción de multijugador para emparejarte online con otros jugadores que estén buscando partida. Si quieres entrar en una sala creada puedes hacerlo introduciendo el código de sala.</p>":
+    "<p>Select the character you want to play with and tap any multiplayer option to be matched online with other players looking for a match. If you want to join an existing lobby, you can do it by entering the lobby code.</p>",
   "<p>Recuerda, te espera un largo camino a través de 4 campañas de diferente dificultad en las que desbloquearás todas las funciones del juego. Podrás crear tu propio mazo, desbloquearás nuevas campañas, nuevos personajes, músicas, dorsos de cartas… Ten paciencia, es un camino largo donde aprenderás poco a poco a pelear como un auténtico maestro. De momento continúa este entrenamiento en la primera fase de la campaña. ¡Suerte!</p>":
     "<p>Remember, a long road awaits you through 4 campaigns of different difficulty in which you'll unlock every feature of the game. You'll be able to build your own deck, and you'll unlock new campaigns, new characters, music, card backs… Be patient: it's a long road where you'll slowly learn to fight like a true master. For now, carry on with this training in the first phase of the campaign. Good luck!</p>"
 });
@@ -30737,7 +30739,7 @@ Object.assign(TRAD, {
   "Buscando rival…": "Searching for opponent…", "Buscando jugadores…": "Searching for players…", "Cancelar": "Cancel",
   "¡Rival encontrado!": "Opponent found!", "¡Equipos listos!": "Teams ready!",
   "Elige tu luchador primero.": "Choose your fighter first.",
-    "Sin conexión: puedes jugar contra la IA.": "Offline: you can play vs AI.",
+    "Sin conexión.": "Offline.",
   "sin conexión": "offline",
   "Listo": "Ready", "Empezar combate": "Start", "no está listo": "is not ready", "está listo": "is ready", "Al azar": "Random",
   "IA": "AI", "Ocupar asiento": "Take seat", "Controlar asiento": "Control seat", "Dejar asiento libre": "Leave seat",
@@ -30964,7 +30966,6 @@ function pantallaRapida(seguir){
   const h = '<div class="prep solo lonja-rapida"><h2>' + idi("Elige tu luchador") + '</h2>' +
     '<div class="lonja-losa">' + losas() + '</div>' +
     '<div class="opciones col lonja-modos">' +
-      '<button data-ia="1">' + idi("1 vs IA") + '</button>' +
       '<button data-modo="1v1">1 vs 1</button>' +
       '<button data-modo="equipos">2 vs 2</button>' +
       '<button data-modo="libre">3-4 · ' + idi("Libre") + '</button>' +
@@ -31045,7 +31046,7 @@ function pantallaRapida(seguir){
     pinta();
   }
   pinta();
-  p.querySelector("[data-ia]").onclick = () => { LONJA.rapidaConIA = true; pinta(); elegir(1); };
+  if(p.querySelector("[data-ia]")) p.querySelector("[data-ia]").onclick = () => { LONJA.rapidaConIA = true; pinta(); elegir(1); };
   p.querySelectorAll("[data-modo]").forEach(b => b.onclick = () => buscarRapida(b.dataset.modo));
   p.querySelector("[data-codigo]").onclick = () => { LONJA.pantalla = null; LONJA.desdeRapida = true; SALA.via = "internet"; SALA.paso = "entrar"; dibujarSala(); };
   p.querySelector("[data-atras]").onclick = () => { LONJA.pantalla = null; pasoCamino(); };
@@ -31305,8 +31306,8 @@ function jugarContraIA(){
       LONJA.sinRed = true; LONJA.publica = false; lonjaParar(); limpiarEstadoSala();
       const viejo = document.querySelector("#portada .lonja-sw"); if(viejo) viejo.remove();
       if(LONJA.rapidaModo){ LONJA.busca = null; quitarBusca(); LONJA.rapidaModo = null; cerrarRed(); pantallaRapida(true);
-        return _est0.call(this, idi("Sin conexión: puedes jugar contra la IA.")); }
-      return _est0.call(this, idi("Sin conexión: puedes jugar contra la IA."));
+        return _est0.call(this, idi("Sin conexión.")); }
+      return _est0.call(this, idi("Sin conexión."));
     }
     return _err.call(this, dicho);
   }; }
@@ -31952,7 +31953,7 @@ st.textContent =
   "#eligeL.rejilla .sel-fila .sel-ctl .nombre{pointer-events:none}" +
   "#eligeL.rejilla .hoja-asiento > .sl-accion.lonja-empezar{margin-top:18px}" +
   /* sala: los botones del asiento (Dejar asiento libre, Controlar asiento, Lo llevo yo…) en una línea, uno al lado del otro */
-  "#eligeL.rejilla .fila-acciones{display:flex;gap:14px;width:100%;max-width:369px;margin:6px auto 0}" +
+  "#eligeL.rejilla .fila-acciones{display:flex;gap:14px;width:100%;max-width:369px;margin:22px auto 0}" +
   "#eligeL.rejilla .fila-acciones .sl-accion{flex:1;min-width:0;width:auto;min-height:34px;height:34px;margin:0;padding:0 6px;font-size:11px;letter-spacing:.06em}";
 document.head.appendChild(st);
 function montarSala(caja){
