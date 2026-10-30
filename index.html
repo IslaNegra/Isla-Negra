@@ -31468,7 +31468,7 @@ function jugarContraIA(){
       if(RED.modo === "equipos" && RED.n === 4){
         const sitios = p.querySelector(".sitios");
         const sillas = sitios ? [...sitios.querySelectorAll(".sl-silla")] : [];
-        if(sillas.length === 4) [0, 2, 1, 3].forEach(k => sitios.appendChild(sillas[k]));
+        /* 30-10-2026 (Artur): en la sala los asientos van en su orden, J1 J2 J3 J4 */
       }
       /* conectado / desconectado: icono de wifi */
       p.querySelectorAll(".sl-quien").forEach(q => {
