@@ -32073,4 +32073,53 @@ if(typeof pasoCamino === "function"){ const _pc = pasoCamino; pasoCamino = funct
   document.head.appendChild(st);
 })();
 </script>
+<script>
+/* 30-10-2026 (Artur): patata caliente a 3 y 4 jugadores.
+   Solo responde quien recibe la Carga (nadie se mete, tampoco su compañero).
+   Si la evita, pasa sola al siguiente en el orden de turno que no sea de su equipo. A dos, como siempre. */
+(function(){
+  const _cand = candidatosRespuesta;
+  candidatosRespuesta = function(p){
+    if(p && p.cartaId === "carga" && nAsientos() >= 3)
+      return (p.objetivo !== p.origen && vivo(p.objetivo)) ? [p.objetivo] : [];
+    return _cand.apply(this, arguments);
+  };
+  const _reb = reboteCarga;
+  reboteCarga = function(quien, p){
+    if(nAsientos() < 3) return _reb.apply(this, arguments);
+    if(ganadorAsalto() !== -1) return false;
+    const n = nAsientos();
+    let v = -1;
+    for(let k = 1; k < n; k++){ const j = (quien + k) % n; if(vivo(j) && !sonAliados(quien, j)){ v = j; break; } }
+    if(v < 0) return false;
+    anotar(ESTADO.asientos[quien].nombre + " evita la Carga: pasa a " + ESTADO.asientos[v].nombre + ".", "hito");
+    avisar(() => { pintar(); }, 850);
+    ESTADO.pendiente = { origen: quien, objetivo: v, dano: p.dano, nivel: p.nivel, inevitable: false,
+                         nombre: p.nombre, cartaId: "carga", alEntrar: null, empuja: 1, intercambio: p.intercambio };
+    pintar();
+    pedirRespuesta();
+    return true;
+  };
+})();
+/* 30-10-2026 (Artur): a 3 y 4, la Carga lanzada se pone en pequeño debajo de la ficha de quien la tiene
+   y, en ese tamaño, va pasando de ficha en ficha. A dos, como siempre. */
+{ const _pcRueda = pintarCarga;
+  pintarCarga = function(){
+    const r = _pcRueda.apply(this, arguments);
+    try{
+      const p = ESTADO.pendiente, el = document.getElementById("cargaViva");
+      if(!mesaGrande() || !el || !el.classList.contains("ver") || !(p && p.cartaId === "carga")) return r;
+      if(Date.now() < CARGA_VISTA.grande) return r;
+      const f = document.getElementById("lu" + p.objetivo); if(!f) return r;
+      const rf = f.getBoundingClientRect(); if(!rf.width) return r;
+      const z = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--z")) || 1) * 1.1;
+      const an = 98 * z, k = Math.min(.4, rf.width * .48 / an);   /* un poco más pequeña en las losas */
+      el.style.left = (rf.left + rf.width / 2 - an * k / 2) + "px";
+      el.style.top = (rf.bottom + 4) + "px";
+      el.style.transform = "scale(" + k + ")";
+    }catch(e){}
+    return r;
+  }; }
+
+</script>
 </html>
