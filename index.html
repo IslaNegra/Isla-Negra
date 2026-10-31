@@ -27455,13 +27455,7 @@ function hacerViaje(v){
   const M = LAD.marcas[v.asiento], t = v.asiento, yo = ESTADO.asientos[t];
   if(M && M.soloMarca && M.soloMarca === v.cartaId){ delete M.soloMarca; return false; }   /* PRUEBA: Efecto mariposa marcó: no viaja */
   if(LAD.pasado && M && M.llegada){ anotar(yo.nombre + " ya está en la marca: no viaja.", "hito"); avisar(() => { subeMarca("ya estás en la marca", "a" + t + " chico"); pintar(); }, 850); return false; }   /* PRUEBA: ya estás en la marca */
-  if(!M){
-    if(v.tipo !== "rebobinar"){   /* 26-10-2026 (Artur): al rebobinar sin marca no sale ningún texto */
-      anotar(yo.nombre + " no tiene marca: no viaja.", "hito");
-      avisar(() => { subeMarca("sin marca: no viaja", "a" + t + " chico"); pintar(); }, 850);
-    }
-    return false;
-  }
+  if(!M) return false;   /* 31-10-2026 (Artur): sin marca no viaja y no sale ningún texto (ni en la mesa ni en el rodillo) */
   if(v.tipo === "rebobinar"){
     const S = clonar(M.F);
     quitarAlDescarte(S, S.asientos[t], v.cartaId);
