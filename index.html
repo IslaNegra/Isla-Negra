@@ -36202,3 +36202,110 @@ try{ if(typeof REGLAS_VISTA !== "undefined" && REGLAS_VISTA === "avance") REGLAS
 
 </script>
 </html>
+<script>
+/* ---- 84_avance_movil.js ---- */
+/* 4-11-2026 (Artur) (en prueba): en la app de Android, en la sala del móvil, un disquete al lado del altavoz.
+   Abre un menú pequeño, como el de sonido, con un solo botón: «Cargar avance».
+   Sirve para quien tenía la APK y se pasa a la de Google Play: elige Descargas/IslaNegra/avance.json (el archivo que guarda la APK)
+   o un archivo de «Guardar avance» del ordenador. En el ordenador (html.pc) no sale: allí ya está el disquete de 83_avance_sala. */
+(function(){
+"use strict";
+if(window.AVANCE_MOVIL_PUESTO) return; window.AVANCE_MOVIL_PUESTO = true;
+const R = document.documentElement;
+const enApp = () => { try{ return !!(window.AVANCE_MOVIL_PRUEBA || (typeof APK_EN_MARCO !== "undefined" && APK_EN_MARCO) || window.IslaAndroid); }catch(e){ return false; } };
+if(!enApp() || typeof dibujarSala !== "function") return;
+const T = (s) => (typeof idi === "function") ? idi(s) : s;
+try{ if(typeof TRAD === "object") Object.assign(TRAD, {
+  "Avance": "Progress", "Cargar avance": "Load progress", "Cargado": "Loaded",
+  "Ese archivo no es de Isla Negra.": "That file is not from Isla Negra.",
+  "No se ha podido leer el archivo.": "The file could not be read.", "No se ha podido guardar.": "Could not save."
+}); }catch(e){}
+const DISCO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true">' +
+  '<path d="M5 3h11l3 3v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M7 3v5h8V3"/><rect x="7" y="13" width="10" height="6" rx="1"/></svg>';
+const st = document.createElement("style");
+st.textContent = `
+.portada.en-sala .cabecera.lonja-cab > .sl-disco{position:absolute;margin:0;z-index:3}
+.sl-disco svg{transform:none !important}
+html.pc .sl-disco{display:none !important}
+#menuAvanceMovil .ms-caja{min-width:200px;box-sizing:border-box}
+#menuAvanceMovil .av-fila{display:flex;flex-direction:column;gap:8px;margin:0}
+#menuAvanceMovil .av-fila button{width:100%;padding:9px 6px;font-size:13px;letter-spacing:.06em}
+#menuAvanceMovil .av-fila button.hecho{color:#CDEBD3 !important;box-shadow:inset 0 0 0 1px #9BD6A7,0 0 8px rgba(155,214,167,.45) !important}
+#menuAvanceMovil .av-aviso{min-height:14px;margin-top:6px;font-size:11px;line-height:1.35;color:#E8C170;text-align:center}
+`;
+document.head.appendChild(st);
+
+/* el archivo: o el de la APK (todo lo que el juego guarda en el móvil) o el código «IN1.» de «Guardar avance» */
+function cargarTexto(txt){
+  txt = String(txt || "").trim();
+  if(txt.indexOf("IN1.") === 0){
+    if(typeof avanceCargar !== "function") return T("Ese archivo no es de Isla Negra.");
+    return avanceCargar(txt);
+  }
+  let o = null;
+  try{ o = JSON.parse(txt); }catch(e){ return T("Ese archivo no es de Isla Negra."); }
+  if(!o || typeof o !== "object" || Array.isArray(o)) return T("Ese archivo no es de Isla Negra.");
+  let c = null;
+  try{ c = JSON.parse(o["islanegra-campana"] || "null"); }catch(e){ c = null; }
+  if(!c || !c.fase || !c.libres) return T("Ese archivo no es de Isla Negra.");
+  try{
+    localStorage.clear();
+    for(const k in o){ if(k === "islanegra-avance-t") continue; if(o[k] !== null && o[k] !== undefined) localStorage.setItem(k, String(o[k])); }
+  }catch(e){ return T("No se ha podido guardar."); }
+  try{ if(typeof CAMPANA !== "undefined") CAMPANA.datos = null; }catch(e){}
+  try{ if(typeof LOGRO !== "undefined") LOGRO.d = null; }catch(e){}
+  return "";
+}
+
+function cerrar(){ const m = document.getElementById("menuAvanceMovil"); if(m) m.remove(); }
+function abrir(btn){
+  if(document.getElementById("menuAvanceMovil")){ cerrar(); return; }
+  const f = document.createElement("div"); f.id = "menuAvanceMovil"; f.className = "ms-fondo";
+  f.innerHTML = '<div class="ms-caja"><div class="ms-titulo">' + T("Avance") + '</div>' +
+    '<div class="opciones av-fila"><button type="button" id="avMovilC">' + T("Cargar avance") + '</button></div>' +
+    '<input type="file" id="avMovilArchivo" accept=".json,application/json,text/plain" hidden>' +
+    '<div class="av-aviso" id="avMovilAviso"></div></div>';
+  document.body.appendChild(f);
+  const caja = f.querySelector(".ms-caja"), r = btn.getBoundingClientRect();
+  caja.style.top = Math.round(r.bottom + 8) + "px";
+  caja.style.left = "8px"; caja.style.right = "auto";
+  f.addEventListener("click", e => { if(e.target === f) cerrar(); });
+  const aviso = t => { f.querySelector("#avMovilAviso").textContent = t || ""; };
+  const bC = f.querySelector("#avMovilC"), ent = f.querySelector("#avMovilArchivo");
+  bC.onclick = ev => { ev.stopPropagation(); ent.value = ""; ent.click(); };
+  ent.onchange = () => {
+    const file = ent.files && ent.files[0]; if(!file) return;
+    const lector = new FileReader();
+    lector.onload = () => {
+      const err = cargarTexto(lector.result);
+      if(err){ aviso(err); return; }
+      aviso(""); bC.classList.add("hecho"); bC.textContent = T("Cargado");
+      try{ dibujarSala(); }catch(e){}
+      setTimeout(cerrar, 1400);
+    };
+    lector.onerror = () => aviso(T("No se ha podido leer el archivo."));
+    lector.readAsText(file);
+  };
+}
+
+function ponDisco(){
+  if(R.classList.contains("pc")) return;
+  const p = document.getElementById("portada"); if(!p) return;
+  const cab = p.querySelector(".cabecera.lonja-cab"); if(!cab) return;
+  const alt = cab.querySelector(":scope > .sl-altavoz"); if(!alt) return;
+  let b = cab.querySelector(":scope > .sl-disco");
+  if(!b){
+    b = document.createElement("button"); b.type = "button";
+    b.className = "entrar-sala-icono sl-disco"; b.setAttribute("aria-label", T("Avance"));
+    b.innerHTML = DISCO;
+    b.onclick = ev => { ev.stopPropagation(); abrir(b); };
+    cab.appendChild(b);
+  }
+  b.style.left = (alt.offsetLeft + alt.offsetWidth + 8) + "px";
+  b.style.top = alt.offsetTop + "px";
+}
+const _dib = dibujarSala;
+dibujarSala = function(){ const r = _dib.apply(this, arguments); try{ ponDisco(); }catch(e){} return r; };
+addEventListener("resize", () => { try{ ponDisco(); }catch(e){} });
+})();
+</script>
