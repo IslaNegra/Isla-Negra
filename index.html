@@ -36247,7 +36247,8 @@ function cargarTexto(txt){
   if(!o || typeof o !== "object" || Array.isArray(o)) return T("Ese archivo no es de Isla Negra.");
   let c = null;
   try{ c = JSON.parse(o["islanegra-campana"] || "null"); }catch(e){ c = null; }
-  if(!c || !c.fase || !c.libres) return T("Ese archivo no es de Isla Negra.");
+  if(!Object.keys(o).some(k => /^isla/i.test(k) && k !== "islanegra-avance-t")) return T("Ese archivo no es de Isla Negra.");
+  if(o["islanegra-campana"] != null && (!c || !c.fase || !c.libres)) return T("Ese archivo no es de Isla Negra.");
   try{
     localStorage.clear();
     for(const k in o){ if(k === "islanegra-avance-t") continue; if(o[k] !== null && o[k] !== undefined) localStorage.setItem(k, String(o[k])); }
@@ -36263,7 +36264,7 @@ function abrir(btn){
   const f = document.createElement("div"); f.id = "menuAvanceMovil"; f.className = "ms-fondo";
   f.innerHTML = '<div class="ms-caja"><div class="ms-titulo">' + T("Avance") + '</div>' +
     '<div class="opciones av-fila"><button type="button" id="avMovilC">' + T("Cargar avance") + '</button></div>' +
-    '<input type="file" id="avMovilArchivo" accept=".json,application/json,text/plain" hidden>' +
+    '<input type="file" id="avMovilArchivo" hidden>' +
     '<div class="av-aviso" id="avMovilAviso"></div></div>';
   document.body.appendChild(f);
   const caja = f.querySelector(".ms-caja"), r = btn.getBoundingClientRect();
@@ -36281,7 +36282,7 @@ function abrir(btn){
       if(err){ aviso(err); return; }
       aviso(""); bC.classList.add("hecho"); bC.textContent = T("Cargado");
       try{ dibujarSala(); }catch(e){}
-      setTimeout(cerrar, 1400);
+      setTimeout(function(){ try{ location.reload(); }catch(e){ cerrar(); } }, 1400);
     };
     lector.onerror = () => aviso(T("No se ha podido leer el archivo."));
     lector.readAsText(file);
