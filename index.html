@@ -18476,11 +18476,11 @@ function hacerViaje(E, v){
     quitarAlDescarte(S.asientos[t], v.cartaId);
     cont(E, t, "rebobinar");
     anotar(E, yo.nombre + " rebobina: todo vuelve a la marca.");
-    ponerEstado(E, S, cuenta, historia);
+    ponerEstado(E, S, cuenta, historia); E.soloCartaId = null;   /* 6-11-2026 (Artur) */
     if(M.tipo === "respuesta") empezarTurno(E);
     return true;
   }
-  const P = copiar(E); P.marcas = Object.assign({}, E.marcas); delete P.marcas[t]; P.viaje = null;
+  const P = copiar(E); P.marcas = Object.assign({}, E.marcas); delete P.marcas[t]; P.viaje = null; P.soloCartaId = null;   /* 6-11-2026 (Artur) */
   const S = copiar(M.S), L = S.asientos[t];
   L.mano = yo.mano.slice();                                                  /* viaja su mano de ahora (el mazo no viaja) */
   L.pv = yo.pv; L.nivel = yo.nivel; L.mejorasEnMesa = yo.mejorasEnMesa; L.mesa = (yo.mesa || []).slice();   /* y sus PV, Mejoras y nivel de ahora */
@@ -18496,7 +18496,7 @@ function hacerViaje(E, v){
   cont(E, t, "alterar");
   anotar(E, yo.nombre + " altera el pasado: vuelve a la marca con su mano de ahora.");
   ponerEstado(E, S, cuenta, historia);
-  E.iniciativa = t; E.puntero = t; E.primeraAccion = false;                 /* juega él, sin coger carta */
+  E.iniciativa = t; E.puntero = t; E.primeraAccion = false; E.soloCartaId = null;   /* juega él, sin coger carta · 6-11-2026: con toda la mano */
   if(E.fase !== "turno" && E.fase !== "trasRespuesta"){ E.fase = "turno"; E.pendiente = null; E.quienJuegaTras = null; }
   return true;
 }
@@ -27282,7 +27282,7 @@ function cartaJugada(a, id){ let c = defCarta(id); if(c && robadaDe(a, c)) c = d
 function hacerMarca(i, tipo, indiceMano, tras){
   nuevaPartida();
   const a = ESTADO.asientos[i];
-  const F = foto();
+  const F = foto(); F.campos.soloCartaId = null;   /* 6-11-2026 (Artur): al volver a la marca, nada de «solo esa carta» (el Sastrilegio mayor ya se jugó) */
   if(indiceMano !== undefined && indiceMano !== null){
     const L = F.asientos[i], id = L.mano.splice(indiceMano, 1)[0]; L.manoEtq.splice(indiceMano, 1);
     alMontonEn(F, L, id);
@@ -27494,7 +27494,7 @@ function hacerViaje(v){
   /* Alterar */
   const X0 = LAD.pasado, ACUM = X0 && window.PRUEBA_ALTERAR ? PRUEBA_ALTERAR.acumular(X0) : null;   /* PRUEBA: Alterar desde el pasado */
   const P = X0 ? X0.P : foto(), marcasP = X0 ? X0.marcasP : Object.assign({}, LAD.marcas); if(!X0) delete marcasP[t];
-  P.campos.secuencia = []; P.campos.nuevaSecuencia = true; P.campos.pendiente = null; P.campos.quienJuegaTras = null;   /* al volver, la mesa ya está recogida */
+  P.campos.secuencia = []; P.campos.nuevaSecuencia = true; P.campos.pendiente = null; P.campos.quienJuegaTras = null; P.campos.soloCartaId = null;   /* 6-11-2026 (Artur) */   /* al volver, la mesa ya está recogida */
   const S = clonar(M.F), L = S.asientos[t];
   L.mano = yo.mano.slice(); L.manoEtq = yo.manoEtq.slice();                       /* viaja su mano de ahora (el mazo no viaja) */
   L.pv = yo.pv; L.nivel = yo.nivel; L.mejorasEnMesa = yo.mejorasEnMesa; L.mesa = (yo.mesa || []).slice();   /* y sus PV, Mejoras y nivel de ahora */
@@ -27524,6 +27524,7 @@ function hacerViaje(v){
 /* después de viajar: sigue jugando el Ladrón (o, si marcó con respuesta y rebobina, empieza su turno y coge carta) */
 function seguirTrasViaje(t, M, rebobina){
   const a = ESTADO.asientos[t];
+  ESTADO.soloCartaId = null;   /* 6-11-2026 (Artur): en el pasado se juega con toda la mano */
   ESTADO.iniciativa = M.modo === "tras" ? ESTADO.iniciativa : t;
   ESTADO.apuntando = null; ESTADO.recogiendo = false;
   if(rebobina && M.tipo === "respuesta"){ ESTADO.fase = "cambio"; ESTADO.puntero = t; ESTADO.iniciativa = t; pintar(); tarde(lento(300), empezarTurno); return; }
