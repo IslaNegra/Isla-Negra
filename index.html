@@ -10912,6 +10912,8 @@ function pintarMano(){
    con el texto «Descarta X» o «Quédate X». Se tocan para marcarlas (otro toque, se desmarca).
    Cuando están las que pide, sale el ✓ para confirmar. Las que te quedas vuelan a la mano; las otras, a su mazo.
    El menú de antes queda como pedirDescartesMenu (sin usar). */
+/* 10-11-2026 (Artur): lo que se descarta va SIEMPRE a la pila de usadas (en la mesa de ordenador, la que se ve) */
+function pilaUsadas(i){ try{ if(window.esAncha && window.esAncha()){ const u = document.querySelector('.ancha-pila.usadas[data-asiento="' + i + '"] .dorso'); if(u && u.getBoundingClientRect().width) return u; } }catch(e){} return null; }
 function pedirDescartes(a, idx, cuantas, listo, modo){
   cerrarCaras();
   const quedarse = !!(modo && modo.quedarse);
@@ -10979,7 +10981,7 @@ function pedirDescartes(a, idx, cuantas, listo, modo){
     listo(elegidas);
     { const pa = ESTADO.asientos[yo]; vuelos.forEach(v => { v.queda = !!pa && pa.manoEtq.indexOf(v.et) >= 0; }); }   /* las que de verdad siguen en la mano (la aguja, no) */
     /* cada una a su sitio: las que te quedas, a su hueco de la mano; las otras, al mazo (descarte o el del rival) */
-    const destinoSuelta = centro(rv >= 0 ? (document.getElementById("mz" + rv) || anclaMazo(rv)) : anclaMazo(yo)) || origen;
+    const destinoSuelta = centro(rv >= 0 ? (document.getElementById("mz" + rv) || anclaMazo(rv)) : (pilaUsadas(yo) || anclaMazo(yo))) || origen;   /* 10-11-2026: las descartadas, a las usadas */
     vuelos.forEach(v => { if(v.queda) LLEGAN_MANO.add(String(v.et)); });
     const huecoDe = et => document.querySelector('#mano .fan .carta[data-etq="' + et + '"]');
     pintar();
@@ -12444,7 +12446,7 @@ function reajustarTitulos(){
   window.addEventListener('resize', reajustarTitulos);
   if(document.fonts && document.fonts.ready) document.fonts.ready.then(reajustarTitulos);
 })();
-const VERSION = "2.4.1";
+const VERSION = "2.4.2";
 document.title = "Sombras sobre Isla Negra · " + VERSION;
 function panelPortada(html, pie, bajoTitulo){
   const p = document.getElementById("portada");
@@ -12793,10 +12795,7 @@ function abrirJugadas(){
   if(!a) return;
   const cuenta = new Map();
   (a.descartes || []).forEach(id => cuenta.set(id, (cuenta.get(id) || 0) + 1));
-  if(a.mejorasEnMesa > 0){
-    const im = idMejora(a.mazoId);
-    cuenta.set(im, (cuenta.get(im) || 0) + a.mejorasEnMesa);
-  }
+  /* 10-11-2026 (Artur): solo lo que hay en la pila de usadas; las Mejoras de la mesa no son descartes */
   const capa = document.createElement("div");
   capa.id = "jugadas-p";
   let h = '<div class="hoja-j"><h2>Cartas jugadas</h2>';
@@ -25762,7 +25761,7 @@ function volarAguja(t, c){
   return d;
 }
 function agujaAlDescarte(d, t){
-  const S = +d.dataset.esc || 1, anc = anclaMazo(t), ra = anc ? anc.getBoundingClientRect() : null, r = d.getBoundingClientRect();
+  const S = +d.dataset.esc || 1, anc = pilaUsadas(t) || anclaMazo(t), ra = anc ? anc.getBoundingClientRect() : null, r = d.getBoundingClientRect();
   const dx = ra ? (ra.left + ra.width / 2) - (r.left + r.width / 2) : -r.right, dy = ra ? (ra.top + ra.height / 2) - (r.top + r.height / 2) : 0;
   d.getAnimations().forEach(x => x.cancel());
   d.animate([{ transform:"translate(0,0) rotate(0deg) scale(" + S + ")" }, { transform:"translate(" + dx + "px," + dy + "px) rotate(24deg) scale(" + (.35 * S) + ")" }],
@@ -27452,9 +27451,11 @@ function verFuturo(rv, ids, alTocar, bocaAbajo){
     cartas.push({ d, k, desde, llega });
   });
   if(typeof efx === "function") efx(n >= 4 ? "carta_repartir" : "carta_coger3");
-  const irse = () => cartas.forEach(({ d, k, desde, llega }) =>
-    d.animate([{ transform:llega }, { transform:desde }], { duration:lento(460), delay:k * lento(60), easing:"cubic-bezier(.45,0,.7,.4)", fill:"forwards" })
-     .finished.then(() => d.remove(), () => d.remove()));
+  const irse = () => cartas.forEach(({ d, k, desde, llega }) => {
+    const u = pilaUsadas(rv), ur = u ? u.getBoundingClientRect() : null;   /* 10-11-2026: al descarte del rival, no a su mazo */
+    const hasta = ur ? "translate(" + (ur.left + ur.width / 2 - (x0 + k * paso)) + "px," + (ur.top + ur.height / 2 - y0) + "px) scale(" + (w / w0 * 0.3) + ") rotate(20deg)" : desde;
+    d.animate([{ transform:llega }, { transform:hasta }], { duration:lento(460), delay:k * lento(60), easing:"cubic-bezier(.45,0,.7,.4)", fill:"forwards" })
+     .finished.then(() => d.remove(), () => d.remove()); });
   if(!alTocar && bocaAbajo){ setTimeout(irse, lento(1700)); return; }   /* 3-11-2026 (Artur): boca abajo (las ve el rival), se van solas */
   if(!alTocar) alTocar = () => {};   /* boca arriba (en sala y en línea): se quedan hasta la ✕, para que dé tiempo a leerlas; la partida no se para */
   /* las tuyas: se quedan a la vista hasta que las tocas (o la ✕) */
